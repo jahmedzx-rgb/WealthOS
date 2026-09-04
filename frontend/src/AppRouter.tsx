@@ -8,7 +8,7 @@ import { lazy, Suspense } from 'react'
 import AppLayout from './components/layout/AppLayout'
 
 import BetaProfileInitializer from './components/BetaProfileInitializer'
-import SetupGate from './components/SetupGate'
+import BootstrapGate from './components/BootstrapGate'
 
 const OperationWorkspacePage=lazy(()=>import('./pages/OperationWorkspacePage'))
 const OperationsCatalogPage=lazy(()=>import('./pages/OperationsCatalogPage'))
@@ -44,7 +44,7 @@ const ReconciliationView=lazy(()=>import('./pages/ReconciliationView'))
 export default function AppRouter() {
   return (
     <BrowserRouter>
-      <SetupGate><BetaProfileInitializer />
+      <BootstrapGate><BetaProfileInitializer />
       <Suspense fallback={<div className="app-route-loading">Loading WealthOS…</div>}>
       <Routes>
         <Route element={<AppLayout />}>
@@ -101,7 +101,7 @@ export default function AppRouter() {
         </Route>
       </Routes>
       </Suspense>
-      </SetupGate>
+      </BootstrapGate>
     </BrowserRouter>
   )
 }

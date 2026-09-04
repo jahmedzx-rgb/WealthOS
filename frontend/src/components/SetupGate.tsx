@@ -1,5 +1,5 @@
 import { type FormEvent, type ReactNode, useEffect, useState } from 'react'
-import { getSetupStatus, loginWebAccount, recoverLocalAccount, registerWebAccount, type SetupStatus, unlockLocalAccount } from '../services/accountService'
+import { getAccountProfile, getSetupStatus, loginWebAccount, recoverLocalAccount, registerWebAccount, type SetupStatus, unlockLocalAccount } from '../services/accountService'
 import SetupWizard from './SetupWizard'
 import wealthosIcon from '../../../assets/branding/wealthos-app-icon.svg'
 import { useLanguage } from '../context/LanguageContext'
@@ -8,7 +8,7 @@ export default function SetupGate({children}:{children:ReactNode}){
   const{direction,t,language}=useLanguage()
   const copy={statusError:t('Unable to read local setup status.'),preparing:t('Preparing your private workspace…'),workspace:t('PRIVATE LOCAL WORKSPACE'),recover:t('Recover WealthOS'),unlock:t('Unlock WealthOS'),saveCode:t('Save your new recovery code'),recoveryCode:t('Recovery code'),newPassword:t('New password'),localPassword:t('Local password'),password:t('Password'),saved:t('I saved the code'),back:t('Back'),reset:t('Reset password'),useRecovery:t('Use recovery code'),unlockAction:t('Unlock'),recoveryError:t('Recovery could not be completed.'),passwordError:t('The local password is incorrect.')}
   const[status,setStatus]=useState<SetupStatus|null>(null),[webMode,setWebMode]=useState(false),[webAuthenticated,setWebAuthenticated]=useState(false),[loadError,setLoadError]=useState(''),[actionError,setActionError]=useState(''),[password,setPassword]=useState(''),[recovering,setRecovering]=useState(false),[recoveryCode,setRecoveryCode]=useState(''),[replacement,setReplacement]=useState(''),[newCode,setNewCode]=useState('')
-  useEffect(()=>{getSetupStatus().then(setStatus).catch(error=>{if(error instanceof Error&&error.message.includes('401'))setWebMode(true);else setLoadError(copy.statusError)})},[copy.statusError])
+  useEffect(()=>{getAccountProfile().then(()=>{setWebMode(true);setWebAuthenticated(true)}).catch(()=>getSetupStatus().then(setStatus).catch(error=>{if(error instanceof Error&&error.message.includes('401'))setWebMode(true);else setLoadError(copy.statusError)}))},[copy.statusError])
   if(webMode&&!webAuthenticated)return <WebAuthGate direction={direction} locale={language} onAuthenticated={()=>setWebAuthenticated(true)}/>
   if(webMode&&webAuthenticated)return children
   if(loadError)return <div className="app-route-loading">{loadError}</div>

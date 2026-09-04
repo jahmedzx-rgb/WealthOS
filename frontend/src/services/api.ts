@@ -25,12 +25,15 @@ async function request<T>(
   endpoint: string,
   options?: RequestInit,
 ): Promise<T> {
+  const csrf = document.cookie.split('; ').find(value => value.startsWith('__Host-wealthos-csrf='))?.split('=')[1]
   const response = await fetch(
     `${API_BASE_URL}${endpoint}`,
     {
       headers: {
         'Content-Type': 'application/json',
+        ...(csrf ? { 'X-CSRF-Token': decodeURIComponent(csrf) } : {}),
       },
+      credentials: 'same-origin',
       ...options,
     },
   )
