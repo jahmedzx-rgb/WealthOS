@@ -1,0 +1,97 @@
+/*
+  WealthOS Design Tokens Contract
+
+  Surfaces
+  --------
+  --surface-primary
+  --surface-secondary
+  --surface-tertiary
+
+  Text
+  ----
+  --text-primary
+  --text-secondary
+  --text-muted
+
+  Borders
+  -------
+  --border-primary
+  --border-hover
+
+  Accent & Status
+  ---------------
+  --accent-primary
+  --accent-hover
+  --success
+  --danger
+  --warning
+  --info
+
+  Elevation
+  ---------
+  --shadow-sm
+  --shadow-md
+  --shadow-lg
+
+  Shape
+  -----
+  --radius-sm
+  --radius-md
+  --radius-lg
+
+  Motion
+  ------
+  --transition-fast
+*/
+
+:root {
+  /* WealthOS typography scale — the single source of truth for every page. */
+  --font-size-caption: 0.75rem;
+  --font-size-helper: 0.8rem;
+  --font-size-body: 0.875rem;
+  --font-size-control: 0.875rem;
+  --font-size-section-title: 1rem;
+  --font-size-page-title: 1.55rem;
+  --font-size-metric: 1.4rem;
+  --property-caption-size: 0.79rem;
+  --property-body-size: 0.9rem;
+  --property-table-size: 0.86rem;
+  --property-value-size: 1rem;
+  --property-metric-size: 1.35rem;
+  --currency-mark-size: 1.28rem;
+  --dashboard-indicator-label-size: 0.8rem;
+  --report-content-label-size: 0.76rem;
+  --report-content-helper-size: 0.72rem;
+  --report-content-row-size: 0.75rem;
+  --report-content-money-size: 1.08rem;
+  --report-content-currency-scale: 1.48em;
+  --report-content-number-scale: 1.055em;
+  --report-page-body-size: 0.86rem;
+  --report-page-title-size: 1.7rem;
+  --report-eyebrow-size: 0.69rem;
+  --report-subtitle-size: 0.8rem;
+  --report-builder-title-size: 0.94rem;
+  --report-builder-helper-size: 0.68rem;
+  --report-field-label-size: 0.72rem;
+  --report-control-size: 0.74rem;
+  --report-compact-control-size: 0.65rem;
+  --report-micro-label-size: 0.62rem;
+  --report-action-size: 0.76rem;
+  --report-preview-meta-size: 0.67rem;
+  --report-preview-title-size: 1.12rem;
+  --report-preview-helper-size: 0.68rem;
+  --report-metric-label-size: 0.7rem;
+  --report-metric-size: 1.12rem;
+  --report-metric-helper-size: 0.64rem;
+  --report-section-title-size: 0.86rem;
+  --report-section-helper-size: 0.65rem;
+  --report-legend-size: 0.66rem;
+  --report-table-header-size: 0.63rem;
+  --report-table-row-size: 0.71rem;
+  --report-empty-title-size: 0.85rem;
+  --report-empty-copy-size: 0.7rem;
+
+  --line-height-compact: 1.3;
+  --line-height-body: 1.5;
+  --line-height-comfortable: 1.6;
+}

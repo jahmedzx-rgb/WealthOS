@@ -1,0 +1,42 @@
+.allocation-chart {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.allocation-chart__item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.allocation-chart__row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.allocation-chart__label {
+  color: var(--text-primary);
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.allocation-chart__value {
+  color: var(--text-muted);
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.allocation-chart__track {
+  height: 10px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: var(--surface-tertiary);
+}
+
+.allocation-chart__bar {
+  height: 100%;
+  border-radius: inherit;
+  background: var(--accent-primary);
+}

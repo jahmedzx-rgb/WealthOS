@@ -1,0 +1,17 @@
+import { type ReactNode, useEffect, useState } from 'react'
+import { getSetupStatus, recoverLocalAccount, type SetupStatus, unlockLocalAccount } from '../services/accountService'
+import SetupWizard from './SetupWizard'
+import wealthosIcon from '../../../assets/branding/wealthos-app-icon.svg'
+import { useLanguage } from '../context/LanguageContext'
+
+export default function SetupGate({children}:{children:ReactNode}){
+  const{direction,t}=useLanguage()
+  const copy={statusError:t('Unable to read local setup status.'),preparing:t('Preparing your private workspace…'),workspace:t('PRIVATE LOCAL WORKSPACE'),recover:t('Recover WealthOS'),unlock:t('Unlock WealthOS'),saveCode:t('Save your new recovery code'),recoveryCode:t('Recovery code'),newPassword:t('New password'),localPassword:t('Local password'),password:t('Password'),saved:t('I saved the code'),back:t('Back'),reset:t('Reset password'),useRecovery:t('Use recovery code'),unlockAction:t('Unlock'),recoveryError:t('Recovery could not be completed.'),passwordError:t('The local password is incorrect.')}
+  const[status,setStatus]=useState<SetupStatus|null>(null),[loadError,setLoadError]=useState(''),[actionError,setActionError]=useState(''),[password,setPassword]=useState(''),[recovering,setRecovering]=useState(false),[recoveryCode,setRecoveryCode]=useState(''),[replacement,setReplacement]=useState(''),[newCode,setNewCode]=useState('')
+  useEffect(()=>{getSetupStatus().then(setStatus).catch(()=>setLoadError(copy.statusError))},[copy.statusError])
+  if(loadError)return <div className="app-route-loading">{loadError}</div>
+  if(!status)return <div className="app-route-loading">{copy.preparing}</div>
+  if(!status.completed)return <SetupWizard status={status} onComplete={()=>getSetupStatus().then(setStatus)}/>
+  if(status.requires_unlock&&!status.unlocked)return <main className="setup-wizard" dir={direction}><section className="setup-wizard__card"><header><img className="setup-wizard__brand" src={wealthosIcon} alt="WealthOS"/><div><small>{copy.workspace}</small><h1>{recovering?copy.recover:copy.unlock}</h1></div></header><div className="setup-wizard__body">{newCode?<><h2>{copy.saveCode}</h2><div className="setup-wizard__notice"><strong dir="ltr">{newCode}</strong></div></>:recovering?<><label>{copy.recoveryCode}<input dir="ltr" value={recoveryCode} onChange={event=>setRecoveryCode(event.target.value)}/></label><label>{copy.newPassword}<input type="password" value={replacement} onChange={event=>setReplacement(event.target.value)}/></label></>:<><h2>{copy.localPassword}</h2><label>{copy.password}<input type="password" value={password} onChange={event=>setPassword(event.target.value)}/></label></>}{actionError&&<p className="setup-wizard__error">{actionError}</p>}</div><footer>{newCode?<button onClick={()=>getSetupStatus().then(setStatus)}>{copy.saved}</button>:recovering?<><button className="secondary" onClick={()=>{setRecovering(false);setActionError('')}}>{copy.back}</button><button onClick={()=>{setActionError('');recoverLocalAccount(recoveryCode,replacement).then(result=>setNewCode(result.recovery_code)).catch(()=>setActionError(copy.recoveryError))}}>{copy.reset}</button></>:<><button className="secondary" onClick={()=>{setRecovering(true);setActionError('')}}>{copy.useRecovery}</button><button onClick={()=>{setActionError('');unlockLocalAccount(password).then(()=>getSetupStatus()).then(setStatus).catch(()=>setActionError(copy.passwordError))}}>{copy.unlockAction}</button></>}</footer></section></main>
+  return children
+}

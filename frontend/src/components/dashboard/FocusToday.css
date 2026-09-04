@@ -1,0 +1,177 @@
+.focus-today {
+  display: grid;
+  grid-template-rows: 20px repeat(4, 51px) 15px;
+  flex: 0 0 259px;
+  gap: 4px;
+  min-height: 0;
+}
+
+.focus-today__columns { display:grid; grid-template-columns:minmax(0,1fr) 76px 44px; align-items:center; gap:7px; padding:0 8px; color:var(--text-muted); font-size:.68rem; font-weight:650; }
+.focus-today__columns>span:first-child { grid-column:1; }
+.focus-today__columns>span:nth-child(2) { grid-column:2; text-align:right; transform:translateX(-10px); }
+.focus-today__columns.is-hide-active>span:nth-child(2) { transform:translateX(-21px); }
+.focus-today__columns label { grid-column:3; display:flex; width:max-content; align-items:center; justify-content:flex-end; justify-self:end; gap:.3rem; white-space:nowrap; cursor:pointer; transform:translateX(8px); }
+.focus-today__columns input { appearance:none; width:13px; height:13px; margin:0; border:1px solid #9babc0; border-radius:4px; background:#fff; cursor:pointer; transition:border-color .16s ease,background-color .16s ease,box-shadow .16s ease; }
+.focus-today__columns input:hover { border-color:#b79542; box-shadow:0 0 0 3px rgba(183,149,66,.1); }
+.focus-today__columns input:checked { border-color:#193a63; background-color:#193a63; background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M2.2 6.2 4.7 8.5 9.8 3.4' fill='none' stroke='white' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"); background-position:center; background-repeat:no-repeat; }
+.focus-today__columns input:focus-visible { outline:2px solid rgba(36,76,127,.28); outline-offset:2px; }
+.focus-today__columns input:disabled { cursor:default; }
+
+.focus-today__item {
+  display: grid;
+  grid-template-columns:12px minmax(0,1fr) 76px 44px;
+  align-items: center;
+  gap: 7px;
+  height: 100%;
+  min-height: 51px;
+  padding: 4px 8px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  transition:
+    border-color .2s ease,
+    box-shadow .2s ease,
+    transform .2s ease;
+}
+
+.focus-today__item:hover {
+  border-color: #d6d6d6;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, .05);
+  transform: translateY(-1px);
+}
+
+.focus-today__icon {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  flex-shrink: 0;
+}
+.focus-today__icon svg { display: none; }
+
+.focus-today__icon--high {
+  background: #dc2626;
+  color: #dc2626;
+  box-shadow: 0 0 0 4px rgba(220, 38, 38, .1);
+}
+
+.focus-today__icon--medium {
+  background: #d99b17;
+  color: #d99b17;
+  box-shadow: 0 0 0 4px rgba(217, 155, 23, .11);
+}
+
+.focus-today__icon--low {
+  background: #5274a4;
+  color: #5274a4;
+  box-shadow: 0 0 0 4px rgba(82, 116, 164, .1);
+}
+
+.focus-today__content {
+  min-width: 0;
+  overflow: hidden;
+}
+
+.focus-today__title {
+  overflow: hidden;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--text-h);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.focus-today__subtitle {
+  margin-top: 2px;
+
+  display: flex;
+  align-items: center;
+  gap: 4px;
+
+  font-size: 11.5px;
+  color: var(--text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.focus-today__subtitle svg { flex:0 0 auto; }
+
+.focus-today__amount {
+  margin: 0;
+
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-h);
+  overflow: hidden;
+  text-align: right;
+  white-space: nowrap;
+}
+.focus-today__amount.is-empty { color:var(--text-muted); font-weight:500; }
+
+.focus-today__complete {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+
+  width: 30px;
+  height: 30px;
+
+  border-radius: 10px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: #16a34a;
+  justify-self: end;
+
+  transition:
+    background .2s ease,
+    transform .2s ease;
+}
+
+.focus-today__complete:hover {
+  background: #f3f4f6;
+  transform: scale(1.05);
+}
+
+.focus-today__view-all {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+
+  border: none;
+  background: transparent;
+
+  cursor: pointer;
+
+  font-size: 13px;
+  font-weight: 600;
+
+  color: var(--text);
+}
+
+.focus-today__view-all:hover {
+  color: var(--text-h);
+}
+.focus-today__count { color: var(--text-muted); font-size: .68rem; font-weight: 650; }
+.focus-today__top-nav { display: flex; align-items: center; gap: .28rem; }
+.focus-today__top-nav button { display: grid; width: 24px; height: 24px; padding: 0; place-items: center; border: 1px solid var(--border-primary); border-radius: 6px; background: var(--surface-primary); color: var(--text-secondary); cursor: pointer; }
+.focus-today__top-nav button:disabled { cursor: default; opacity: .3; }
+.focus-today__top-nav strong { color: var(--text-muted); font-size: .58rem; }
+.focus-today__top-nav a { display:flex; align-items:center; gap:.3rem; margin-left: .15rem; color: var(--text-secondary); font-size: .76rem; font-weight: 600; text-decoration: none; transition: color .18s ease; }
+.focus-today__top-nav a:hover { color: var(--text-primary); }
+.focus-today__footer { grid-row: 6; display: grid; align-items: end; min-height: 15px; margin-top: 0; }
+.focus-today__footer .focus-today__end { grid-column: 1 / -1; }
+.focus-today__end { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: .55rem; }
+.focus-today__end span { height: 1px; background: linear-gradient(90deg, transparent, var(--border-primary)); }
+.focus-today__end span:last-child { background: linear-gradient(90deg, var(--border-primary), transparent); }
+.focus-today__end small { color: var(--text-muted); font-size: .62rem; }
+.focus-today__end.is-placeholder { visibility: hidden; }
+.focus-today__footer nav { display: flex; justify-content: center; align-items: center; gap: .45rem; }
+.focus-today__footer nav button { display: grid; width: 28px; height: 28px; padding: 0; place-items: center; border: 1px solid var(--border-primary); border-radius: 7px; background: var(--surface-primary); color: var(--text-secondary); cursor: pointer; }
+.focus-today__footer nav button:disabled { cursor: default; opacity: .35; }
+.focus-today__footer nav strong { min-width: 34px; color: var(--text-muted); font-size: .62rem; text-align: center; }

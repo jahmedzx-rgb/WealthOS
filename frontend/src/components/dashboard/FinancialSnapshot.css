@@ -1,0 +1,101 @@
+.financial-snapshot {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.25rem;
+}
+
+.financial-snapshot > .card {
+  gap: .42rem;
+  padding: .56rem .75rem;
+  border-top-width: 1.5px;
+  transition: border-color .22s ease, box-shadow var(--transition-fast), transform var(--transition-fast);
+}
+.financial-snapshot > .card .card__content { gap: .38rem; }
+
+.financial-snapshot > .card:first-child { border-top-color: #187264; }
+.financial-snapshot > .card:first-child:hover { border-top-color: #2f9b89; }
+.financial-snapshot > .card:last-child { border-top-color: #62458f; }
+.financial-snapshot > .card:last-child:hover { border-top-color: #8569b4; }
+
+.financial-snapshot__link {
+  border: 0;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  font: inherit;
+  font-size: .76rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.financial-snapshot__list { display: grid; gap: 1rem; }
+
+.financial-snapshot__item {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: .7rem;
+  padding: .25rem;
+  border-radius: 9px;
+  text-decoration: none;
+  transition: background .16s ease;
+}
+
+.financial-snapshot__item:hover { background: var(--surface-tertiary); }
+
+.financial-snapshot__icon {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 9px;
+}
+
+.financial-snapshot__icon--bank { background: #e8f0ff; color: #204da9; }
+.financial-snapshot__icon--card { background: #eee9fb; color: #6548af; }
+
+.financial-snapshot__details { display: grid; gap: .2rem; min-width: 0; }
+.financial-snapshot__details strong { color: var(--text-primary); font-size: .82rem; }
+.financial-snapshot__details span { color: var(--text-muted); font-size: .7rem; }
+.financial-snapshot__amount { color: var(--text-primary); font-size: .82rem; font-variant-numeric: tabular-nums; }
+.financial-snapshot__amount--negative { color: var(--danger); }
+.financial-snapshot__amount--credit { color: var(--success); }
+
+.financial-snapshot__credit-summary { display: grid; grid-template-rows: 2.35rem 9px .85rem; gap: .36rem; align-items: center; }
+.financial-snapshot__credit-values { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); }
+.financial-snapshot__credit-values > div { display: grid; grid-template-rows: .9rem 1.2rem; align-items: center; gap: .12rem; min-width: 0; padding: 0 .7rem; border-left: 1px solid var(--border-primary); }
+.financial-snapshot__credit-values > div:first-child { padding-left: 0; border-left: 0; }
+.financial-snapshot__credit-values span { color: var(--text-muted); font-size: .74rem; line-height: 1.1; }
+.financial-snapshot__credit-values strong { overflow: hidden; color: var(--text-primary); font-size: .82rem; text-overflow: ellipsis; white-space: nowrap; }
+.financial-snapshot__credit-values strong.is-used { color: #8f4d62; }
+.financial-snapshot__credit-values strong.is-remaining { color: #187264; }
+.financial-snapshot__credit-summary:not(.financial-snapshot__bank-summary) .financial-snapshot__credit-values > div:nth-child(2) strong,
+.financial-snapshot__credit-summary:not(.financial-snapshot__bank-summary) .financial-snapshot__credit-values > div:nth-child(2) .formatted-money { color: #b34752 !important; }
+.financial-snapshot__credit-summary:not(.financial-snapshot__bank-summary) .financial-snapshot__credit-values > div:nth-child(3) strong,
+.financial-snapshot__credit-summary:not(.financial-snapshot__bank-summary) .financial-snapshot__credit-values > div:nth-child(3) .formatted-money { color: #14805b !important; }
+.financial-snapshot__credit-track { height: 9px; overflow: hidden; border-radius: 999px; background: #e8eeeD; box-shadow: inset 0 1px 2px rgba(18,36,64,.08); }
+.financial-snapshot__credit-track span { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg,#62458f,#8d6cbb); transition: width .3s ease; }
+.financial-snapshot__bank-summary .financial-snapshot__credit-track span { background: linear-gradient(90deg,#187264,#42a18f); }
+.financial-snapshot__bank-summary .financial-snapshot__credit-values strong { color: #122440; font-size: .9rem; font-weight: 650; }
+.financial-snapshot__bank-summary .financial-snapshot__credit-values strong.is-remaining { color: #187264; }
+.financial-snapshot__bank-summary .financial-snapshot__credit-values strong.is-used { color: #a24b55; }
+.financial-snapshot__bank-summary .financial-snapshot__credit-values > div:nth-child(2) strong,
+.financial-snapshot__bank-summary .financial-snapshot__credit-values > div:nth-child(2) .formatted-money { color: #14805b !important; }
+.financial-snapshot__bank-summary .financial-snapshot__credit-values > div:nth-child(3) strong,
+.financial-snapshot__bank-summary .financial-snapshot__credit-values > div:nth-child(3) .formatted-money { color: #b34752 !important; }
+.financial-snapshot__credit-caption { display: flex; min-height: .85rem; align-items: center; justify-content: space-between; color: var(--text-muted); font-size: .65rem; }
+.financial-snapshot__credit-caption > span:first-child { color: #14805b; font-weight: 650; }
+.financial-snapshot__credit-caption > span:last-child { color: #b34752; font-weight: 650; }
+.financial-snapshot__bank-summary .financial-snapshot__credit-caption > span:first-child { color: #14805b; font-weight: 650; }
+.financial-snapshot__bank-summary .financial-snapshot__credit-caption > span:last-child { color: #b34752; font-weight: 650; }
+.financial-snapshot .formatted-money { gap: .14em; }
+.financial-snapshot__credit-empty { display: grid; grid-template-columns: auto minmax(0,1fr) auto; align-items: center; gap: .65rem; min-height: 52px; padding: .38rem .5rem; border: 1px dashed #c9bddb; border-radius: 10px; background: #fbf9fe; }
+.financial-snapshot__credit-empty strong { color: var(--text-primary); font-size: .8rem; }
+.financial-snapshot__credit-empty p { margin: .15rem 0 0; color: var(--text-muted); font-size: .66rem; line-height: 1.4; }
+.financial-snapshot__credit-empty > a { padding: .45rem .65rem; border-radius: 8px; background: #62458f; color: #fff; font-size: .67rem; font-weight: 700; text-decoration: none; white-space: nowrap; }
+.financial-snapshot__bank-empty { border-color: #b9d6d0; background: #f8fcfb; }
+.financial-snapshot__bank-empty > a { background: #187264; }
+
+@media (max-width: 900px) {
+  .financial-snapshot { grid-template-columns: 1fr; }
+}

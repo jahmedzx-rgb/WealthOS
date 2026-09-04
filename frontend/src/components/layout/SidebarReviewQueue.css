@@ -1,0 +1,14 @@
+.sidebar .sidebar__submenu a em {
+  display: grid;
+  min-width: 17px;
+  height: 17px;
+  margin-inline-start: auto;
+  padding: 0 4px;
+  place-items: center;
+  border-radius: 99px;
+  background: rgba(216, 180, 92, .16);
+  color: #f2c85b;
+  font-size: .55rem;
+  font-style: normal;
+  font-weight: 750;
+}

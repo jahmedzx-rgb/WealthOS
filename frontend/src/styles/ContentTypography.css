@@ -1,0 +1,61 @@
+/* Readability layer: increase content text without scaling layout spacing. */
+.portfolio-dashboard small,
+.module-page small,
+.reporting-page small,
+.currency-settings small,
+.income-operation small { font-size: .7rem !important; }
+
+.portfolio-dashboard p,
+.module-page p,
+.reporting-page p,
+.currency-settings p,
+.income-operation p { font-size: .75rem; }
+
+.module-page__metrics span,
+.module-page__table,
+.module-page__actions strong,
+.module-page__actions a { font-size: .76rem; }
+
+.module-page__metrics small,
+.module-page__table small,
+.module-page__actions small { font-size: .68rem !important; }
+
+.report-builder label,
+.report-builder button,
+.report-builder input,
+.report-builder select,
+.report-preview__table-head,
+.report-preview__row,
+.report-preview__total { font-size: .72rem; }
+
+.report-preview__metrics span,
+.report-preview__legend span,
+.report-preview__section-title p { font-size: .7rem; }
+
+.currency-settings select,
+.currency-settings__grid strong,
+.currency-settings__grid button { font-size: .74rem; }
+
+.income-operation label,
+.income-operation input,
+.income-operation select,
+.income-operation button,
+.income-operation__types legend,
+.income-operation label > span { font-size: .75rem; }
+
+.financial-snapshot__details span,
+.financial-snapshot__usage,
+.wealth-allocation__classes,
+.wealth-allocation__legend { font-size: .75rem; }
+
+.card__subtitle,
+.portfolio-dashboard__overview-subtitle,
+.portfolio-dashboard__updated { font-size: .78rem; }
+
+@media (max-width: 650px) {
+  .portfolio-dashboard p,
+  .module-page p,
+  .reporting-page p,
+  .currency-settings p,
+  .income-operation p { font-size: .72rem; }
+}

@@ -1,0 +1,31 @@
+.reporting-page__header > div:last-child > button { font-size: var(--font-size-caption); }
+.reporting-page__header > div:last-child > button + button { margin-left: -.12rem; }
+
+/* Comfortable report typography without changing the approved layout. */
+.reporting-page { font-size: var(--report-page-body-size); line-height: 1.45; }
+.reporting-page__header h1 { font-size: var(--report-page-title-size); line-height: 1.2; }
+.reporting-page__header p { font-size: var(--report-eyebrow-size); line-height: 1.4; }
+.reporting-page__header span { font-size: var(--report-subtitle-size); line-height: 1.45; }
+.report-builder h2 { font-size: var(--report-builder-title-size); line-height: 1.3; }
+.report-builder p { font-size: var(--report-builder-helper-size); line-height: 1.45; }
+.report-builder label { font-size: var(--report-field-label-size); line-height: 1.4; }
+.report-builder__native-select select,
+.report-builder__select { font-size: var(--report-control-size); line-height: 1.35; }
+.report-builder__periods button { font-size: var(--report-compact-control-size); font-weight: 600; }
+.report-builder__dates input { font-size: var(--report-compact-control-size); }
+.report-builder__dates span { font-size: var(--report-micro-label-size); }
+.report-builder__checks button { font-size: var(--report-field-label-size); line-height: 1.4; }
+.report-builder__metric-grid button { font-size: var(--report-metric-helper-size); line-height: 1.35; }
+.report-builder__generate { font-size: var(--report-action-size); }
+.report-preview__heading p { font-size: var(--report-preview-meta-size); line-height: 1.4; }
+.report-preview__heading h2 { font-size: var(--report-preview-title-size); line-height: 1.3; }
+.report-preview__heading span { font-size: var(--report-preview-helper-size); line-height: 1.4; }
+.report-preview__metrics span { font-size: var(--report-metric-label-size); }
+.report-preview__metrics strong { font-size: var(--report-metric-size); line-height: 1.25; }
+.report-preview__metrics small { font-size: var(--report-metric-helper-size); line-height: 1.4; }
+.report-preview__section-title h3 { font-size: var(--report-section-title-size); line-height: 1.3; }
+.report-preview__section-title p { font-size: var(--report-section-helper-size); line-height: 1.45; }
+.report-preview__legend span { font-size: var(--report-legend-size); line-height: 1.4; }
+.report-preview__table-head { font-size: var(--report-table-header-size); font-weight: 650; }
+.report-preview__row,
+.report-preview__total { font-size: var(--report-table-row-size); line-height: 1.4; }

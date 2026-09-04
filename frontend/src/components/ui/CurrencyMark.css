@@ -1,0 +1,34 @@
+.currency-mark {
+  display: inline-grid;
+  width: 1.08em;
+  height: 1em;
+  place-items: center;
+  flex: 0 0 auto;
+  font-family: "Segoe UI Symbol", "Noto Sans Symbols 2", "Arial Unicode MS", sans-serif;
+  font-size: 1.2em !important;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 1;
+  transform-origin: 50% 50%;
+  vertical-align: -.08em;
+}
+
+.currency-mark--usd {
+  width: .68em;
+  font-family: inherit;
+  font-size: 1em !important;
+}
+
+.currency-mark--sar {
+  font-family: "WealthOS Saudi Riyal", "Segoe UI Symbol", sans-serif;
+  font-size: 1.46em !important;
+  font-weight: 400;
+  transform: translateY(.045em) scale(1.1, 1.08);
+}
+@font-face {
+  font-family: "WealthOS Saudi Riyal";
+  src: url("../../assets/fonts/saudi-riyal.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 400;
+  font-display: block;
+}

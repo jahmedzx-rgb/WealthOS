@@ -1,0 +1,39 @@
+.formatted-money {
+  display: inline-flex;
+  align-items: baseline;
+  gap: .06em;
+  max-width: 100%;
+  direction: ltr;
+  font-size: inherit !important;
+  font-weight: inherit;
+  line-height: inherit;
+  font-variant-numeric: tabular-nums lining-nums;
+  font-feature-settings: "tnum" 1, "lnum" 1;
+  unicode-bidi: isolate;
+  white-space: nowrap;
+}
+
+.formatted-money > span:last-child { letter-spacing: -.012em; }
+
+.formatted-money > .formatted-money__sign {
+  margin-inline-end: -.025em;
+}
+
+.formatted-money > span:not(.currency-mark) {
+  color: inherit;
+  font-size: inherit !important;
+  font-weight: inherit;
+}
+
+.formatted-money > span:empty {
+  display: none;
+}
+
+html[lang="ar"] .formatted-money > span:last-child,
+html[dir="rtl"] .formatted-money > span:last-child {
+  font-size: 1.045em !important;
+}
+
+@media (max-width: 600px) {
+  .formatted-money { gap: .075em; }
+}

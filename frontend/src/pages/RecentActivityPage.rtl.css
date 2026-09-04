@@ -1,0 +1,6 @@
+.activity-page__value { text-align: end; }
+
+@media (max-width: 760px) {
+  .activity-page__value { text-align: end; }
+  [dir='rtl'] .activity-page__toolbar input { text-align: right; }
+}

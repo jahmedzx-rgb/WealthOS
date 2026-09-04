@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "WealthOS Web Beta environment",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["DATABASE_URL", "TRUSTED_HOSTS", "WEB_MODE", "DEBUG", "APP_VERSION", "MIGRATION_HEAD", "WEB_SESSION_HOURS", "WEB_MAX_USERS", "COOKIE_SECURE"],
+  "properties": {
+    "DATABASE_URL": {"type": "string", "description": "Secret PostgreSQL connection URL supplied by the new hosted database."},
+    "TRUSTED_HOSTS": {"type": "string", "minLength": 1, "description": "Comma-separated exact HTTPS hostnames; never localhost in hosted mode."},
+    "WEB_MODE": {"const": "true"},
+    "DEBUG": {"const": "false"},
+    "APP_VERSION": {"type": "string", "minLength": 1, "description": "Owner-approved Web Beta version; never historical Windows Beta 0.1.0."},
+    "MIGRATION_HEAD": {"const": "c6b02f4c3e82"},
+    "WEB_SESSION_HOURS": {"const": "12"},
+    "WEB_MAX_USERS": {"const": "10"},
+    "COOKIE_SECURE": {"const": "true"},
+    "MARKET_PRICE_PROVIDER": {"type": "string"},
+    "MARKET_PRICE_FALLBACK_PROVIDER": {"type": ["string", "null"]},
+    "ALPHA_VANTAGE_API_KEY": {"type": ["string", "null"], "description": "Optional secret."},
+    "SAHMK_API_KEY": {"type": ["string", "null"], "description": "Optional secret."},
+    "MARKET_PRICE_REQUEST_TIMEOUT_SECONDS": {"type": "string", "pattern": "^[0-9]+(?:\\.[0-9]+)?$"},
+    "MARKET_PRICE_REQUEST_INTERVAL_SECONDS": {"type": "string", "pattern": "^[0-9]+(?:\\.[0-9]+)?$"}
+  }
+}

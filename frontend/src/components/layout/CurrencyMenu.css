@@ -1,0 +1,8 @@
+.header__currency-control { position: relative; }
+.header__currency-menu { position: absolute; top: calc(100% + 8px); right: 0; z-index: 50; display: grid; min-width: 180px; padding: .45rem; border: 1px solid var(--border-primary); border-radius: 10px; background: var(--surface-primary); box-shadow: 0 12px 30px rgba(18,36,64,.16); }
+.header__currency-menu small { padding: .35rem .45rem; color: var(--text-muted); font-size: .58rem; letter-spacing: .08em; text-transform: uppercase; }
+.header__currency-menu button { display: flex; justify-content: space-between; padding: .5rem; border: 0; border-radius: 7px; background: transparent; color: var(--text-secondary); font-size: .68rem; }
+.header__currency-menu button > span { display: flex; align-items: center; gap: .55rem; }
+.header__currency-menu button:hover { background: var(--surface-tertiary); }
+.header__currency-menu button.is-active { color: #2c60d6; font-weight: 750; }
+.header__currency-menu a { margin-top: .25rem; padding: .55rem .45rem; border-top: 1px solid var(--border-primary); color: #956b0c; font-size: .62rem; text-decoration: none; }

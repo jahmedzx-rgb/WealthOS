@@ -1,0 +1,6 @@
+.page-navigation{display:flex;align-items:center;gap:.3rem}
+.page-navigation button,.page-navigation a{display:grid;width:36px;height:36px;min-height:36px;padding:0;place-items:center;border:1px solid var(--border-primary);border-radius:9px;background:var(--surface-primary);color:var(--text-muted);text-decoration:none}
+.page-navigation button:not(:disabled):hover,.page-navigation a:hover{border-color:var(--border-hover);background:var(--surface-tertiary);color:var(--text-primary)}
+.page-navigation button:disabled{opacity:.4}
+.page-navigation a,.page-navigation a.is-active{border-color:#dcc789;background:#fffaf0;color:#956b0c}
+.page-navigation a:hover{border-color:#c6a957;background:#fff5da;color:#795406}

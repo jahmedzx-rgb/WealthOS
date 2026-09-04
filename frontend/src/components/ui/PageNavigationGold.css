@@ -1,0 +1,3 @@
+.page-navigation a { border-color: rgba(182,138,38,.38); background: rgba(182,138,38,.09); color: #956b0c; }
+.page-navigation a:hover,
+.page-navigation a.is-active { border-color: #b68a26; background: rgba(182,138,38,.15); color: #7a5607; }

@@ -1,0 +1,7 @@
+.module-page,
+.reporting-page,
+.currency-settings { gap: .4rem; }
+
+.module-page__header,
+.reporting-page__header,
+.currency-settings > header { padding-bottom: .4rem; }

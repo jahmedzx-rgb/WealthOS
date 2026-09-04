@@ -1,0 +1,5202 @@
+[
+  {
+    "symbol": "1010",
+    "name_ar": "الرياض",
+    "name_en": "RIBL",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "1020",
+    "name_ar": "الجزيرة",
+    "name_en": "BJAZ",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "1030",
+    "name_ar": "الإستثمار",
+    "name_en": "SAIB",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "1050",
+    "name_ar": "بي اس اف",
+    "name_en": "BSF",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "1060",
+    "name_ar": "الأول",
+    "name_en": "SAB",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "1080",
+    "name_ar": "العربي",
+    "name_en": "ANB",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "1111",
+    "name_ar": "مجموعة تداول",
+    "name_en": "TADAWUL GROUP",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "1113",
+    "name_ar": "صكوك مصرف الراجحي من الشريحة الأولى 5.50 دائمة",
+    "name_en": "Skwk Msrf Al Rajhy Mn Al Shryhh Al Awla 5 50 Daemh",
+    "market": null,
+    "status": "active",
+    "security_type": "Sukuk",
+    "market_segment": "SUKUK",
+    "is_etf": false
+  },
+  {
+    "symbol": "1120",
+    "name_ar": "الراجحي",
+    "name_en": "ALRAJHI",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "1140",
+    "name_ar": "البلاد",
+    "name_en": "ALBILAD",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "1150",
+    "name_ar": "الإنماء",
+    "name_en": "ALINMA",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "1180",
+    "name_ar": "الأهلي",
+    "name_en": "SNB",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "1182",
+    "name_ar": "أملاك",
+    "name_en": "AMLAK",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "1183",
+    "name_ar": "سهل",
+    "name_en": "SHL",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "1201",
+    "name_ar": "تكوين",
+    "name_en": "TAKWEEN",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "1202",
+    "name_ar": "مبكو",
+    "name_en": "MEPCO",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "1210",
+    "name_ar": "بي سي آي",
+    "name_en": "BCI",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "1211",
+    "name_ar": "معادن",
+    "name_en": "MAADEN",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "1212",
+    "name_ar": "أسترا الصناعية",
+    "name_en": "ASTRA INDUSTRIAL",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "1213",
+    "name_ar": "نسيج",
+    "name_en": "NASEEJ",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "1214",
+    "name_ar": "شاكر",
+    "name_en": "SHAKER",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "1263",
+    "name_ar": "صكوك الشركة الوطنية السعودية للنقل 4.51 يوليو29",
+    "name_en": "Skwk Al Shrkh Al Wtnyh Al Sawdyh Llnql 4 51 Ywlyw29",
+    "market": null,
+    "status": "active",
+    "security_type": "Sukuk",
+    "market_segment": "SUKUK",
+    "is_etf": false
+  },
+  {
+    "symbol": "1295",
+    "name_ar": "صكوك شركة روابي القابضة المحدودة 8.50 مايو27",
+    "name_en": "Skwk Shrkh Rwaby Al Qabdh Al Mhdwdh 8 50 Mayw27",
+    "market": null,
+    "status": "active",
+    "security_type": "Sukuk",
+    "market_segment": "SUKUK",
+    "is_etf": false
+  },
+  {
+    "symbol": "1301",
+    "name_ar": "أسلاك",
+    "name_en": "ASLAK",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "1302",
+    "name_ar": "بوان",
+    "name_en": "BAWAN",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "1303",
+    "name_ar": "الصناعات الكهربائية",
+    "name_en": "EIC",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "1304",
+    "name_ar": "اليمامة للحديد",
+    "name_en": "ALYAMAMAH STEEL",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "1320",
+    "name_ar": "أنابيب السعودية",
+    "name_en": "SSP",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "1321",
+    "name_ar": "أنابيب الشرق",
+    "name_en": "EAST PIPES",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "1322",
+    "name_ar": "أماك",
+    "name_en": "AMAK",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "1323",
+    "name_ar": "يو سي آي سي",
+    "name_en": "UCIC",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "1324",
+    "name_ar": "صالح الراشد",
+    "name_en": "SALEH ALRASHED",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "1810",
+    "name_ar": "سيرا",
+    "name_en": "SEERA",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "1820",
+    "name_ar": "بان",
+    "name_en": "BAAN",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "1830",
+    "name_ar": "لجام للرياضة",
+    "name_en": "LEEJAM SPORTS",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "1831",
+    "name_ar": "مهارة",
+    "name_en": "MAHARAH",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "1832",
+    "name_ar": "صدر",
+    "name_en": "SADR",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "1833",
+    "name_ar": "الموارد",
+    "name_en": "ALMAWARID",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "1834",
+    "name_ar": "سماسكو",
+    "name_en": "SMASCO",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "1835",
+    "name_ar": "تمكين",
+    "name_en": "TAMKEEN",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "2001",
+    "name_ar": "كيمانول",
+    "name_en": "CHEMANOL",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "2010",
+    "name_ar": "سابك",
+    "name_en": "SABIC",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "2020",
+    "name_ar": "سابك للمغذيات الزراعية",
+    "name_en": "SABIC AGRI-NUTRIENTS",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "2030",
+    "name_ar": "المصافي",
+    "name_en": "SARCO",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "2040",
+    "name_ar": "الخزف السعودي",
+    "name_en": "SAUDI CERAMICS",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "2050",
+    "name_ar": "مجموعة صافولا",
+    "name_en": "SAVOLA GROUP",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "2060",
+    "name_ar": "التصنيع",
+    "name_en": "TASNEE",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "2070",
+    "name_ar": "الدوائية",
+    "name_en": "SPIMACO",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "2080",
+    "name_ar": "الغاز القابضة",
+    "name_en": "GASCO",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "2081",
+    "name_ar": "الخريف",
+    "name_en": "AWPT",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "2082",
+    "name_ar": "أكوا",
+    "name_en": "ACWA",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "2083",
+    "name_ar": "مرافق",
+    "name_en": "MARAFIQ",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "2084",
+    "name_ar": "مياهنا",
+    "name_en": "MIAHONA",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "2090",
+    "name_ar": "جبسكو",
+    "name_en": "NGC",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "2100",
+    "name_ar": "وفرة",
+    "name_en": "WAFRAH",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "2110",
+    "name_ar": "الكابلات السعودية",
+    "name_en": "SAUDI CABLE",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "2120",
+    "name_ar": "متطورة",
+    "name_en": "SAIC",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "2130",
+    "name_ar": "صدق",
+    "name_en": "SIDC",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "2140",
+    "name_ar": "أيان",
+    "name_en": "AYYAN",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "2150",
+    "name_ar": "زجاج",
+    "name_en": "ZOUJAJ",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "2160",
+    "name_ar": "أميانتيت",
+    "name_en": "AMIANTIT",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "2170",
+    "name_ar": "اللجين",
+    "name_en": "ALUJAIN",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "2180",
+    "name_ar": "فيبكو",
+    "name_en": "FIPCO",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "2190",
+    "name_ar": "سيسكو القابضة",
+    "name_en": "SISCO HOLDING",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "2200",
+    "name_ar": "أنابيب",
+    "name_en": "APC",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "2210",
+    "name_ar": "نماء للكيماويات",
+    "name_en": "NAMA CHEMICALS",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "2220",
+    "name_ar": "معدنية",
+    "name_en": "MAADANIYAH",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "2222",
+    "name_ar": "أرامكو السعودية",
+    "name_en": "SAUDI ARAMCO",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "2223",
+    "name_ar": "لوبريف",
+    "name_en": "LUBEREF",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "2230",
+    "name_ar": "الكيميائية",
+    "name_en": "CHEMICAL",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "2240",
+    "name_ar": "صناعات",
+    "name_en": "SENAAT",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "2250",
+    "name_ar": "المجموعة السعودية",
+    "name_en": "SIIG",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "2270",
+    "name_ar": "سدافكو",
+    "name_en": "SADAFCO",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "2280",
+    "name_ar": "المراعي",
+    "name_en": "ALMARAI",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "2281",
+    "name_ar": "تنمية",
+    "name_en": "TANMIAH",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "2282",
+    "name_ar": "نقي",
+    "name_en": "NAQI",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "2283",
+    "name_ar": "المطاحن الأولى",
+    "name_en": "FIRST MILLS",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "2284",
+    "name_ar": "المطاحن الحديثة",
+    "name_en": "MODERN MILLS",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "2285",
+    "name_ar": "المطاحن العربية",
+    "name_en": "ARABIAN MILLS",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "2286",
+    "name_ar": "المطاحن الرابعة",
+    "name_en": "FOURTH MILLING",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "2287",
+    "name_ar": "إنتاج",
+    "name_en": "ENTAJ",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "2288",
+    "name_ar": "نفوذ",
+    "name_en": "NOFOTH",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "2290",
+    "name_ar": "ينساب",
+    "name_en": "YANSAB",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "2300",
+    "name_ar": "صناعة الورق",
+    "name_en": "SPM",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "2310",
+    "name_ar": "سبكيم العالمية",
+    "name_en": "SIPCHEM",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "2315",
+    "name_ar": "صكوك صدارة للخدمات الاساسية مشاركة ديسمبر28",
+    "name_en": "Skwk Sdarh Llkhdmat Al Asasyh Msharkh Dysmbr28",
+    "market": null,
+    "status": "active",
+    "security_type": "Sukuk",
+    "market_segment": "SUKUK",
+    "is_etf": false
+  },
+  {
+    "symbol": "2320",
+    "name_ar": "البابطين",
+    "name_en": "ALBABTAIN",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "2330",
+    "name_ar": "المتقدمة",
+    "name_en": "ADVANCED",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "2340",
+    "name_ar": "ارتيكس",
+    "name_en": "ARTEX",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "2350",
+    "name_ar": "كيان السعودية",
+    "name_en": "SAUDI KAYAN",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "2360",
+    "name_ar": "الفخارية",
+    "name_en": "SVCP",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "2370",
+    "name_ar": "مسك",
+    "name_en": "MESC",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "2380",
+    "name_ar": "بترو رابغ",
+    "name_en": "PETRO RABIGH",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "2381",
+    "name_ar": "الحفر العربية",
+    "name_en": "ARABIAN DRILLING",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "2382",
+    "name_ar": "أديس",
+    "name_en": "ADES",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "3002",
+    "name_ar": "أسمنت نجران",
+    "name_en": "NAJRAN CEMENT",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "3003",
+    "name_ar": "أسمنت المدينة",
+    "name_en": "CITY CEMENT",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "3004",
+    "name_ar": "أسمنت الشمالية",
+    "name_en": "NORTHERN CEMENT",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "3005",
+    "name_ar": "أسمنت ام القرى",
+    "name_en": "UACC",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "3007",
+    "name_ar": "الواحة",
+    "name_en": "OASIS",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "3008",
+    "name_ar": "الكثيري",
+    "name_en": "ALKATHIRI",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "3010",
+    "name_ar": "أسمنت العربية",
+    "name_en": "ACC",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "3020",
+    "name_ar": "أسمنت اليمامة",
+    "name_en": "YC",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "3030",
+    "name_ar": "أسمنت السعودية",
+    "name_en": "SAUDI CEMENT",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "3040",
+    "name_ar": "أسمنت القصيم",
+    "name_en": "QACCO",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "3050",
+    "name_ar": "أسمنت الجنوب",
+    "name_en": "SPCC",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "3060",
+    "name_ar": "أسمنت ينبع",
+    "name_en": "YCC",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "3080",
+    "name_ar": "أسمنت الشرقية",
+    "name_en": "EPCCO",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "3090",
+    "name_ar": "أسمنت تبوك",
+    "name_en": "TCC",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "3091",
+    "name_ar": "أسمنت الجوف",
+    "name_en": "JOUF CEMENT",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "3092",
+    "name_ar": "أسمنت الرياض",
+    "name_en": "RIYADH CEMENT",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "4001",
+    "name_ar": "أسواق ع العثيم",
+    "name_en": "A.OTHAIM MARKET",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "4002",
+    "name_ar": "المواساة",
+    "name_en": "MOUWASAT",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "4003",
+    "name_ar": "إكسترا",
+    "name_en": "EXTRA",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "4004",
+    "name_ar": "دله الصحية",
+    "name_en": "DALLAH HEALTH",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "4005",
+    "name_ar": "رعاية",
+    "name_en": "CARE",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "4006",
+    "name_ar": "أسواق المزرعة",
+    "name_en": "FARM SUPERSTORES",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "4007",
+    "name_ar": "الحمادي",
+    "name_en": "ALHAMMADI",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "4008",
+    "name_ar": "ساكو",
+    "name_en": "SACO",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "4009",
+    "name_ar": "السعودي الألماني الصحية",
+    "name_en": "SAUDI GERMAN HEALTH",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "4011",
+    "name_ar": "لازوردي",
+    "name_en": "LAZURDE",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "4012",
+    "name_ar": "الأصيل",
+    "name_en": "ALASEEL",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "4013",
+    "name_ar": "سليمان الحبيب",
+    "name_en": "SULAIMAN ALHABIB",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "4014",
+    "name_ar": "دار المعدات",
+    "name_en": "EQUIPMENT HOUSE",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "4015",
+    "name_ar": "جمجوم فارما",
+    "name_en": "JAMJOOM PHARMA",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "4016",
+    "name_ar": "أفالون فارما",
+    "name_en": "AVALON PHARMA",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "4017",
+    "name_ar": "فقيه الطبية",
+    "name_en": "FAKEEH CARE",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "4018",
+    "name_ar": "الموسى",
+    "name_en": "ALMOOSA",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "4019",
+    "name_ar": "اس ام سي للرعاية الصحية",
+    "name_en": "SMC HEALTHCARE",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "4020",
+    "name_ar": "العقارية",
+    "name_en": "ALAKARIA",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "4021",
+    "name_ar": "المركز الكندي الطبي",
+    "name_en": "CMCER",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "4030",
+    "name_ar": "البحري",
+    "name_en": "BAHRI",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "4031",
+    "name_ar": "الخدمات الأرضية",
+    "name_en": "SGS",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "4040",
+    "name_ar": "سابتكو",
+    "name_en": "SAPTCO",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "4050",
+    "name_ar": "ساسكو",
+    "name_en": "SASCO",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "4051",
+    "name_ar": "باعظيم",
+    "name_en": "BAAZEEM",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "4061",
+    "name_ar": "أنعام القابضة",
+    "name_en": "ANAAM HOLDING",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "4070",
+    "name_ar": "تهامة",
+    "name_en": "TAPRCO",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "4071",
+    "name_ar": "العربية",
+    "name_en": "ALARABIA",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "4072",
+    "name_ar": "مجموعة إم بي سي",
+    "name_en": "MBC GROUP",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "4080",
+    "name_ar": "سناد القابضة",
+    "name_en": "SINAD HOLDING",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "4081",
+    "name_ar": "النايفات",
+    "name_en": "NAYIFAT",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "4082",
+    "name_ar": "مرنة",
+    "name_en": "MRNA",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "4083",
+    "name_ar": "تسهيل",
+    "name_en": "TASHEEL",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "4084",
+    "name_ar": "دراية",
+    "name_en": "DERAYAH",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "4090",
+    "name_ar": "طيبة",
+    "name_en": "TAIBA",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "4100",
+    "name_ar": "مكة",
+    "name_en": "MCDC",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "4110",
+    "name_ar": "باتك",
+    "name_en": "BATIC",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "4130",
+    "name_ar": "درب السعودية",
+    "name_en": "SAUDI DARB",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "4140",
+    "name_ar": "صادرات",
+    "name_en": "SIECO",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "4141",
+    "name_ar": "العمران",
+    "name_en": "ALOMRAN",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "4142",
+    "name_ar": "كابلات الرياض",
+    "name_en": "RIYADH CABLES",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "4143",
+    "name_ar": "تالكو",
+    "name_en": "TALCO",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "4144",
+    "name_ar": "رؤوم",
+    "name_en": "RAOOM",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "4145",
+    "name_ar": "أو جي سي",
+    "name_en": "OGC",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "4146",
+    "name_ar": "جاز",
+    "name_en": "GAS",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "4147",
+    "name_ar": "سي جي إس",
+    "name_en": "CGS",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "4148",
+    "name_ar": "الوسائل الصناعية",
+    "name_en": "ALWASAIL INDUSTRIAL",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "4150",
+    "name_ar": "التعمير",
+    "name_en": "ARDCO",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "4160",
+    "name_ar": "ثمار",
+    "name_en": "THIMAR",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "4161",
+    "name_ar": "بن داود",
+    "name_en": "BINDAWOOD",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "4162",
+    "name_ar": "المنجم",
+    "name_en": "ALMUNAJEM",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "4163",
+    "name_ar": "الدواء",
+    "name_en": "ALDAWAA",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "4164",
+    "name_ar": "النهدي",
+    "name_en": "NAHDI",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "4165",
+    "name_ar": "الماجد للعود",
+    "name_en": "ALMAJED OUD",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "4170",
+    "name_ar": "شمس",
+    "name_en": "TECO",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "4180",
+    "name_ar": "مجموعة فتيحي",
+    "name_en": "FITAIHI GROUP",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "4190",
+    "name_ar": "جرير",
+    "name_en": "JARIR",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "4191",
+    "name_ar": "أبو معطي",
+    "name_en": "ABO MOATI",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "4192",
+    "name_ar": "السيف غاليري",
+    "name_en": "ALSAIF GALLERY",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "4193",
+    "name_ar": "نايس ون",
+    "name_en": "NICE ONE",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "4194",
+    "name_ar": "محطة البناء",
+    "name_en": "BUILD STATION",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "4200",
+    "name_ar": "الدريس",
+    "name_en": "ALDREES",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "4210",
+    "name_ar": "الأبحاث والإعلام",
+    "name_en": "SRMG",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "4220",
+    "name_ar": "إعمار",
+    "name_en": "EMAAR EC",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "4230",
+    "name_ar": "البحر الأحمر",
+    "name_en": "RED SEA",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "4240",
+    "name_ar": "سينومي ريتيل",
+    "name_en": "CENOMI RETAIL",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "4250",
+    "name_ar": "جبل عمر",
+    "name_en": "JABAL OMAR",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "4260",
+    "name_ar": "بدجت السعودية",
+    "name_en": "BUDGET SAUDI",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "4261",
+    "name_ar": "ذيب",
+    "name_en": "THEEB",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "4262",
+    "name_ar": "لومي",
+    "name_en": "LUMI",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "4263",
+    "name_ar": "سال",
+    "name_en": "SAL",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "4264",
+    "name_ar": "طيران ناس",
+    "name_en": "FLYNAS",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "4265",
+    "name_ar": "شري",
+    "name_en": "CHERRY",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "4270",
+    "name_ar": "طباعة وتغليف",
+    "name_en": "SPPC",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "4280",
+    "name_ar": "المملكة",
+    "name_en": "KINGDOM",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "4290",
+    "name_ar": "الخليج للتدريب",
+    "name_en": "ALKHALEEJ TRNG",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "4291",
+    "name_ar": "الوطنية للتعليم",
+    "name_en": "NCLE",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "4292",
+    "name_ar": "عطاء",
+    "name_en": "ATAA",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "4300",
+    "name_ar": "دار الأركان",
+    "name_en": "DAR ALARKAN",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "4310",
+    "name_ar": "مدينة المعرفة",
+    "name_en": "KEC",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "4320",
+    "name_ar": "الأندلس",
+    "name_en": "ALANDALUS",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "4321",
+    "name_ar": "سينومي سنترز",
+    "name_en": "CENOMI CENTERS",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "4322",
+    "name_ar": "رتال",
+    "name_en": "RETAL",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "4323",
+    "name_ar": "سمو",
+    "name_en": "SUMOU",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "4324",
+    "name_ar": "بنان",
+    "name_en": "BANAN",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "4325",
+    "name_ar": "مسار",
+    "name_en": "MASAR",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "4326",
+    "name_ar": "الماجدية",
+    "name_en": "ALMAJDIAH",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "4327",
+    "name_ar": "الرمز",
+    "name_en": "ALRAMZ",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "4328",
+    "name_ar": "لدن",
+    "name_en": null,
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "4330",
+    "name_ar": "الرياض ريت",
+    "name_en": "RIYAD REIT",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "4331",
+    "name_ar": "الجزيرة ريت",
+    "name_en": "ALJAZIRA REIT",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "4332",
+    "name_ar": "جدوى ريت الحرمين",
+    "name_en": "JADWA REIT ALHARAMAIN",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "4333",
+    "name_ar": "تعليم ريت",
+    "name_en": "TALEEM REIT",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "4334",
+    "name_ar": "المعذر ريت",
+    "name_en": "AL MAATHER REIT",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "4335",
+    "name_ar": "مشاركة ريت",
+    "name_en": "MUSHARAKA REIT",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "4336",
+    "name_ar": "ملكية ريت",
+    "name_en": "MULKIA REIT",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "4337",
+    "name_ar": "العزيزية ريت",
+    "name_en": "AL AZIZIAH REIT",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "4338",
+    "name_ar": "الأهلي ريت 1",
+    "name_en": "ALAHLI REIT 1",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "4339",
+    "name_ar": "دراية ريت",
+    "name_en": "DERAYAH REIT",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "4340",
+    "name_ar": "الراجحي ريت",
+    "name_en": "Al RAJHI REIT",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "4342",
+    "name_ar": "جدوى ريت السعودية",
+    "name_en": "JADWA REIT SAUDI",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "4344",
+    "name_ar": "سدكو كابيتال ريت",
+    "name_en": "SEDCO CAPITAL REIT",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "4345",
+    "name_ar": "الإنماء ريت للتجزئة",
+    "name_en": "ALINMA RETAIL REIT",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "4346",
+    "name_ar": "ميفك ريت",
+    "name_en": "MEFIC REIT",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "4347",
+    "name_ar": "بنيان ريت",
+    "name_en": "BONYAN REIT",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "4348",
+    "name_ar": "الخبير ريت",
+    "name_en": "ALKHABEER REIT",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "4349",
+    "name_ar": "الإنماء ريت الفندقي",
+    "name_en": "ALINMA HOSPITALITY REIT",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "4350",
+    "name_ar": "الاستثمار ريت",
+    "name_en": "ALISTITHMAR REIT",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "4700",
+    "name_ar": "الخبير للدخل",
+    "name_en": "Al Khbyr Lldkhl",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Closed-End Fund",
+    "market_segment": "ETF",
+    "is_etf": true
+  },
+  {
+    "symbol": "4701",
+    "name_ar": "الخبير للنمو والدخل",
+    "name_en": "Al Khbyr Llnmw Waldkhl",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Closed-End Fund",
+    "market_segment": "ETF",
+    "is_etf": true
+  },
+  {
+    "symbol": "4702",
+    "name_ar": "الخبير للدخل 2030",
+    "name_en": "Al Khbyr Lldkhl 2030",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Closed-End Fund",
+    "market_segment": "ETF",
+    "is_etf": true
+  },
+  {
+    "symbol": "4703",
+    "name_ar": "سدكو متعدد الأصول",
+    "name_en": "Sdkw Mtadd Al Aswl",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Closed-End Fund",
+    "market_segment": "ETF",
+    "is_etf": true
+  },
+  {
+    "symbol": "5015",
+    "name_ar": "صكوك الكثيري سلسلة الإصدار الأولى 8.50 مارس28",
+    "name_en": "Skwk Al Kthyry Slslh Al Isdar Al Awla 8 50 Mars28",
+    "market": null,
+    "status": "active",
+    "security_type": "Sukuk",
+    "market_segment": "SUKUK",
+    "is_etf": false
+  },
+  {
+    "symbol": "5019",
+    "name_ar": "صكوك شركة الشرق الأوسط للرعاية الصحية 7.20 مارس29",
+    "name_en": "Skwk Shrkh Al Shrq Al Awst Llraayh Al Shyh 7 20 Mars29",
+    "market": null,
+    "status": "active",
+    "security_type": "Sukuk",
+    "market_segment": "SUKUK",
+    "is_etf": false
+  },
+  {
+    "symbol": "5021",
+    "name_ar": "صكوك شركة رواسي البناء للاستثمار 10.25 مارس30",
+    "name_en": "Skwk Shrkh Rwasy Al Bna Llastthmar 10 25 Mars30",
+    "market": null,
+    "status": "active",
+    "security_type": "Sukuk",
+    "market_segment": "SUKUK",
+    "is_etf": false
+  },
+  {
+    "symbol": "5022",
+    "name_ar": "صكوك شركة مصنع أقاسيم للكيماويات والبلاستيك 10.00 مايو30",
+    "name_en": "Skwk Shrkh Msna Aqasym Llkymawyat Walblastyk 10 00 Mayw30",
+    "market": null,
+    "status": "active",
+    "security_type": "Sukuk",
+    "market_segment": "SUKUK",
+    "is_etf": false
+  },
+  {
+    "symbol": "5023",
+    "name_ar": "صكوك شركة المراكز العربية 8.50 نوفمبر31",
+    "name_en": "Skwk Shrkh Al Mrakz Al Arbyh 8 50 Nwfmbr31",
+    "market": null,
+    "status": "active",
+    "security_type": "Sukuk",
+    "market_segment": "SUKUK",
+    "is_etf": false
+  },
+  {
+    "symbol": "5024",
+    "name_ar": "صكوك راية للتمويل 8.50 دائمة",
+    "name_en": "Skwk Rayh Lltmwyl 8 50 Daemh",
+    "market": null,
+    "status": "active",
+    "security_type": "Sukuk",
+    "market_segment": "SUKUK",
+    "is_etf": false
+  },
+  {
+    "symbol": "5025",
+    "name_ar": "صكوك بداية للتمويل 7.10 مارس29",
+    "name_en": null,
+    "market": null,
+    "status": "active",
+    "security_type": "Sukuk",
+    "market_segment": "SUKUK",
+    "is_etf": false
+  },
+  {
+    "symbol": "5026",
+    "name_ar": "صكوك شركة البخور الذكي للتجارة 10.50 مايو31",
+    "name_en": null,
+    "market": null,
+    "status": "active",
+    "security_type": "Sukuk",
+    "market_segment": "SUKUK",
+    "is_etf": false
+  },
+  {
+    "symbol": "5027",
+    "name_ar": "صكوك بنك الرياض شريحة 1 6.50 دائمة",
+    "name_en": null,
+    "market": null,
+    "status": "active",
+    "security_type": "Sukuk",
+    "market_segment": "SUKUK",
+    "is_etf": false
+  },
+  {
+    "symbol": "5110",
+    "name_ar": "السعودية للطاقة",
+    "name_en": "SAUDI ENERGY",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "5112",
+    "name_ar": "صكوك الشركة السعودية للكهرباء السعودية استثمار يوليو29",
+    "name_en": "Skwk Al Shrkh Al Sawdyh Llkhrba Al Sawdyh Astthmar Ywlyw29",
+    "market": null,
+    "status": "active",
+    "security_type": "Sukuk",
+    "market_segment": "SUKUK",
+    "is_etf": false
+  },
+  {
+    "symbol": "5114",
+    "name_ar": "صكوك السعودية للكهرباء استثمار يناير24",
+    "name_en": "Skwk Al Sawdyh Llkhrba Astthmar Ynayr24",
+    "market": null,
+    "status": "active",
+    "security_type": "Sukuk",
+    "market_segment": "SUKUK",
+    "is_etf": false
+  },
+  {
+    "symbol": "5212",
+    "name_ar": "سندات حكومية السعودية 2.3 فبراير26",
+    "name_en": "Sndat Hkwmyh Al Sawdyh 2 3 Fbrayr26",
+    "market": null,
+    "status": "active",
+    "security_type": "Sukuk",
+    "market_segment": "SUKUK",
+    "is_etf": false
+  },
+  {
+    "symbol": "5213",
+    "name_ar": "سندات حكومية السعودية متغيرة مارس26",
+    "name_en": "Sndat Hkwmyh Al Sawdyh Mtghyrh Mars26",
+    "market": null,
+    "status": "active",
+    "security_type": "Sukuk",
+    "market_segment": "SUKUK",
+    "is_etf": false
+  },
+  {
+    "symbol": "5214",
+    "name_ar": "أداة دين متغير/ 10-1003",
+    "name_en": "Sndat Hkwmyh Al Sawdyh Mtghyrh Abryl 26",
+    "market": null,
+    "status": "active",
+    "security_type": "Sukuk",
+    "market_segment": "SUKUK",
+    "is_etf": false
+  },
+  {
+    "symbol": "5215",
+    "name_ar": "سندات حكومية السعودية متغيرة مايو 23",
+    "name_en": "Sndat Hkwmyh Al Sawdyh Mtghyrh Mayw 23",
+    "market": null,
+    "status": "active",
+    "security_type": "Sukuk",
+    "market_segment": "SUKUK",
+    "is_etf": false
+  },
+  {
+    "symbol": "5216",
+    "name_ar": "سندات حكومية السعودية متغيرة مايو 26",
+    "name_en": "Sndat Hkwmyh Al Sawdyh Mtghyrh Mayw 26",
+    "market": null,
+    "status": "active",
+    "security_type": "Sukuk",
+    "market_segment": "SUKUK",
+    "is_etf": false
+  },
+  {
+    "symbol": "5217",
+    "name_ar": "سندات حكومية السعودية متغيرة يونيو23",
+    "name_en": "Sndat Hkwmyh Al Sawdyh Mtghyrh Ywnyw23",
+    "market": null,
+    "status": "active",
+    "security_type": "Sukuk",
+    "market_segment": "SUKUK",
+    "is_etf": false
+  },
+  {
+    "symbol": "5218",
+    "name_ar": "سندات حكومية السعودية متغيرة يونيو26",
+    "name_en": "Sndat Hkwmyh Al Sawdyh Mtghyrh Ywnyw26",
+    "market": null,
+    "status": "active",
+    "security_type": "Sukuk",
+    "market_segment": "SUKUK",
+    "is_etf": false
+  },
+  {
+    "symbol": "5219",
+    "name_ar": "سندات حكومية السعودية متغيرة يوليو 23",
+    "name_en": "Sndat Hkwmyh Al Sawdyh Mtghyrh Ywlyw 23",
+    "market": null,
+    "status": "active",
+    "security_type": "Sukuk",
+    "market_segment": "SUKUK",
+    "is_etf": false
+  },
+  {
+    "symbol": "5220",
+    "name_ar": "سندات حكومية السعودية متغيرة يوليو 26",
+    "name_en": "Sndat Hkwmyh Al Sawdyh Mtghyrh Ywlyw 26",
+    "market": null,
+    "status": "active",
+    "security_type": "Sukuk",
+    "market_segment": "SUKUK",
+    "is_etf": false
+  },
+  {
+    "symbol": "5221",
+    "name_ar": "سندات حكومية السعودية متغيرة أغسطس26",
+    "name_en": "Sndat Hkwmyh Al Sawdyh Mtghyrh Aghsts26",
+    "market": null,
+    "status": "active",
+    "security_type": "Sukuk",
+    "market_segment": "SUKUK",
+    "is_etf": false
+  },
+  {
+    "symbol": "5222",
+    "name_ar": "سندات حكومية السعودية متغيرة سبتمبر26",
+    "name_en": "Sndat Hkwmyh Al Sawdyh Mtghyrh Sbtmbr26",
+    "market": null,
+    "status": "active",
+    "security_type": "Sukuk",
+    "market_segment": "SUKUK",
+    "is_etf": false
+  },
+  {
+    "symbol": "5225",
+    "name_ar": "سندات حكومية السعودية 2.65 أغسطس25",
+    "name_en": "Sndat Hkwmyh Al Sawdyh 2 65 Aghsts25",
+    "market": null,
+    "status": "active",
+    "security_type": "Sukuk",
+    "market_segment": "SUKUK",
+    "is_etf": false
+  },
+  {
+    "symbol": "5228",
+    "name_ar": "سندات حكومية السعودية 2.7 سبتمبر25",
+    "name_en": "Sndat Hkwmyh Al Sawdyh 2 7 Sbtmbr25",
+    "market": null,
+    "status": "active",
+    "security_type": "Sukuk",
+    "market_segment": "SUKUK",
+    "is_etf": false
+  },
+  {
+    "symbol": "5230",
+    "name_ar": "سندات حكومية السعودية 2.17 أكتوبر22",
+    "name_en": "Sndat Hkwmyh Al Sawdyh 2 17 Aktwbr22",
+    "market": null,
+    "status": "active",
+    "security_type": "Sukuk",
+    "market_segment": "SUKUK",
+    "is_etf": false
+  },
+  {
+    "symbol": "5231",
+    "name_ar": "سندات حكومية السعودية 2.56 أكتوبر25",
+    "name_en": "Sndat Hkwmyh Al Sawdyh 2 56 Aktwbr25",
+    "market": null,
+    "status": "active",
+    "security_type": "Sukuk",
+    "market_segment": "SUKUK",
+    "is_etf": false
+  },
+  {
+    "symbol": "5234",
+    "name_ar": "سندات حكومية السعودية 2.85 نوفمبر25",
+    "name_en": "Sndat Hkwmyh Al Sawdyh 2 85 Nwfmbr25",
+    "market": null,
+    "status": "active",
+    "security_type": "Sukuk",
+    "market_segment": "SUKUK",
+    "is_etf": false
+  },
+  {
+    "symbol": "5237",
+    "name_ar": "سندات حكومية السعودية 2.85 ديسمبر25",
+    "name_en": "Sndat Hkwmyh Al Sawdyh 2 85 Dysmbr25",
+    "market": null,
+    "status": "active",
+    "security_type": "Sukuk",
+    "market_segment": "SUKUK",
+    "is_etf": false
+  },
+  {
+    "symbol": "5240",
+    "name_ar": "سندات حكومية السعودية 2.7 يناير26",
+    "name_en": "Sndat Hkwmyh Al Sawdyh 2 7 Ynayr26",
+    "market": null,
+    "status": "active",
+    "security_type": "Sukuk",
+    "market_segment": "SUKUK",
+    "is_etf": false
+  },
+  {
+    "symbol": "5244",
+    "name_ar": "صكوك حكومية السعودية الاستثمار يوليو26",
+    "name_en": "Skwk Hkwmyh Al Sawdyh Al Astthmar Ywlyw26",
+    "market": null,
+    "status": "active",
+    "security_type": "Sukuk",
+    "market_segment": "SUKUK",
+    "is_etf": false
+  },
+  {
+    "symbol": "5245",
+    "name_ar": "صكوك حكومية السعودية الاستثمار 3.55 يوليو27",
+    "name_en": "Skwk Hkwmyh Al Sawdyh Al Astthmar Ywlyw27",
+    "market": null,
+    "status": "active",
+    "security_type": "Sukuk",
+    "market_segment": "SUKUK",
+    "is_etf": false
+  },
+  {
+    "symbol": "5247",
+    "name_ar": "صكوك حكومية السعودية الاستثمار أغسطس24",
+    "name_en": "Skwk Hkwmyh Al Sawdyh Al Astthmar Aghsts24",
+    "market": null,
+    "status": "active",
+    "security_type": "Sukuk",
+    "market_segment": "SUKUK",
+    "is_etf": false
+  },
+  {
+    "symbol": "5248",
+    "name_ar": "صكوك حكومية السعودية الاستثمار أغسطس27",
+    "name_en": "Skwk Hkwmyh Al Sawdyh Al Astthmar Aghsts27",
+    "market": null,
+    "status": "active",
+    "security_type": "Sukuk",
+    "market_segment": "SUKUK",
+    "is_etf": false
+  },
+  {
+    "symbol": "5250",
+    "name_ar": "صكوك حكومية السعودية الاستثمار سبتمبر24",
+    "name_en": "Skwk Hkwmyh Al Sawdyh Al Astthmar Sbtmbr24",
+    "market": null,
+    "status": "active",
+    "security_type": "Sukuk",
+    "market_segment": "SUKUK",
+    "is_etf": false
+  },
+  {
+    "symbol": "5251",
+    "name_ar": "صكوك حكومية السعودية الاستثمار 3.450 سبتمبر27",
+    "name_en": "Skwk Hkwmyh Al Sawdyh Al Astthmar Sbtmbr27",
+    "market": null,
+    "status": "active",
+    "security_type": "Sukuk",
+    "market_segment": "SUKUK",
+    "is_etf": false
+  },
+  {
+    "symbol": "5253",
+    "name_ar": "صكوك حكومية السعودية الاستثمار أكتوبر24",
+    "name_en": "Skwk Hkwmyh Al Sawdyh Al Astthmar Aktwbr24",
+    "market": null,
+    "status": "active",
+    "security_type": "Sukuk",
+    "market_segment": "SUKUK",
+    "is_etf": false
+  },
+  {
+    "symbol": "5254",
+    "name_ar": "صكوك حكومية السعودية الاستثمار 3.65 أكتوبر27",
+    "name_en": "Skwk Hkwmyh Al Sawdyh Al Astthmar Aktwbr25",
+    "market": null,
+    "status": "active",
+    "security_type": "Sukuk",
+    "market_segment": "SUKUK",
+    "is_etf": false
+  },
+  {
+    "symbol": "5263",
+    "name_ar": "صكوك حكومية السعودية الاستثمار يناير25",
+    "name_en": "Skwk Hkwmyh Al Sawdyh Al Astthmar Ynayr25",
+    "market": null,
+    "status": "active",
+    "security_type": "Sukuk",
+    "market_segment": "SUKUK",
+    "is_etf": false
+  },
+  {
+    "symbol": "5264",
+    "name_ar": "صكوك حكومية السعودية الاستثمار 3.85 يناير28",
+    "name_en": "Skwk Hkwmyh Al Sawdyh Al Astthmar Ynayr28",
+    "market": null,
+    "status": "active",
+    "security_type": "Sukuk",
+    "market_segment": "SUKUK",
+    "is_etf": false
+  },
+  {
+    "symbol": "5267",
+    "name_ar": "صكوك حكومية السعودية الاستثمار 3.75 ابريل28",
+    "name_en": "Skwk Hkwmyh Al Sawdyh Al Astthmar Abryl28",
+    "market": null,
+    "status": "active",
+    "security_type": "Sukuk",
+    "market_segment": "SUKUK",
+    "is_etf": false
+  },
+  {
+    "symbol": "5269",
+    "name_ar": "صكوك حكومية السعودية الاستثمار يوليو25",
+    "name_en": "Skwk Hkwmyh Al Sawdyh Al Astthmar Ywlyw25",
+    "market": null,
+    "status": "active",
+    "security_type": "Sukuk",
+    "market_segment": "SUKUK",
+    "is_etf": false
+  },
+  {
+    "symbol": "5270",
+    "name_ar": "صكوك حكومية السعودية الاستثمار 3.8 يوليو28",
+    "name_en": "Skwk Hkwmyh Al Sawdyh Al Astthmar Ywlyw28",
+    "market": null,
+    "status": "active",
+    "security_type": "Sukuk",
+    "market_segment": "SUKUK",
+    "is_etf": false
+  },
+  {
+    "symbol": "5271",
+    "name_ar": "صكوك حكومية السعودية الاستثمار أكتوبر23",
+    "name_en": "Skwk Hkwmyh Al Sawdyh Al Astthmar Aktwbr23",
+    "market": null,
+    "status": "active",
+    "security_type": "Sukuk",
+    "market_segment": "SUKUK",
+    "is_etf": false
+  },
+  {
+    "symbol": "5273",
+    "name_ar": "صكوك حكومية السعودية الاستثمار 4.06 اكتوبر28",
+    "name_en": "Skwk Hkwmyh Al Sawdyh Al Astthmar Aktwbr28",
+    "market": null,
+    "status": "active",
+    "security_type": "Sukuk",
+    "market_segment": "SUKUK",
+    "is_etf": false
+  },
+  {
+    "symbol": "5274",
+    "name_ar": "صكوك حكومية السعودية الاستثمار 3.9 اكتوبر29",
+    "name_en": "Skwk Hkwmyh Al Sawdyh Al Astthmar Aktwbr29",
+    "market": null,
+    "status": "active",
+    "security_type": "Sukuk",
+    "market_segment": "SUKUK",
+    "is_etf": false
+  },
+  {
+    "symbol": "5275",
+    "name_ar": "صكوك حكومية السعودية الاستثمار يناير24",
+    "name_en": "Skwk Hkwmyh Al Sawdyh Al Astthmar Ynayr24",
+    "market": null,
+    "status": "active",
+    "security_type": "Sukuk",
+    "market_segment": "SUKUK",
+    "is_etf": false
+  },
+  {
+    "symbol": "5277",
+    "name_ar": "صكوك حكومية السعودية الاستثمار 4.1 فبراير31",
+    "name_en": "Skwk Hkwmyh Al Sawdyh Al Astthmar Fbrayr31",
+    "market": null,
+    "status": "active",
+    "security_type": "Sukuk",
+    "market_segment": "SUKUK",
+    "is_etf": false
+  },
+  {
+    "symbol": "5279",
+    "name_ar": "صكوك حكومية السعودية الاستثمار 4.01 مارس34",
+    "name_en": "Skwk Hkwmyh Al Sawdyh Al Astthmar Mars34",
+    "market": null,
+    "status": "active",
+    "security_type": "Sukuk",
+    "market_segment": "SUKUK",
+    "is_etf": false
+  },
+  {
+    "symbol": "5280",
+    "name_ar": "صكوك حكومية السعودية الاستثمار 4.64 إبريل49",
+    "name_en": "Skwk Hkwmyh Al Sawdyh Al Astthmar 4 64 Ibryl49",
+    "market": null,
+    "status": "active",
+    "security_type": "Sukuk",
+    "market_segment": "SUKUK",
+    "is_etf": false
+  },
+  {
+    "symbol": "5281",
+    "name_ar": "صكوك حكومية السعودية الاستثمار 2.17 مارس24",
+    "name_en": "Skwk Hkwmyh Al Sawdyh Al Astthmar 2 17 Mars24",
+    "market": null,
+    "status": "active",
+    "security_type": "Sukuk",
+    "market_segment": "SUKUK",
+    "is_etf": false
+  },
+  {
+    "symbol": "5282",
+    "name_ar": "صكوك حكومية السعودية الاستثمار 2.69 مارس30",
+    "name_en": "Skwk Hkwmyh Al Sawdyh Al Astthmar 2 69 Mars30",
+    "market": null,
+    "status": "active",
+    "security_type": "Sukuk",
+    "market_segment": "SUKUK",
+    "is_etf": false
+  },
+  {
+    "symbol": "5283",
+    "name_ar": "صكوك حكومية السعودية الاستثمار 2.47 يناير27",
+    "name_en": "Skwk Hkwmyh Al Sawdyh Al Astthmar 2 47 Ynayr27",
+    "market": null,
+    "status": "active",
+    "security_type": "Sukuk",
+    "market_segment": "SUKUK",
+    "is_etf": false
+  },
+  {
+    "symbol": "5284",
+    "name_ar": "صكوك حكومية السعودية الاستثمار 3.00 فبراير35",
+    "name_en": "Skwk Hkwmyh Al Sawdyh Al Astthmar 3 00 Fbrayr35",
+    "market": null,
+    "status": "active",
+    "security_type": "Sukuk",
+    "market_segment": "SUKUK",
+    "is_etf": false
+  },
+  {
+    "symbol": "5285",
+    "name_ar": "صكوك حكومية السعودية الاستثمار 3.68 مارس50",
+    "name_en": "Skwk Hkwmyh Al Sawdyh Al Astthmar 3 68 Mars50",
+    "market": null,
+    "status": "active",
+    "security_type": "Sukuk",
+    "market_segment": "SUKUK",
+    "is_etf": false
+  },
+  {
+    "symbol": "5297",
+    "name_ar": "صكوك حكومية السعودية الاستثمار 1.73 يوليو27",
+    "name_en": "Skwk Hkwmyh Al Sawdyh Al Astthmar 1 73 Ywlyw27",
+    "market": null,
+    "status": "active",
+    "security_type": "Sukuk",
+    "market_segment": "SUKUK",
+    "is_etf": false
+  },
+  {
+    "symbol": "5300",
+    "name_ar": "صكوك حكومية السعودية الاستثمار 1.64 يوليو24",
+    "name_en": "Skwk Hkwmyh Al Sawdyh Al Astthmar 1 64 Ywlyw24",
+    "market": null,
+    "status": "active",
+    "security_type": "Sukuk",
+    "market_segment": "SUKUK",
+    "is_etf": false
+  },
+  {
+    "symbol": "5301",
+    "name_ar": "صكوك حكومية السعودية الاستثمار يوليو28",
+    "name_en": "Skwk Hkwmyh Al Sawdyh Al Astthmar 2 29 Ywlyw28",
+    "market": null,
+    "status": "active",
+    "security_type": "Sukuk",
+    "market_segment": "SUKUK",
+    "is_etf": false
+  },
+  {
+    "symbol": "5302",
+    "name_ar": "صكوك حكومية السعودية الاستثمار 2.89 يوليو32",
+    "name_en": "Skwk Hkwmyh Al Sawdyh Al Astthmar 2 89 Ywlyw32",
+    "market": null,
+    "status": "active",
+    "security_type": "Sukuk",
+    "market_segment": "SUKUK",
+    "is_etf": false
+  },
+  {
+    "symbol": "5303",
+    "name_ar": "صكوك حكومية السعودية الاستثمار يوليو35",
+    "name_en": "Skwk Hkwmyh Al Sawdyh Al Astthmar 3 1 Ywlyw35",
+    "market": null,
+    "status": "active",
+    "security_type": "Sukuk",
+    "market_segment": "SUKUK",
+    "is_etf": false
+  },
+  {
+    "symbol": "5306",
+    "name_ar": "صكوك حكومية السعودية الاستثمار 1.97 يناير28",
+    "name_en": "Skwk Hkwmyh Al Sawdyh Al Astthmar 1 97 Ynayr28",
+    "market": null,
+    "status": "active",
+    "security_type": "Sukuk",
+    "market_segment": "SUKUK",
+    "is_etf": false
+  },
+  {
+    "symbol": "5308",
+    "name_ar": "صكوك حكومية السعودية الاستثمار 2.55 يناير33",
+    "name_en": "Skwk Hkwmyh Al Sawdyh Al Astthmar 2 55 Ynayr33",
+    "market": null,
+    "status": "active",
+    "security_type": "Sukuk",
+    "market_segment": "SUKUK",
+    "is_etf": false
+  },
+  {
+    "symbol": "5309",
+    "name_ar": "صكوك حكومية السعودية الاستثمار 2.8 مارس31",
+    "name_en": "Skwk Hkwmyh Al Sawdyh Al Astthmar 2 8 Mars31",
+    "market": null,
+    "status": "active",
+    "security_type": "Sukuk",
+    "market_segment": "SUKUK",
+    "is_etf": false
+  },
+  {
+    "symbol": "5311",
+    "name_ar": "صكوك حكومية السعودية الاستثمار 2.6 يونيو31",
+    "name_en": "Skwk Hkwmyh Al Sawdyh Al Astthmar 2 6 Ywnyw31",
+    "market": null,
+    "status": "active",
+    "security_type": "Sukuk",
+    "market_segment": "SUKUK",
+    "is_etf": false
+  },
+  {
+    "symbol": "5312",
+    "name_ar": "صكوك حكومية السعودية الاستثمار 2.43 أغسطس29",
+    "name_en": "Skwk Hkwmyh Al Sawdyh Al Astthmar 2 43 Aghsts29",
+    "market": null,
+    "status": "active",
+    "security_type": "Sukuk",
+    "market_segment": "SUKUK",
+    "is_etf": false
+  },
+  {
+    "symbol": "5313",
+    "name_ar": "صكوك حكومية السعودية الاستثمار 3.21 أغسطس36",
+    "name_en": "Skwk Hkwmyh Al Sawdyh Al Astthmar 3 21 Aghsts36",
+    "market": null,
+    "status": "active",
+    "security_type": "Sukuk",
+    "market_segment": "SUKUK",
+    "is_etf": false
+  },
+  {
+    "symbol": "5314",
+    "name_ar": "صكوك حكومية السعودية الاستثمار 2.60 يناير29",
+    "name_en": "Skwk Hkwmyh Al Sawdyh Al Astthmar 2 60 Ynayr29",
+    "market": null,
+    "status": "active",
+    "security_type": "Sukuk",
+    "market_segment": "SUKUK",
+    "is_etf": false
+  },
+  {
+    "symbol": "5315",
+    "name_ar": "صكوك حكومية السعودية الاستثمار 2.99 نوفمبر31",
+    "name_en": "Skwk Hkwmyh Al Sawdyh Al Astthmar 2 99 Nwfmbr31",
+    "market": null,
+    "status": "active",
+    "security_type": "Sukuk",
+    "market_segment": "SUKUK",
+    "is_etf": false
+  },
+  {
+    "symbol": "5316",
+    "name_ar": "صكوك حكومية السعودية الاستثمار 3.20 نوفمبر33",
+    "name_en": "Skwk Hkwmyh Al Sawdyh Al Astthmar 3 20 Nwfmbr33",
+    "market": null,
+    "status": "active",
+    "security_type": "Sukuk",
+    "market_segment": "SUKUK",
+    "is_etf": false
+  },
+  {
+    "symbol": "5317",
+    "name_ar": "صكوك حكومية السعودية الاستثمار 3.50 نوفمبر36",
+    "name_en": "Skwk Hkwmyh Al Sawdyh Al Astthmar 3 50 Nwfmbr36",
+    "market": null,
+    "status": "active",
+    "security_type": "Sukuk",
+    "market_segment": "SUKUK",
+    "is_etf": false
+  },
+  {
+    "symbol": "5318",
+    "name_ar": "صكوك حكومية السعودية الاستثمار 2.77 يناير30",
+    "name_en": "Skwk Hkwmyh Al Sawdyh Al Astthmar 2 77 Ynayr30",
+    "market": null,
+    "status": "active",
+    "security_type": "Sukuk",
+    "market_segment": "SUKUK",
+    "is_etf": false
+  },
+  {
+    "symbol": "5319",
+    "name_ar": "صكوك حكومية السعودية الاستثمار 3.12 يناير34",
+    "name_en": "Skwk Hkwmyh Al Sawdyh Al Astthmar 3 12 Ynayr34",
+    "market": null,
+    "status": "active",
+    "security_type": "Sukuk",
+    "market_segment": "SUKUK",
+    "is_etf": false
+  },
+  {
+    "symbol": "5320",
+    "name_ar": "صكوك حكومية السعودية الاستثمار 2.60 مارس27",
+    "name_en": "Skwk Hkwmyh Al Sawdyh Al Astthmar 2 60 Mars27",
+    "market": null,
+    "status": "active",
+    "security_type": "Sukuk",
+    "market_segment": "SUKUK",
+    "is_etf": false
+  },
+  {
+    "symbol": "5321",
+    "name_ar": "صكوك حكومية السعودية الاستثمار 2.70 مارس29",
+    "name_en": "Skwk Hkwmyh Al Sawdyh Al Astthmar 2 70 Mars29",
+    "market": null,
+    "status": "active",
+    "security_type": "Sukuk",
+    "market_segment": "SUKUK",
+    "is_etf": false
+  },
+  {
+    "symbol": "5322",
+    "name_ar": "صكوك حكومية السعودية الاستثمار 3.05 مارس32",
+    "name_en": "Skwk Hkwmyh Al Sawdyh Al Astthmar 3 05 Mars32",
+    "market": null,
+    "status": "active",
+    "security_type": "Sukuk",
+    "market_segment": "SUKUK",
+    "is_etf": false
+  },
+  {
+    "symbol": "5323",
+    "name_ar": "صكوك حكومية السعودية الاستثمار 3.35 مارس37",
+    "name_en": "Skwk Hkwmyh Al Sawdyh Al Astthmar 3 35 Mars37",
+    "market": null,
+    "status": "active",
+    "security_type": "Sukuk",
+    "market_segment": "SUKUK",
+    "is_etf": false
+  },
+  {
+    "symbol": "5325",
+    "name_ar": "صكوك حكومية السعودية الاستثمار 3.95 يونيو30",
+    "name_en": "Skwk Hkwmyh Al Sawdyh Al Astthmar 3 95 Ywnyw30",
+    "market": null,
+    "status": "active",
+    "security_type": "Sukuk",
+    "market_segment": "SUKUK",
+    "is_etf": false
+  },
+  {
+    "symbol": "5326",
+    "name_ar": "صكوك حكومية السعودية الاستثمار 4.30 يونيو34",
+    "name_en": "Skwk Hkwmyh Al Sawdyh Al Astthmar 4 30 Ywnyw34",
+    "market": null,
+    "status": "active",
+    "security_type": "Sukuk",
+    "market_segment": "SUKUK",
+    "is_etf": false
+  },
+  {
+    "symbol": "5332",
+    "name_ar": "صكوك حكومية السعودية الاستثمار 4.5 أغسطس31",
+    "name_en": "Skwk Hkwmyh Al Sawdyh Al Astthmar 4 5 Aghsts31",
+    "market": null,
+    "status": "active",
+    "security_type": "Sukuk",
+    "market_segment": "SUKUK",
+    "is_etf": false
+  },
+  {
+    "symbol": "5333",
+    "name_ar": "صكوك حكومية السعودية الاستثمار 4.57 أغسطس32",
+    "name_en": "Skwk Hkwmyh Al Sawdyh Al Astthmar 4 57 Aghsts32",
+    "market": null,
+    "status": "active",
+    "security_type": "Sukuk",
+    "market_segment": "SUKUK",
+    "is_etf": false
+  },
+  {
+    "symbol": "5334",
+    "name_ar": "صكوك حكومية السعودية الاستثمار 4.6 أغسطس33",
+    "name_en": "Skwk Hkwmyh Al Sawdyh Al Astthmar 4 6 Aghsts33",
+    "market": null,
+    "status": "active",
+    "security_type": "Sukuk",
+    "market_segment": "SUKUK",
+    "is_etf": false
+  },
+  {
+    "symbol": "5336",
+    "name_ar": "صكوك حكومية السعودية الاستثمار 4.69 أغسطس38",
+    "name_en": "Skwk Hkwmyh Al Sawdyh Al Astthmar 4 69 Aghsts38",
+    "market": null,
+    "status": "active",
+    "security_type": "Sukuk",
+    "market_segment": "SUKUK",
+    "is_etf": false
+  },
+  {
+    "symbol": "5338",
+    "name_ar": "صكوك حكومية السعودية الاستثمار 4.94 يناير34",
+    "name_en": "Skwk Al Sawdyh 10-01-2024",
+    "market": null,
+    "status": "active",
+    "security_type": "Sukuk",
+    "market_segment": "SUKUK",
+    "is_etf": false
+  },
+  {
+    "symbol": "5339",
+    "name_ar": "صكوك حكومية السعودية الاستثمار 5.14 يناير39",
+    "name_en": "Skwk Al Sawdyh 15-01-2024",
+    "market": null,
+    "status": "active",
+    "security_type": "Sukuk",
+    "market_segment": "SUKUK",
+    "is_etf": false
+  },
+  {
+    "symbol": "5343",
+    "name_ar": "صكوك حكومية السعودية الاستثمار 5.40 أبريل31",
+    "name_en": "Skwk Hkwmyh Al Sawdyh Al Astthmar 5 40 Abryl31",
+    "market": null,
+    "status": "active",
+    "security_type": "Sukuk",
+    "market_segment": "SUKUK",
+    "is_etf": false
+  },
+  {
+    "symbol": "5344",
+    "name_ar": "صكوك حكومية السعودية الاستثمار 5.59 أبريل36",
+    "name_en": "Skwk Hkwmyh Al Sawdyh Al Astthmar 5 59 Abryl36",
+    "market": null,
+    "status": "active",
+    "security_type": "Sukuk",
+    "market_segment": "SUKUK",
+    "is_etf": false
+  },
+  {
+    "symbol": "5346",
+    "name_ar": "صكوك حكومية السعودية الاستثمار مايو39 متغيرة",
+    "name_en": "Skwk Hkwmyh Al Sawdyh Al Astthmar Mayw39 Mtghyrh",
+    "market": null,
+    "status": "active",
+    "security_type": "Sukuk",
+    "market_segment": "SUKUK",
+    "is_etf": false
+  },
+  {
+    "symbol": "5363",
+    "name_ar": "صكوك حكومية السعودية الاستثمار مايو35 متغيرة",
+    "name_en": "Skwk Hkwmyh Al Sawdyh Al Astthmar Mayw35 Mtghyrh",
+    "market": null,
+    "status": "active",
+    "security_type": "Sukuk",
+    "market_segment": "SUKUK",
+    "is_etf": false
+  },
+  {
+    "symbol": "5364",
+    "name_ar": "صكوك حكومية السعودية الاستثمار مايو40 متغيرة",
+    "name_en": "Skwk Hkwmyh Al Sawdyh Al Astthmar Mayw40 Mtghyrh",
+    "market": null,
+    "status": "active",
+    "security_type": "Sukuk",
+    "market_segment": "SUKUK",
+    "is_etf": false
+  },
+  {
+    "symbol": "5379",
+    "name_ar": "صكوك حكومية السعودية الاستثمار 5.69 يوليو41",
+    "name_en": "Skwk Hkwmyh Al Sawdyh Al Astthmar 5 69 Ywlyw41",
+    "market": null,
+    "status": "active",
+    "security_type": "Sukuk",
+    "market_segment": "SUKUK",
+    "is_etf": false
+  },
+  {
+    "symbol": "5388",
+    "name_ar": "صكوك حكومية السعودية الاستثمار يوليو36 متغيرة",
+    "name_en": null,
+    "market": null,
+    "status": "active",
+    "security_type": "Unknown",
+    "market_segment": "UNKNOWN",
+    "is_etf": false
+  },
+  {
+    "symbol": "5389",
+    "name_ar": "صكوك حكومية السعودية الاستثمار يوليو41 متغيرة",
+    "name_en": null,
+    "market": null,
+    "status": "active",
+    "security_type": "Unknown",
+    "market_segment": "UNKNOWN",
+    "is_etf": false
+  },
+  {
+    "symbol": "6000",
+    "name_ar": "6000",
+    "name_en": null,
+    "market": null,
+    "status": "active",
+    "security_type": "Unknown",
+    "market_segment": "UNKNOWN",
+    "is_etf": false
+  },
+  {
+    "symbol": "6001",
+    "name_ar": "حلواني إخوان",
+    "name_en": "HB",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "6002",
+    "name_ar": "هرفي للأغذية",
+    "name_en": "HERFY FOODS",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "6003",
+    "name_ar": "6003",
+    "name_en": null,
+    "market": null,
+    "status": "active",
+    "security_type": "Unknown",
+    "market_segment": "UNKNOWN",
+    "is_etf": false
+  },
+  {
+    "symbol": "6004",
+    "name_ar": "كاتريون",
+    "name_en": "CATRION",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "6005",
+    "name_ar": "6005",
+    "name_en": null,
+    "market": null,
+    "status": "active",
+    "security_type": "Unknown",
+    "market_segment": "UNKNOWN",
+    "is_etf": false
+  },
+  {
+    "symbol": "6006",
+    "name_ar": "6006",
+    "name_en": null,
+    "market": null,
+    "status": "active",
+    "security_type": "Unknown",
+    "market_segment": "UNKNOWN",
+    "is_etf": false
+  },
+  {
+    "symbol": "6007",
+    "name_ar": "6007",
+    "name_en": null,
+    "market": null,
+    "status": "active",
+    "security_type": "Unknown",
+    "market_segment": "UNKNOWN",
+    "is_etf": false
+  },
+  {
+    "symbol": "6008",
+    "name_ar": "6008",
+    "name_en": null,
+    "market": null,
+    "status": "active",
+    "security_type": "Unknown",
+    "market_segment": "UNKNOWN",
+    "is_etf": false
+  },
+  {
+    "symbol": "6009",
+    "name_ar": "6009",
+    "name_en": null,
+    "market": null,
+    "status": "active",
+    "security_type": "Unknown",
+    "market_segment": "UNKNOWN",
+    "is_etf": false
+  },
+  {
+    "symbol": "6010",
+    "name_ar": "نادك",
+    "name_en": "NADEC",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "6011",
+    "name_ar": "6011",
+    "name_en": null,
+    "market": null,
+    "status": "active",
+    "security_type": "Unknown",
+    "market_segment": "UNKNOWN",
+    "is_etf": false
+  },
+  {
+    "symbol": "6012",
+    "name_ar": "ريدان",
+    "name_en": "RAYDAN",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "6013",
+    "name_ar": "التطويرية الغذائية",
+    "name_en": "DWF",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "6014",
+    "name_ar": "الآمار",
+    "name_en": "ALAMAR",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "6015",
+    "name_ar": "أمريكانا",
+    "name_en": "AMERICANA",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "6016",
+    "name_ar": "برغرايززر",
+    "name_en": "BURGERIZZR",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "6017",
+    "name_ar": "جاهز",
+    "name_en": "JAHEZ",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "6018",
+    "name_ar": "الأندية للرياضة",
+    "name_en": "SPORT CLUBS",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "6019",
+    "name_ar": "المسار الشامل",
+    "name_en": "ALMASAR ALSHAMIL",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "6020",
+    "name_ar": "جاكو",
+    "name_en": "GACO",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "6022",
+    "name_ar": "أرماح",
+    "name_en": null,
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "6040",
+    "name_ar": "تبوك الزراعية",
+    "name_en": "TADCO",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "6050",
+    "name_ar": "الأسماك",
+    "name_en": "SFICO",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "6060",
+    "name_ar": "الشرقية للتنمية",
+    "name_en": "SHARQIYAH DEV",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "6070",
+    "name_ar": "الجوف",
+    "name_en": "ALJOUF",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "6090",
+    "name_ar": "جازادكو",
+    "name_en": "JAZADCO",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "6563",
+    "name_ar": "6563",
+    "name_en": "6563",
+    "market": null,
+    "status": "active",
+    "security_type": "Unknown",
+    "market_segment": "UNKNOWN",
+    "is_etf": false
+  },
+  {
+    "symbol": "7010",
+    "name_ar": "اس تي سي",
+    "name_en": "STC",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "7020",
+    "name_ar": "إتحاد إتصالات",
+    "name_en": "ETIHAD ETISALAT",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "7030",
+    "name_ar": "زين السعودية",
+    "name_en": "ZAIN KSA",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "7040",
+    "name_ar": "قو للإتصالات",
+    "name_en": "GO TELECOM",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "7200",
+    "name_ar": "إم آي إس",
+    "name_en": "MIS",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "7201",
+    "name_ar": "بحر العرب",
+    "name_en": "ARAB SEA",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "7202",
+    "name_ar": "سلوشنز",
+    "name_en": "SOLUTIONS",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "7203",
+    "name_ar": "علم",
+    "name_en": "ELM",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "7204",
+    "name_ar": "توبي",
+    "name_en": "2P",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "7205",
+    "name_ar": "دار البلد",
+    "name_en": "Shrkh Dar Al Bld Lhlwl Al Aamal",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "7211",
+    "name_ar": "عزم",
+    "name_en": "AZM",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "8010",
+    "name_ar": "التعاونية",
+    "name_en": "TAWUNIYA",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "8012",
+    "name_ar": "جزيرة تكافل",
+    "name_en": "JAZIRA TAKAFUL",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "8020",
+    "name_ar": "ملاذ للتأمين",
+    "name_en": "MALATH INSURANCE",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "8030",
+    "name_ar": "ميدغلف للتأمين",
+    "name_en": "MEDGULF",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "8040",
+    "name_ar": "متكاملة",
+    "name_en": "MUTAKAMELA",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "8050",
+    "name_ar": "سلامة",
+    "name_en": "SALAMA",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "8060",
+    "name_ar": "ولاء",
+    "name_en": "WALAA",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "8070",
+    "name_ar": "الدرع العربي",
+    "name_en": "ARABIAN SHIELD",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "8100",
+    "name_ar": "سايكو",
+    "name_en": "SAICO",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "8120",
+    "name_ar": "إتحاد الخليج الأهلية",
+    "name_en": "GULF UNION ALAHLIA",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "8150",
+    "name_ar": "أسيج",
+    "name_en": "ACIG",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "8160",
+    "name_ar": "التأمين العربية",
+    "name_en": "AICC",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "8170",
+    "name_ar": "الاتحاد",
+    "name_en": "ALETIHAD",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "8180",
+    "name_ar": "الصقر للتأمين",
+    "name_en": "ALSAGR INSURANCE",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "8190",
+    "name_ar": "المتحدة للتأمين",
+    "name_en": "UCA",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "8200",
+    "name_ar": "الإعادة السعودية",
+    "name_en": "SAUDI RE",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "8210",
+    "name_ar": "بوبا العربية",
+    "name_en": "BUPA ARABIA",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "8230",
+    "name_ar": "تكافل الراجحي",
+    "name_en": "ALRAJHI TAKAFUL",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "8240",
+    "name_ar": "تْشب",
+    "name_en": "CHUBB",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "8250",
+    "name_ar": "جي آي جي",
+    "name_en": "GIG",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "8260",
+    "name_ar": "الخليجية العامة",
+    "name_en": "GULF GENERAL",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "8280",
+    "name_ar": "ليفا",
+    "name_en": "LIVA",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "8300",
+    "name_ar": "الوطنية",
+    "name_en": "WATANIYA",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "8310",
+    "name_ar": "أمانة للتأمين",
+    "name_en": "AMANA INSURANCE",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "8311",
+    "name_ar": "عناية",
+    "name_en": "ENAYA",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "8313",
+    "name_ar": "رسن",
+    "name_en": "RASAN",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "TASI",
+    "is_etf": false
+  },
+  {
+    "symbol": "9300",
+    "name_ar": "الواحة ريت",
+    "name_en": "ALWAHA REIT",
+    "market": "NOMU",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "NOMU",
+    "is_etf": false
+  },
+  {
+    "symbol": "9400",
+    "name_ar": "صندوق يقين 30",
+    "name_en": "Yqyn 30",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "ETF",
+    "market_segment": "ETF",
+    "is_etf": true
+  },
+  {
+    "symbol": "9401",
+    "name_ar": "صندوق يقين للبتروكيماويات",
+    "name_en": "Yqyn Llbtrwkymawyat",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "ETF",
+    "market_segment": "ETF",
+    "is_etf": true
+  },
+  {
+    "symbol": "9402",
+    "name_ar": "صندوق الأول للاستثمار الكمي المتداول",
+    "name_en": "Al Awl Im Ty 30",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "ETF",
+    "market_segment": "ETF",
+    "is_etf": true
+  },
+  {
+    "symbol": "9403",
+    "name_ar": "صندوق البلاد للصكوك السيادية",
+    "name_en": "Skwk Al Blad",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "ETF",
+    "market_segment": "ETF",
+    "is_etf": true
+  },
+  {
+    "symbol": "9404",
+    "name_ar": "صندوق الإنماء للصكوك الحكومية",
+    "name_en": "Skwk Al Inma",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "ETF",
+    "market_segment": "ETF",
+    "is_etf": true
+  },
+  {
+    "symbol": "9405",
+    "name_ar": "صندوق البلاد للذهب",
+    "name_en": "Al Blad Lldhhb",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "ETF",
+    "market_segment": "ETF",
+    "is_etf": true
+  },
+  {
+    "symbol": "9406",
+    "name_ar": "صندوق البلاد الأمريكي",
+    "name_en": "Al Blad Im Is Sy Ay",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "ETF",
+    "market_segment": "ETF",
+    "is_etf": true
+  },
+  {
+    "symbol": "9407",
+    "name_ar": "صندوق البلاد التقني الأمريكي",
+    "name_en": "Al Blad Al Tqny Al Amryky",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "ETF",
+    "market_segment": "ETF",
+    "is_etf": true
+  },
+  {
+    "symbol": "9408",
+    "name_ar": "صندوق البلاد للنمو السعودي",
+    "name_en": "Al Blad Llnmw Al Sawdy",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "ETF",
+    "market_segment": "ETF",
+    "is_etf": true
+  },
+  {
+    "symbol": "9409",
+    "name_ar": "يقين إي إس جي",
+    "name_en": "Yqyn Iy Is Jy",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "ETF",
+    "market_segment": "ETF",
+    "is_etf": true
+  },
+  {
+    "symbol": "9410",
+    "name_ar": "صندوق البلاد هونج كونج الصين",
+    "name_en": "Al Blad Hwnj Kwnj Al Syn",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "ETF",
+    "market_segment": "ETF",
+    "is_etf": true
+  },
+  {
+    "symbol": "9411",
+    "name_ar": "صندوق الأول للاستثمار هونج كونج",
+    "name_en": "Al Awl Hwnj Kwnj",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "ETF",
+    "market_segment": "ETF",
+    "is_etf": true
+  },
+  {
+    "symbol": "9412",
+    "name_ar": "صندوق البلاد للأسهم السعودية",
+    "name_en": "Sndwq Al Blad Is And By",
+    "market": "TASI",
+    "status": "active",
+    "security_type": "ETF",
+    "market_segment": "ETF",
+    "is_etf": true
+  },
+  {
+    "symbol": "9413",
+    "name_ar": "صندوق الراجحي للأسهم السعودية",
+    "name_en": null,
+    "market": "TASI",
+    "status": "active",
+    "security_type": "ETF",
+    "market_segment": "ETF",
+    "is_etf": true
+  },
+  {
+    "symbol": "9510",
+    "name_ar": "الوطنية للبناء والتسويق",
+    "name_en": "NBM",
+    "market": "NOMU",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "NOMU",
+    "is_etf": false
+  },
+  {
+    "symbol": "9513",
+    "name_ar": "حديد وطني",
+    "name_en": "WATANI STEEL",
+    "market": "NOMU",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "NOMU",
+    "is_etf": false
+  },
+  {
+    "symbol": "9514",
+    "name_ar": "الناقول",
+    "name_en": "ALNAQOOL",
+    "market": "NOMU",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "NOMU",
+    "is_etf": false
+  },
+  {
+    "symbol": "9515",
+    "name_ar": "فش فاش",
+    "name_en": "FESH FASH",
+    "market": "NOMU",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "NOMU",
+    "is_etf": false
+  },
+  {
+    "symbol": "9516",
+    "name_ar": "غاز",
+    "name_en": "NGDC",
+    "market": "NOMU",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "NOMU",
+    "is_etf": false
+  },
+  {
+    "symbol": "9517",
+    "name_ar": "موبي للصناعة",
+    "name_en": "MOBI INDUSTRY",
+    "market": "NOMU",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "NOMU",
+    "is_etf": false
+  },
+  {
+    "symbol": "9521",
+    "name_ar": "إنمار",
+    "name_en": "INMAR",
+    "market": "NOMU",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "NOMU",
+    "is_etf": false
+  },
+  {
+    "symbol": "9522",
+    "name_ar": "الحاسوب",
+    "name_en": "ALHASOOB",
+    "market": "NOMU",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "NOMU",
+    "is_etf": false
+  },
+  {
+    "symbol": "9523",
+    "name_ar": "جروب فايف",
+    "name_en": "GROUP FIVE",
+    "market": "NOMU",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "NOMU",
+    "is_etf": false
+  },
+  {
+    "symbol": "9524",
+    "name_ar": "آيكتك",
+    "name_en": "AICTEC",
+    "market": "NOMU",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "NOMU",
+    "is_etf": false
+  },
+  {
+    "symbol": "9527",
+    "name_ar": "ألف ميم ياء",
+    "name_en": "AME",
+    "market": "NOMU",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "NOMU",
+    "is_etf": false
+  },
+  {
+    "symbol": "9530",
+    "name_ar": "طبية",
+    "name_en": "TIBBIYAH",
+    "market": "NOMU",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "NOMU",
+    "is_etf": false
+  },
+  {
+    "symbol": "9532",
+    "name_ar": "حلوة",
+    "name_en": "ALJOUF WATER",
+    "market": "NOMU",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "NOMU",
+    "is_etf": false
+  },
+  {
+    "symbol": "9533",
+    "name_ar": "المركز الآلي",
+    "name_en": "SPC",
+    "market": "NOMU",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "NOMU",
+    "is_etf": false
+  },
+  {
+    "symbol": "9535",
+    "name_ar": "لدن",
+    "name_en": "LADUN",
+    "market": "NOMU",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "NOMU",
+    "is_etf": false
+  },
+  {
+    "symbol": "9536",
+    "name_ar": "فاديكو",
+    "name_en": "FADECO",
+    "market": "NOMU",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "NOMU",
+    "is_etf": false
+  },
+  {
+    "symbol": "9537",
+    "name_ar": "أمواج الدولية",
+    "name_en": "AMWAJ INTERNATIONAL",
+    "market": "NOMU",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "NOMU",
+    "is_etf": false
+  },
+  {
+    "symbol": "9538",
+    "name_ar": "نسيج للتقنية",
+    "name_en": "NASEEJ TECH",
+    "market": "NOMU",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "NOMU",
+    "is_etf": false
+  },
+  {
+    "symbol": "9539",
+    "name_ar": "أقاسيم",
+    "name_en": "AQASEEM",
+    "market": "NOMU",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "NOMU",
+    "is_etf": false
+  },
+  {
+    "symbol": "9540",
+    "name_ar": "تدوير",
+    "name_en": "TADWEEER",
+    "market": "NOMU",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "NOMU",
+    "is_etf": false
+  },
+  {
+    "symbol": "9541",
+    "name_ar": "أكاديمية التعلم",
+    "name_en": "ACADEMY OF LEARNING",
+    "market": "NOMU",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "NOMU",
+    "is_etf": false
+  },
+  {
+    "symbol": "9542",
+    "name_ar": "كير",
+    "name_en": "KEIR *",
+    "market": "NOMU",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "NOMU",
+    "is_etf": false
+  },
+  {
+    "symbol": "9543",
+    "name_ar": "نت وركرس",
+    "name_en": "NETWORKERS",
+    "market": "NOMU",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "NOMU",
+    "is_etf": false
+  },
+  {
+    "symbol": "9544",
+    "name_ar": "الرعاية المستقبلية",
+    "name_en": "FUTURE CARE",
+    "market": "NOMU",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "NOMU",
+    "is_etf": false
+  },
+  {
+    "symbol": "9545",
+    "name_ar": "الدولية",
+    "name_en": "ALDAWLIAH",
+    "market": "NOMU",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "NOMU",
+    "is_etf": false
+  },
+  {
+    "symbol": "9546",
+    "name_ar": "نبع الصحة",
+    "name_en": "NABA ALSAHA",
+    "market": "NOMU",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "NOMU",
+    "is_etf": false
+  },
+  {
+    "symbol": "9547",
+    "name_ar": "رواسي",
+    "name_en": "RAWASI",
+    "market": "NOMU",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "NOMU",
+    "is_etf": false
+  },
+  {
+    "symbol": "9548",
+    "name_ar": "ابيكو",
+    "name_en": "APICO",
+    "market": "NOMU",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "NOMU",
+    "is_etf": false
+  },
+  {
+    "symbol": "9549",
+    "name_ar": "البابطين الغذائية",
+    "name_en": "ALBABTAIN FOOD",
+    "market": "NOMU",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "NOMU",
+    "is_etf": false
+  },
+  {
+    "symbol": "9550",
+    "name_ar": "شور",
+    "name_en": "SURE",
+    "market": "NOMU",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "NOMU",
+    "is_etf": false
+  },
+  {
+    "symbol": "9551",
+    "name_ar": "برج المعرفة",
+    "name_en": "KNOWLEDGE TOWER",
+    "market": "NOMU",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "NOMU",
+    "is_etf": false
+  },
+  {
+    "symbol": "9552",
+    "name_ar": "قمة السعودية",
+    "name_en": "SAUDI TOP",
+    "market": "NOMU",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "NOMU",
+    "is_etf": false
+  },
+  {
+    "symbol": "9553",
+    "name_ar": "ملان",
+    "name_en": "MOLAN",
+    "market": "NOMU",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "NOMU",
+    "is_etf": false
+  },
+  {
+    "symbol": "9555",
+    "name_ar": "لين الخير",
+    "name_en": "LEEN ALKHAIR",
+    "market": "NOMU",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "NOMU",
+    "is_etf": false
+  },
+  {
+    "symbol": "9557",
+    "name_ar": "إدارات",
+    "name_en": "EDARAT",
+    "market": "NOMU",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "NOMU",
+    "is_etf": false
+  },
+  {
+    "symbol": "9558",
+    "name_ar": "القمم",
+    "name_en": "ALQEMAM",
+    "market": "NOMU",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "NOMU",
+    "is_etf": false
+  },
+  {
+    "symbol": "9559",
+    "name_ar": "بلدي",
+    "name_en": "BALADY",
+    "market": "NOMU",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "NOMU",
+    "is_etf": false
+  },
+  {
+    "symbol": "9560",
+    "name_ar": "وجا",
+    "name_en": "WAJA",
+    "market": "NOMU",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "NOMU",
+    "is_etf": false
+  },
+  {
+    "symbol": "9561",
+    "name_ar": "نولجنت",
+    "name_en": "KNOWLEDGENET",
+    "market": "NOMU",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "NOMU",
+    "is_etf": false
+  },
+  {
+    "symbol": "9562",
+    "name_ar": "بوابة الأطعمة",
+    "name_en": "FOOD GATE",
+    "market": "NOMU",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "NOMU",
+    "is_etf": false
+  },
+  {
+    "symbol": "9563",
+    "name_ar": "بناء",
+    "name_en": "BENA",
+    "market": "NOMU",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "NOMU",
+    "is_etf": false
+  },
+  {
+    "symbol": "9564",
+    "name_ar": "آفاق الغذاء",
+    "name_en": "HORIZON FOOD",
+    "market": "NOMU",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "NOMU",
+    "is_etf": false
+  },
+  {
+    "symbol": "9565",
+    "name_ar": "معيار",
+    "name_en": "MEYAR",
+    "market": "NOMU",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "NOMU",
+    "is_etf": false
+  },
+  {
+    "symbol": "9566",
+    "name_ar": "الصناعات الجيرية",
+    "name_en": "LIME INDUSTRIES",
+    "market": "NOMU",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "NOMU",
+    "is_etf": false
+  },
+  {
+    "symbol": "9567",
+    "name_ar": "غذاء السلطان",
+    "name_en": "GHIDA ALSULTAN",
+    "market": "NOMU",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "NOMU",
+    "is_etf": false
+  },
+  {
+    "symbol": "9568",
+    "name_ar": "ميار",
+    "name_en": "MAYAR",
+    "market": "NOMU",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "NOMU",
+    "is_etf": false
+  },
+  {
+    "symbol": "9569",
+    "name_ar": "آل منيف",
+    "name_en": "ALMUNEEF",
+    "market": "NOMU",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "NOMU",
+    "is_etf": false
+  },
+  {
+    "symbol": "9570",
+    "name_ar": "تام التنموية",
+    "name_en": "TAM DEVELOPMENT",
+    "market": "NOMU",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "NOMU",
+    "is_etf": false
+  },
+  {
+    "symbol": "9571",
+    "name_ar": "مناوله",
+    "name_en": "MUNAWLA",
+    "market": "NOMU",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "NOMU",
+    "is_etf": false
+  },
+  {
+    "symbol": "9572",
+    "name_ar": "الرازي",
+    "name_en": "ALRAZI",
+    "market": "NOMU",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "NOMU",
+    "is_etf": false
+  },
+  {
+    "symbol": "9574",
+    "name_ar": "بروميديكس",
+    "name_en": "PRO MEDEX",
+    "market": "NOMU",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "NOMU",
+    "is_etf": false
+  },
+  {
+    "symbol": "9575",
+    "name_ar": "ماربل ديزاين",
+    "name_en": "MARBLE DESIGN",
+    "market": "NOMU",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "NOMU",
+    "is_etf": false
+  },
+  {
+    "symbol": "9576",
+    "name_ar": "منزل الورق",
+    "name_en": "PAPER HOME",
+    "market": "NOMU",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "NOMU",
+    "is_etf": false
+  },
+  {
+    "symbol": "9577",
+    "name_ar": "دار المركبة",
+    "name_en": "DAR ALMARKABAH",
+    "market": "NOMU",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "NOMU",
+    "is_etf": false
+  },
+  {
+    "symbol": "9578",
+    "name_ar": "مصاعد أطلس",
+    "name_en": "ATLAS ELEVATORS",
+    "market": "NOMU",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "NOMU",
+    "is_etf": false
+  },
+  {
+    "symbol": "9579",
+    "name_ar": "رماث",
+    "name_en": "IOUD",
+    "market": "NOMU",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "NOMU",
+    "is_etf": false
+  },
+  {
+    "symbol": "9580",
+    "name_ar": "الراشد للصناعة",
+    "name_en": "ALRASHID INDUSTRIAL",
+    "market": "NOMU",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "NOMU",
+    "is_etf": false
+  },
+  {
+    "symbol": "9581",
+    "name_ar": "كلين لايف",
+    "name_en": "CLEAN LIFE",
+    "market": "NOMU",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "NOMU",
+    "is_etf": false
+  },
+  {
+    "symbol": "9583",
+    "name_ar": "المتحدة للتعدين",
+    "name_en": "UNITED MINING",
+    "market": "NOMU",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "NOMU",
+    "is_etf": false
+  },
+  {
+    "symbol": "9584",
+    "name_ar": "ريال",
+    "name_en": "RIYAL",
+    "market": "NOMU",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "NOMU",
+    "is_etf": false
+  },
+  {
+    "symbol": "9585",
+    "name_ar": "ملكية",
+    "name_en": "MULKIA",
+    "market": "NOMU",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "NOMU",
+    "is_etf": false
+  },
+  {
+    "symbol": "9586",
+    "name_ar": "أصول وبخيت",
+    "name_en": "OSOOL AND BAKHEET",
+    "market": "NOMU",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "NOMU",
+    "is_etf": false
+  },
+  {
+    "symbol": "9587",
+    "name_ar": "لانا",
+    "name_en": "LANA",
+    "market": "NOMU",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "NOMU",
+    "is_etf": false
+  },
+  {
+    "symbol": "9588",
+    "name_ar": "حديد الرياض",
+    "name_en": "RIYADH STEEL",
+    "market": "NOMU",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "NOMU",
+    "is_etf": false
+  },
+  {
+    "symbol": "9589",
+    "name_ar": "فاد",
+    "name_en": "FAD",
+    "market": "NOMU",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "NOMU",
+    "is_etf": false
+  },
+  {
+    "symbol": "9590",
+    "name_ar": "أرماح",
+    "name_en": "ARMAH",
+    "market": "NOMU",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "NOMU",
+    "is_etf": false
+  },
+  {
+    "symbol": "9591",
+    "name_ar": "فيو",
+    "name_en": "VIEW",
+    "market": "NOMU",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "NOMU",
+    "is_etf": false
+  },
+  {
+    "symbol": "9592",
+    "name_ar": "المجتمع الطبية",
+    "name_en": "ALMUJTAMA MEDICAL",
+    "market": "NOMU",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "NOMU",
+    "is_etf": false
+  },
+  {
+    "symbol": "9593",
+    "name_ar": "عبر الخليج",
+    "name_en": "PAN GULF",
+    "market": "NOMU",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "NOMU",
+    "is_etf": false
+  },
+  {
+    "symbol": "9594",
+    "name_ar": "المداواة",
+    "name_en": "ALMODAWAT",
+    "market": "NOMU",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "NOMU",
+    "is_etf": false
+  },
+  {
+    "symbol": "9595",
+    "name_ar": "وسم",
+    "name_en": "WSM",
+    "market": "NOMU",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "NOMU",
+    "is_etf": false
+  },
+  {
+    "symbol": "9596",
+    "name_ar": "كوارا",
+    "name_en": "QUARA",
+    "market": "NOMU",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "NOMU",
+    "is_etf": false
+  },
+  {
+    "symbol": "9597",
+    "name_ar": "الليف",
+    "name_en": "LEAF",
+    "market": "NOMU",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "NOMU",
+    "is_etf": false
+  },
+  {
+    "symbol": "9598",
+    "name_ar": "المحافظة للتعليم",
+    "name_en": "ALMOHAFAZA FOR EDUCATION",
+    "market": "NOMU",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "NOMU",
+    "is_etf": false
+  },
+  {
+    "symbol": "9599",
+    "name_ar": "طاقات",
+    "name_en": "TAQAT",
+    "market": "NOMU",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "NOMU",
+    "is_etf": false
+  },
+  {
+    "symbol": "9600",
+    "name_ar": "كومل",
+    "name_en": "QOMEL",
+    "market": "NOMU",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "NOMU",
+    "is_etf": false
+  },
+  {
+    "symbol": "9601",
+    "name_ar": "الرشيد",
+    "name_en": "ALRASHEED",
+    "market": "NOMU",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "NOMU",
+    "is_etf": false
+  },
+  {
+    "symbol": "9602",
+    "name_ar": "يقين",
+    "name_en": "YAQEEN",
+    "market": "NOMU",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "NOMU",
+    "is_etf": false
+  },
+  {
+    "symbol": "9603",
+    "name_ar": "شركة الأفق التعليمية",
+    "name_en": "HORIZON EDUCATIONAL",
+    "market": "NOMU",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "NOMU",
+    "is_etf": false
+  },
+  {
+    "symbol": "9604",
+    "name_ar": "ميرال",
+    "name_en": "MIRAL",
+    "market": "NOMU",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "NOMU",
+    "is_etf": false
+  },
+  {
+    "symbol": "9605",
+    "name_ar": "نفط الشرق",
+    "name_en": "NEFT ALSHARQ",
+    "market": "NOMU",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "NOMU",
+    "is_etf": false
+  },
+  {
+    "symbol": "9606",
+    "name_ar": "ثروة",
+    "name_en": "THARWAH",
+    "market": "NOMU",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "NOMU",
+    "is_etf": false
+  },
+  {
+    "symbol": "9607",
+    "name_ar": "عسق",
+    "name_en": "ASG",
+    "market": "NOMU",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "NOMU",
+    "is_etf": false
+  },
+  {
+    "symbol": "9608",
+    "name_ar": "الأشغال الميسرة",
+    "name_en": "ALASHGHAL ALMOYSRA",
+    "market": "NOMU",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "NOMU",
+    "is_etf": false
+  },
+  {
+    "symbol": "9609",
+    "name_ar": "بترول ناس",
+    "name_en": "NAAS PETROL",
+    "market": "NOMU",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "NOMU",
+    "is_etf": false
+  },
+  {
+    "symbol": "9610",
+    "name_ar": "الجادة الأولى",
+    "name_en": "FIRST AVENUE",
+    "market": "NOMU",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "NOMU",
+    "is_etf": false
+  },
+  {
+    "symbol": "9611",
+    "name_ar": "المتحدة للزجاج المسطح",
+    "name_en": "UFG",
+    "market": "NOMU",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "NOMU",
+    "is_etf": false
+  },
+  {
+    "symbol": "9612",
+    "name_ar": "مياه سما",
+    "name_en": "SAMA WATER",
+    "market": "NOMU",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "NOMU",
+    "is_etf": false
+  },
+  {
+    "symbol": "9613",
+    "name_ar": "شلفا",
+    "name_en": "SHALFA",
+    "market": "NOMU",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "NOMU",
+    "is_etf": false
+  },
+  {
+    "symbol": "9614",
+    "name_ar": "نقاوة",
+    "name_en": "PURITY",
+    "market": "NOMU",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "NOMU",
+    "is_etf": false
+  },
+  {
+    "symbol": "9615",
+    "name_ar": "مفيد",
+    "name_en": "MUFEED",
+    "market": "NOMU",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "NOMU",
+    "is_etf": false
+  },
+  {
+    "symbol": "9616",
+    "name_ar": "جنى",
+    "name_en": "JANA *",
+    "market": "NOMU",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "NOMU",
+    "is_etf": false
+  },
+  {
+    "symbol": "9617",
+    "name_ar": "ارابيكا ستار",
+    "name_en": "ARABICA STAR",
+    "market": "NOMU",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "NOMU",
+    "is_etf": false
+  },
+  {
+    "symbol": "9618",
+    "name_ar": "الفاخرة",
+    "name_en": "ALFAKHERA",
+    "market": "NOMU",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "NOMU",
+    "is_etf": false
+  },
+  {
+    "symbol": "9619",
+    "name_ar": "الأعمال المتعددة",
+    "name_en": "MULTI BUSINESS",
+    "market": "NOMU",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "NOMU",
+    "is_etf": false
+  },
+  {
+    "symbol": "9620",
+    "name_ar": "بلسم الطبية",
+    "name_en": "BALSM MEDICAL",
+    "market": "NOMU",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "NOMU",
+    "is_etf": false
+  },
+  {
+    "symbol": "9621",
+    "name_ar": "دي آر سي",
+    "name_en": "DRC",
+    "market": "NOMU",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "NOMU",
+    "is_etf": false
+  },
+  {
+    "symbol": "9622",
+    "name_ar": "شموع الماضي",
+    "name_en": "SMC",
+    "market": "NOMU",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "NOMU",
+    "is_etf": false
+  },
+  {
+    "symbol": "9623",
+    "name_ar": "مصنع البتال",
+    "name_en": "ALBATTAL FACTORY",
+    "market": "NOMU",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "NOMU",
+    "is_etf": false
+  },
+  {
+    "symbol": "9624",
+    "name_ar": "الشهيلي المعدنية",
+    "name_en": "ALSHEHILI METAL",
+    "market": "NOMU",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "NOMU",
+    "is_etf": false
+  },
+  {
+    "symbol": "9625",
+    "name_ar": "إتمام",
+    "name_en": "ITMAM",
+    "market": "NOMU",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "NOMU",
+    "is_etf": false
+  },
+  {
+    "symbol": "9626",
+    "name_ar": "سمايل كير",
+    "name_en": "SMILE CARE",
+    "market": "NOMU",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "NOMU",
+    "is_etf": false
+  },
+  {
+    "symbol": "9627",
+    "name_ar": "طوارئيات",
+    "name_en": "TMC",
+    "market": "NOMU",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "NOMU",
+    "is_etf": false
+  },
+  {
+    "symbol": "9628",
+    "name_ar": "لمسات",
+    "name_en": "LAMASAT",
+    "market": "NOMU",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "NOMU",
+    "is_etf": false
+  },
+  {
+    "symbol": "9630",
+    "name_ar": "ريشيو",
+    "name_en": "RATIO",
+    "market": "NOMU",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "NOMU",
+    "is_etf": false
+  },
+  {
+    "symbol": "9631",
+    "name_ar": "هضاب الخليج",
+    "name_en": "HKC",
+    "market": "NOMU",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "NOMU",
+    "is_etf": false
+  },
+  {
+    "symbol": "9632",
+    "name_ar": "رؤية المستقبل",
+    "name_en": "FUTURE VISION",
+    "market": "NOMU",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "NOMU",
+    "is_etf": false
+  },
+  {
+    "symbol": "9633",
+    "name_ar": "آلات الصيانة",
+    "name_en": "SERVICE EQUIPMENT",
+    "market": "NOMU",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "NOMU",
+    "is_etf": false
+  },
+  {
+    "symbol": "9634",
+    "name_ar": "أدير",
+    "name_en": "ADEER",
+    "market": "NOMU",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "NOMU",
+    "is_etf": false
+  },
+  {
+    "symbol": "9635",
+    "name_ar": "دخون",
+    "name_en": "DKHOUN",
+    "market": "NOMU",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "NOMU",
+    "is_etf": false
+  },
+  {
+    "symbol": "9636",
+    "name_ar": "الخزامى",
+    "name_en": "ALKUZAMA",
+    "market": "NOMU",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "NOMU",
+    "is_etf": false
+  },
+  {
+    "symbol": "9637",
+    "name_ar": "الحلول المتسارعة",
+    "name_en": "AXELERATED SOLUTIONS",
+    "market": "NOMU",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "NOMU",
+    "is_etf": false
+  },
+  {
+    "symbol": "9639",
+    "name_ar": "أنماط",
+    "name_en": "ANMAT",
+    "market": "NOMU",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "NOMU",
+    "is_etf": false
+  },
+  {
+    "symbol": "9640",
+    "name_ar": "أساس مكين",
+    "name_en": "ASAS MAKEEN",
+    "market": "NOMU",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "NOMU",
+    "is_etf": false
+  },
+  {
+    "symbol": "9641",
+    "name_ar": "هوية",
+    "name_en": "HAWYIA",
+    "market": "NOMU",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "NOMU",
+    "is_etf": false
+  },
+  {
+    "symbol": "9642",
+    "name_ar": "تايم",
+    "name_en": "TIME",
+    "market": "NOMU",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "NOMU",
+    "is_etf": false
+  },
+  {
+    "symbol": "9644",
+    "name_ar": "ناف",
+    "name_en": "NAF",
+    "market": "NOMU",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "NOMU",
+    "is_etf": false
+  },
+  {
+    "symbol": "9645",
+    "name_ar": "ساين وورلد",
+    "name_en": "SIGN WORLD",
+    "market": "NOMU",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "NOMU",
+    "is_etf": false
+  },
+  {
+    "symbol": "9647",
+    "name_ar": "وجد الحياة",
+    "name_en": "WAJD LIFE",
+    "market": "NOMU",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "NOMU",
+    "is_etf": false
+  },
+  {
+    "symbol": "9648",
+    "name_ar": "حمد بن سعيدان العقارية",
+    "name_en": "HAMAD BIN SAEDAN REAL ESTATE",
+    "market": "NOMU",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "NOMU",
+    "is_etf": false
+  },
+  {
+    "symbol": "9649",
+    "name_ar": "جمجوم فاشن",
+    "name_en": "JAMJOOM FASHION",
+    "market": "NOMU",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "NOMU",
+    "is_etf": false
+  },
+  {
+    "symbol": "9650",
+    "name_ar": "ساحة المجد",
+    "name_en": "SAHAT ALMAJD",
+    "market": "NOMU",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "NOMU",
+    "is_etf": false
+  },
+  {
+    "symbol": "9651",
+    "name_ar": "التويجري",
+    "name_en": "ALTWIJRI",
+    "market": "NOMU",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "NOMU",
+    "is_etf": false
+  },
+  {
+    "symbol": "9653",
+    "name_ar": "خالد ظافر وإخوانه",
+    "name_en": "KDL",
+    "market": "NOMU",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "NOMU",
+    "is_etf": false
+  },
+  {
+    "symbol": "9655",
+    "name_ar": "مسقا",
+    "name_en": null,
+    "market": "NOMU",
+    "status": "active",
+    "security_type": "Equity",
+    "market_segment": "NOMU",
+    "is_etf": false
+  }
+]

@@ -1,0 +1,32 @@
+.stat-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.stat-card__title {
+  margin: 0;
+
+  color: var(--text-muted);
+
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.stat-card__value {
+  margin: 0;
+
+  color: var(--text-primary);
+
+  font-size: 1.4rem;
+  font-weight: 700;
+  line-height: 1.15;
+  font-variant-numeric: tabular-nums;
+}
+
+.stat-card__subtitle {
+  margin: .15rem 0 0;
+  color: var(--success);
+  font-size: .78rem;
+  font-weight: 600;
+}

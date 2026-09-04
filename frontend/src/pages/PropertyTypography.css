@@ -1,0 +1,19 @@
+.property-pages{gap:.8rem;line-height:var(--line-height-body)}
+.property-pages__tabs a{min-height:40px;font-size:var(--property-caption-size);line-height:1.35}
+.property-pages__metrics article{gap:.3rem;padding:1rem 1.1rem}
+.property-pages__metrics article>span,.property-pages__metrics article>small{font-size:var(--property-caption-size);font-weight:550;line-height:1.5}
+.property-pages__metrics strong{font-size:var(--property-metric-size);font-weight:750;line-height:1.3}
+.property-pages h2{font-size:1.02rem;font-weight:750;line-height:1.35}
+.property-pages p{font-size:var(--property-caption-size);line-height:1.55}
+.property-pages__head,.property-pages__activity-head{font-size:var(--property-caption-size);line-height:1.4}
+.property-pages__row,.property-pages__activity{font-size:var(--property-table-size);line-height:1.5}
+.property-pages__row>strong,.property-pages__activity>strong{font-size:var(--property-value-size);font-weight:720}
+.property-pages__row small,.property-pages__activity small{font-size:var(--property-caption-size);font-weight:520;line-height:1.45}
+.property-pages__actions a{min-height:32px;padding:.38rem .58rem;font-size:.75rem;line-height:1.35}
+.property-pages__empty,.property-pages__state{font-size:var(--property-body-size);line-height:1.55}
+.property-pages__note{padding:.8rem .9rem;font-size:var(--property-caption-size);line-height:1.55}
+.property-pages__note strong{font-size:.84rem;font-weight:750}
+html[lang="ar"] .property-pages{--property-caption-size:.84rem;--property-body-size:.96rem;--property-table-size:.94rem;--property-value-size:1.08rem;--property-metric-size:1.48rem}
+html[lang="ar"] .property-pages :is(.property-pages__metrics strong,.property-pages__row>strong,.property-pages__activity>strong){font-variant-numeric:tabular-nums;font-feature-settings:"tnum" 1;font-weight:760}
+.property-pages .formatted-money>.currency-mark--sar{font-size:1.2em!important;font-weight:400!important;line-height:1!important;transform:translateY(.035em) scale(1.06)}
+@media(max-width:650px){.property-pages{gap:.7rem;padding:.2rem .8rem 1.1rem}.property-pages__metrics article{padding:.9rem 1rem}.property-pages__metrics strong{font-size:1.3rem}html[lang="ar"] .property-pages__metrics strong{font-size:1.42rem}}

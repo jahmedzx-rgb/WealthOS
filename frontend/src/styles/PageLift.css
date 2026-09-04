@@ -1,0 +1,11 @@
+.portfolio-dashboard,
+.module-page,
+.reporting-page,
+.currency-settings { margin-top: -.3rem; }
+
+@media (max-width: 650px) {
+  .portfolio-dashboard,
+  .module-page,
+  .reporting-page,
+  .currency-settings { margin-top: -.2rem; }
+}

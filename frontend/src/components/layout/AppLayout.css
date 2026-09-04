@@ -1,0 +1,24 @@
+.app-layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.app-layout__body {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+}
+
+.app-layout__shell {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+  flex-direction: column;
+}
+
+.app-layout__content {
+  flex: 1;
+  min-width: 0;
+  background: var(--surface-secondary);
+}

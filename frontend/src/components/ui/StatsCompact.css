@@ -1,0 +1,6 @@
+.stat-grid > .card { padding: .55rem .8rem; }
+.stat-card { gap: .12rem; }
+.stat-card__primary { display: flex; align-items: baseline; gap: .5rem; min-width: 0; }
+.stat-card__primary .stat-card__subtitle { flex: 0 0 auto; margin: 0; }
+.stat-card__value { line-height: 1.08; }
+.stat-card__subtitle { margin-top: .08rem; }

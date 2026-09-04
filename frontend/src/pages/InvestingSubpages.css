@@ -1,0 +1,3 @@
+.brokers-page,.positions-page{width:100%;max-width:1600px}
+.brokers-page>.page-header,.positions-page>.page-header{min-height:58px;box-sizing:border-box}
+@media(max-width:650px){.brokers-page,.positions-page{padding:.15rem .8rem 1rem}}

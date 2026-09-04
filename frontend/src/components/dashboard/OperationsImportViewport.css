@@ -1,0 +1,22 @@
+.import-modal__panel {
+  max-height: calc(100vh - 2rem);
+  overflow: auto;
+}
+
+.import-modal__pagination strong {
+  min-width: 72px;
+  color: var(--text-secondary);
+  font-size: .6rem;
+  text-align: center;
+}
+
+@media (max-height: 720px) {
+  .import-modal__guard,
+  .import-modal__summary {
+    margin-top: .45rem;
+  }
+
+  .import-modal__list article {
+    padding-block: .5rem;
+  }
+}

@@ -1,0 +1,26 @@
+.trade-operation__account-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+.trade-operation__value-row{grid-template-columns:minmax(110px,.72fr) minmax(0,1.15fr) minmax(0,1fr);gap:12px!important}.trade-operation__value-row>div{display:grid;gap:.28rem;min-width:0}.trade-operation__value-row input[readonly]{background:#f7f3e8;color:#17345a;font-weight:700}
+.trade-operation__included-toggle{grid-column:1/-1;display:inline-flex!important;align-items:center;justify-content:flex-start!important;gap:.35rem!important;width:max-content;color:#667b94;font-size:.64rem!important;font-weight:600;white-space:nowrap}.trade-operation__included-toggle input{width:13px!important;height:13px!important;min-height:0!important;margin:0;accent-color:#17345a}
+.trade-operation__actions{display:flex!important;align-items:center;justify-content:flex-end;gap:.55rem!important}.trade-operation__actions>button{min-width:148px;padding:.7rem 1rem;border:0;border-radius:9px;background:#122440;color:#fff;cursor:pointer;font:inherit;font-weight:700}.trade-operation__actions>button:disabled{cursor:not-allowed;opacity:.55}.trade-operation__actions .trade-operation__clear{border:1px solid #c9d2df;background:#fff;color:#17345a;box-shadow:none}.trade-operation__actions .trade-operation__clear:hover:not(:disabled){border-color:#8fa0b7;background:#f5f7fa}
+.trade-operation__security-row{display:grid!important;grid-template-columns:minmax(0,1fr) auto;align-items:end;gap:12px!important}.trade-operation__security-row>div{min-width:0}.trade-operation__security-row .trade-operation__side>div{height:38px}.trade-operation__security-row .trade-operation__side button{height:38px}
+
+@media (max-width: 650px) {
+  .trade-operation__account-row {
+    grid-template-columns: 1fr;
+  }
+  .trade-operation__security-row{grid-template-columns:1fr}.trade-operation__security-row .trade-operation__side>div{height:auto}
+  .trade-operation__value-row{grid-template-columns:1fr}
+}
+.trade-operation__distribution { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; padding:.65rem; border:1px solid var(--border-primary); border-radius:10px; background:var(--surface-secondary); }
+.trade-operation__distribution>div { display:grid; gap:.35rem; }
+.trade-operation__distribution label { display:flex; justify-content:space-between; gap:.35rem; white-space:nowrap; }
+.trade-operation__distribution label small { color:var(--text-muted); font-size:.58rem; font-weight:500; }
+.trade-operation__distribution-status{grid-column:1/-1;margin:0;color:#657991;font-size:.66rem}.trade-operation__distribution-status::before{content:'●';margin-right:.35rem;color:#b78a1e;font-size:.55rem}
+.trade-operation__frequency{color:#17345a!important;background:#f7f3e8!important;font-weight:700}
+@media(max-width:650px){.trade-operation__distribution{grid-template-columns:1fr}.trade-operation__distribution>div:last-of-type{grid-column:auto}.trade-operation__distribution label{white-space:normal}}
+.trade-operation__field-label{display:flex;align-items:center;justify-content:space-between;gap:.6rem;width:100%}.trade-operation__field-label small{margin-left:auto;color:var(--text-muted);font-size:.66rem;font-weight:500;white-space:nowrap}.trade-operation__closing-row{display:grid!important;grid-template-columns:1fr 1fr;gap:12px!important}.trade-operation__commission-label small{color:#667b94;font-size:.64rem}@media(max-width:700px){.trade-operation__closing-row{grid-template-columns:1fr}.trade-operation__commission-label{align-items:flex-start;flex-direction:column;gap:.12rem}.trade-operation__commission-label small{margin-left:0}}
+.trade-operation__empty-portfolio{display:grid;gap:.35rem;margin-top:.45rem;padding:.65rem;border:1px solid #dfc985;border-radius:9px;background:#fbf8ef}.trade-operation__empty-portfolio strong{color:#17345a}.trade-operation__empty-portfolio span{color:var(--text-muted);font-size:.75rem}.trade-operation__empty-portfolio>div{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:.4rem}.trade-operation__empty-portfolio input{min-width:0}.trade-operation__empty-portfolio button{padding:0 .8rem;border:0;border-radius:8px;background:#122d53;color:#fff;font-weight:700}.trade-operation__empty-portfolio button:disabled{opacity:.55}

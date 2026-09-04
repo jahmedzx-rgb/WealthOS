@@ -1,0 +1,7 @@
+.lookup-select > label {
+  display: block;
+  margin-bottom: .45rem;
+  color: var(--text-secondary);
+  font-size: var(--operation-label-font-size, .8rem);
+  font-weight: 650;
+}

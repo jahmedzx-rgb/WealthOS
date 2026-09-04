@@ -1,0 +1,19 @@
+import { CheckCircle2, RefreshCcw, Search, TriangleAlert } from 'lucide-react'
+import { useEffect, useMemo, useState } from 'react'
+import { Link } from 'react-router-dom'
+import PageHeader from '../components/ui/PageHeader'
+import { useCurrency } from '../context/CurrencyContext'
+import { useLanguage } from '../context/LanguageContext'
+import { getReconciliation, type ReconciliationSummary } from '../services/accountingService'
+import { formatDate } from '../utils/dateFormat'
+import './AccountingToolPage.css'
+import FormattedMoney from '../components/ui/FormattedMoney'
+import { formatDisplayInteger } from '../utils/localeFormat'
+
+export default function ReconciliationView({standalone=false}:{standalone?:boolean}){
+  const{formatMoney}=useCurrency();const{t,language}=useLanguage();const[data,setData]=useState<ReconciliationSummary|null>(null);const[loading,setLoading]=useState(true);const[error,setError]=useState('');const[query,setQuery]=useState('')
+  useEffect(()=>{let active=true;getReconciliation().then(value=>{if(active)setData(value)}).catch(()=>{if(active)setError(t('Unable to perform reconciliation.'))}).finally(()=>{if(active)setLoading(false)});return()=>{active=false}},[t])
+  const items=useMemo(()=>data?.items.filter(item=>!query.trim()||`${item.description} ${item.posting_reference??''} ${item.journal_description??''}`.toLowerCase().includes(query.toLowerCase()))??[],[data,query])
+  const content=<div className="accounting-view"><div className="accounting-view__metrics"><article><span>{t('Matched')}</span><strong>{loading?'…':formatDisplayInteger(data?.matched??0,language)}</strong><small>{t('Confirmed posted operations')}</small></article><article><span>{t('Suggested Matches')}</span><strong>{loading?'…':formatDisplayInteger(data?.suggested??0,language)}</strong><small>{t('Amount and date match')}</small></article><article><span>{t('Needs Review')}</span><strong>{loading?'…':formatDisplayInteger(data?.needs_review??0,language)}</strong><small><Link to="/accounting/review-queue">{t('Open Review Queue')}</Link></small></article></div><section className="accounting-panel"><header><div><h2>{t('Reconciliation Results')}</h2><p>{t('Match imported statement transactions with actual posted journal entries.')}</p></div><RefreshCcw size={17}/></header><label className="accounting-tool__reconciliation-search"><Search size={15}/><input value={query} onChange={event=>setQuery(event.target.value)} placeholder={t('Search reconciled transactions')}/></label>{loading?<div className="review-queue__empty">{t('Performing reconciliation…')}</div>:error?<div className="review-queue__empty"><TriangleAlert size={20}/><strong>{t('Reconciliation failed')}</strong><span>{error}</span></div>:items.length?<div className="accounting-tool__reconciliation-list">{items.map(item=><div key={item.id}><span>{item.date?formatDate(item.date):t('No date')}</span><span><strong>{item.description}</strong><small>{item.journal_description??item.posting_reference??t('Imported operation')}</small></span><strong>{item.amount==null?'—':<FormattedMoney value={formatMoney(Number(item.amount))}/>}</strong><em className={`is-${item.status.toLowerCase()}`}>{item.status==='MATCHED'?<CheckCircle2 size={13}/>:<TriangleAlert size={13}/>} {t(item.status==='MATCHED'?'Matched':item.status==='SUGGESTED'?'Suggested':'Review')}</em></div>)}</div>:<div className="review-queue__empty"><CheckCircle2 size={22}/><strong>{t('No statement transactions need reconciliation')}</strong><span>{t('Import a bank or card statement to see its transactions here.')}</span></div>}</section></div>
+  return standalone?<section className="accounting-tool"><PageHeader title={t('Reconciliation')} subtitle={t('Match account and card transactions with WealthOS records.')} icon={RefreshCcw}/>{content}</section>:content
+}

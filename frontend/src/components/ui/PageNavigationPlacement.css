@@ -1,0 +1,4 @@
+.page-navigation{order:-1;flex-shrink:0}
+.module-page__header:has(>.page-navigation),.accounting-page>header:has(>.page-navigation),.reporting-page__header:has(>.page-navigation),.positions-page__header:has(>.page-navigation),.focus-page>header:has(>.page-navigation),.review-queue>header:has(>.page-navigation),.accounting-tool>header:has(>.page-navigation),.currency-settings>header:has(.page-navigation){justify-content:flex-start}
+.module-page__header-actions,.accounting-page__header-actions,.reporting-page__header>div:last-child,.currency-settings__header-icon{margin-left:auto}
+.currency-settings__header-actions{display:contents}
