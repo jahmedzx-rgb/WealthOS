@@ -24,4 +24,4 @@ COPY --from=frontend-build /build/frontend/dist frontend/dist/
 RUN useradd --create-home --uid 10001 wealthos && chown -R wealthos:wealthos /app
 USER wealthos
 EXPOSE 10000
-CMD ["python", "deploy/start_web.py"]
+CMD ["python", "-m", "deploy.start_web"]
