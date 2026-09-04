@@ -11,6 +11,7 @@ export default function BootstrapGate({ children }: { children: ReactNode }) {
   const [registering, setRegistering] = useState(false)
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
+  const [inviteCode, setInviteCode] = useState('')
   const [locale, setLocale] = useState<'ar' | 'en'>(direction === 'rtl' ? 'ar' : 'en')
   const [error, setError] = useState('')
 
@@ -28,7 +29,7 @@ export default function BootstrapGate({ children }: { children: ReactNode }) {
     setError('')
     const response = await fetch(`${API}/auth/${registering ? 'register' : 'login'}`, {
       method: 'POST', credentials: 'same-origin', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(registering ? { username, password, locale } : { username, password }),
+      body: JSON.stringify(registering ? { username, password, locale, invite_code: inviteCode } : { username, password }),
     })
     if (response.ok) return probe()
     const payload = await response.json().catch(() => null) as { detail?: { key?: string } } | null
@@ -50,6 +51,7 @@ export default function BootstrapGate({ children }: { children: ReactNode }) {
       <label>{direction === 'rtl' ? 'اسم المستخدم' : 'Username'}<input autoComplete="username" value={username} onChange={event => setUsername(event.target.value)} required minLength={3}/></label>
       <label>{direction === 'rtl' ? 'كلمة المرور' : 'Password'}<input type="password" autoComplete={registering ? 'new-password' : 'current-password'} value={password} onChange={event => setPassword(event.target.value)} required minLength={12}/></label>
       {registering && <label>{direction === 'rtl' ? 'اللغة' : 'Language'}<select value={locale} onChange={event => setLocale(event.target.value as 'ar' | 'en')}><option value="ar">العربية</option><option value="en">English</option></select></label>}
+      {registering && <label>Invite code<input type="password" autoComplete="off" value={inviteCode} onChange={event => setInviteCode(event.target.value)} required minLength={16}/></label>}
       {error && <p className="setup-wizard__error">{error}</p>}
     </div>
     <footer><button type="button" className="secondary" onClick={() => { setRegistering(!registering); setError('') }}>{registering ? (direction === 'rtl' ? 'لدي حساب' : 'I have an account') : (direction === 'rtl' ? 'إنشاء حساب' : 'Create account')}</button><button type="submit">{registering ? (direction === 'rtl' ? 'إنشاء' : 'Create') : (direction === 'rtl' ? 'دخول' : 'Sign in')}</button></footer>

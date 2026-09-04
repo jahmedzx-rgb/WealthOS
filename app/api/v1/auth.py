@@ -1,4 +1,6 @@
+import hashlib
 import secrets
+from datetime import UTC, datetime
 
 from fastapi import APIRouter, Depends, HTTPException, Request, Response
 from pydantic import BaseModel, Field, field_validator
@@ -9,7 +11,7 @@ from app.core.models.user import User
 from app.core.settings import settings
 from app.database.engine import get_db
 from app.security.local_lock import hash_secret, needs_rehash, validate_new_password, verify_secret
-from app.security.models import WebRegistrationSlot
+from app.security.models import WebInviteCode, WebRegistrationSlot
 from app.security.web_auth import CSRF_COOKIE, SESSION_COOKIE, check_rate_limit, client_key, get_session, issue_session, normalize_username, revoke_session, revoke_user_sessions
 
 router = APIRouter(prefix="/auth", tags=["Authentication"])
@@ -19,6 +21,7 @@ class Credentials(BaseModel):
     username: str = Field(min_length=3, max_length=64)
     password: str = Field(min_length=12, max_length=256)
     locale: str = Field(default="en", pattern="^(ar|en)$")
+    invite_code: str = Field(min_length=16, max_length=128)
 
     @field_validator("username")
     @classmethod
@@ -66,6 +69,12 @@ def register(payload: Credentials, request: Request, response: Response, db: Ses
     db.add(user)
     try:
         db.flush()
+        invite_hash = hashlib.sha256(payload.invite_code.strip().encode("utf-8")).hexdigest()
+        claimed = db.query(WebInviteCode).filter(WebInviteCode.code_hash == invite_hash, WebInviteCode.used_by_user_id.is_(None)).update(
+            {WebInviteCode.used_by_user_id: user.id, WebInviteCode.used_at: datetime.now(UTC)}, synchronize_session=False)
+        if claimed != 1:
+            db.rollback()
+            raise HTTPException(status_code=403, detail={"key": "auth.invite_invalid"})
         reserved = False
         for slot in range(1, settings.WEB_MAX_USERS + 1):
             try:

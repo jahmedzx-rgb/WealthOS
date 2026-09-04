@@ -16,7 +16,7 @@ services:
       - key: APP_VERSION
         value: 0.2.0-beta.1
       - key: MIGRATION_HEAD
-        value: c6b02f4c3e82
+        value: d7c13a5d4f93
       - key: WEB_SESSION_HOURS
         value: "12"
       - key: WEB_MAX_USERS

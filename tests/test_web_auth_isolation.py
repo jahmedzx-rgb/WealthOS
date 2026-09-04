@@ -7,8 +7,14 @@ from app.core.models import Currency, Entity, User
 from app.core.settings import settings
 from app.database.base import Base
 from app.database.engine import get_db
-from app.security.models import WebSessionRecord
+from app.security.models import WebInviteCode, WebSessionRecord
 from app.security.web_auth import CSRF_COOKIE, SESSION_COOKIE, token_digest
+
+
+def seed_invites(session_factory, *codes: str) -> None:
+    with session_factory() as db:
+        db.add_all(WebInviteCode(code_hash=token_digest(code)) for code in codes)
+        db.commit()
 
 
 def test_two_web_accounts_are_authenticated_and_export_isolated(tmp_path, monkeypatch):
@@ -27,14 +33,15 @@ def test_two_web_accounts_are_authenticated_and_export_isolated(tmp_path, monkey
     monkeypatch.setattr(settings, "COOKIE_SECURE", False)
     monkeypatch.setattr(main_module, "SessionLocal", testing_session)
     main_module.app.dependency_overrides[get_db] = override_db
+    seed_invites(testing_session, "invite-alice-0001", "invite-bob-0000002")
     try:
         anonymous = TestClient(main_module.app)
         assert anonymous.get("/api/v1/account/me").status_code == 401
 
         a = TestClient(main_module.app)
         b = TestClient(main_module.app)
-        first = a.post("/api/v1/auth/register", json={"username": "Alice", "password": "A-strong-passphrase-123", "locale": "en"})
-        second = b.post("/api/v1/auth/register", json={"username": "Bob", "password": "B-strong-passphrase-456", "locale": "ar"})
+        first = a.post("/api/v1/auth/register", json={"username": "Alice", "password": "A-strong-passphrase-123", "locale": "en", "invite_code": "invite-alice-0001"})
+        second = b.post("/api/v1/auth/register", json={"username": "Bob", "password": "B-strong-passphrase-456", "locale": "ar", "invite_code": "invite-bob-0000002"})
         assert first.status_code == 201
         assert second.status_code == 201
         assert a.get("/api/v1/account/me").json()["username"] == "Alice"
@@ -117,9 +124,10 @@ def test_username_normalization_is_unique(tmp_path, monkeypatch):
     monkeypatch.setattr(settings, "COOKIE_SECURE", False)
     monkeypatch.setattr(main_module, "SessionLocal", testing_session)
     main_module.app.dependency_overrides[get_db] = override_db
+    seed_invites(testing_session, "invite-case-00001", "invite-case-00002")
     try:
-        first = TestClient(main_module.app).post("/api/v1/auth/register", json={"username": "CaseUser", "password": "A-strong-passphrase-123", "locale": "en"})
-        duplicate = TestClient(main_module.app).post("/api/v1/auth/register", json={"username": "caseuser", "password": "B-strong-passphrase-456", "locale": "en"})
+        first = TestClient(main_module.app).post("/api/v1/auth/register", json={"username": "CaseUser", "password": "A-strong-passphrase-123", "locale": "en", "invite_code": "invite-case-00001"})
+        duplicate = TestClient(main_module.app).post("/api/v1/auth/register", json={"username": "caseuser", "password": "B-strong-passphrase-456", "locale": "en", "invite_code": "invite-case-00002"})
         assert first.status_code == 201
         assert duplicate.status_code == 409
         assert duplicate.json()["detail"]["key"] == "auth.username_taken"

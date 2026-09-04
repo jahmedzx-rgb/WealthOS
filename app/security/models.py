@@ -27,3 +27,11 @@ class WebRegistrationSlot(Base):
     __tablename__ = "web_registration_slots"
     slot: Mapped[int] = mapped_column(primary_key=True)
     user_id: Mapped[int] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"), unique=True, nullable=False)
+
+
+class WebInviteCode(Base):
+    __tablename__ = "web_invite_codes"
+    code_hash: Mapped[str] = mapped_column(String(64), primary_key=True)
+    used_by_user_id: Mapped[int | None] = mapped_column(ForeignKey("users.id", ondelete="RESTRICT"), unique=True, nullable=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=lambda: datetime.now(UTC), nullable=False)
+    used_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)

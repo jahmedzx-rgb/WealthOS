@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import hashlib
 import os
 
 import psycopg2
@@ -11,6 +12,27 @@ from alembic.script import ScriptDirectory
 
 
 MIGRATION_LOCK_ID = 905_710_042
+
+
+def _invite_hashes_from_env() -> list[str]:
+    raw = os.getenv("WEB_INVITE_CODES", "")
+    if not raw:
+        return []
+    codes = [value.strip() for value in raw.replace("\n", ",").split(",") if value.strip()]
+    if len(codes) != 10 or len(set(codes)) != 10 or any(len(code) < 16 for code in codes):
+        raise RuntimeError("WEB_INVITE_CODES must contain exactly 10 unique codes of at least 16 characters.")
+    return [hashlib.sha256(code.encode("utf-8")).hexdigest() for code in codes]
+
+
+def _provision_invites(connection) -> None:
+    hashes = _invite_hashes_from_env()
+    if not hashes:
+        return
+    with connection.cursor() as cursor:
+        cursor.execute("SELECT COUNT(*) FROM web_invite_codes")
+        if int(cursor.fetchone()[0]) != 0:
+            return
+        cursor.executemany("INSERT INTO web_invite_codes (code_hash, created_at) VALUES (%s, NOW())", [(value,) for value in hashes])
 
 
 def main() -> None:
@@ -31,6 +53,7 @@ def main() -> None:
         if not acquired:
             raise RuntimeError("Another WealthOS migration job holds the release lock.")
         command.upgrade(alembic_config, expected_head)
+        _provision_invites(connection)
     finally:
         try:
             with connection.cursor() as cursor:

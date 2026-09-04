@@ -40,7 +40,7 @@ def test_adopts_verified_legacy_database_when_canonical_is_absent(tmp_path):
     canonical = beta_root / "data" / "wealthos.db"
     assert canonical.is_file()
     assert not legacy.exists()
-    assert revision(canonical) == "c6b02f4c3e82"
+    assert revision(canonical) == "d7c13a5d4f93"
     assert len(list((beta_root / "backups").glob("legacy-pre-adoption-*.db"))) == 1
     assert len(list((beta_root / "backups").glob("legacy-original-*.db"))) == 1
 
@@ -105,7 +105,7 @@ def test_neutral_instance_copies_one_prior_profile_without_modifying_source(tmp_
 
     assert source.read_bytes() == original
     assert (instance_root / "data" / "wealthos.db").is_file()
-    assert revision(instance_root / "data" / "wealthos.db") == "c6b02f4c3e82"
+    assert revision(instance_root / "data" / "wealthos.db") == "d7c13a5d4f93"
     assert len(list((instance_root / "backups").glob("pre-instance-adoption-*.db"))) == 1
 
 
