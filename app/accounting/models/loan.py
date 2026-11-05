@@ -1,7 +1,7 @@
 from datetime import UTC, date, datetime
 from decimal import Decimal
 
-from sqlalchemy import Date, DateTime, ForeignKey, Integer, Numeric, String
+from sqlalchemy import Date, DateTime, ForeignKey, Integer, Numeric, String, JSON, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.database.base import Base
@@ -22,7 +22,8 @@ class Loan(Base):
     annual_rate: Mapped[Decimal] = mapped_column(Numeric(8, 4), nullable=False, default=0)
     term_months: Mapped[int] = mapped_column(Integer, nullable=False)
     monthly_payment: Mapped[Decimal] = mapped_column(Numeric(18, 2), nullable=False)
-    first_payment_date: Mapped[date] = mapped_column(Date, nullable=False)
+    first_payment_date: Mapped[date | None] = mapped_column(Date, nullable=True)
+    private_details: Mapped[dict | None] = mapped_column(JSON, nullable=True)
     destination_account_code: Mapped[int] = mapped_column(Integer, nullable=False)
     destination_bank_account_id: Mapped[int | None] = mapped_column(ForeignKey("bank_accounts.id", ondelete="SET NULL"), nullable=True)
     liability_account_code: Mapped[int] = mapped_column(Integer, nullable=False)
@@ -32,3 +33,42 @@ class Loan(Base):
 
     journal_entry = relationship("JournalEntry")
     user = relationship("User", back_populates="loans")
+
+
+class PrivateLoanEvent(Base):
+    __tablename__ = "private_loan_events"
+    __table_args__ = (UniqueConstraint("user_id", "idempotency_key", name="uq_private_loan_event_key"),)
+    id: Mapped[int] = mapped_column(primary_key=True)
+    user_id: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=False)
+    loan_id: Mapped[int] = mapped_column(ForeignKey("loans.id"), nullable=False)
+    kind: Mapped[str] = mapped_column(String(30), nullable=False)
+    event_date: Mapped[date] = mapped_column(Date, nullable=False)
+    amount: Mapped[Decimal] = mapped_column(Numeric(18, 2), nullable=False)
+    journal_entry_id: Mapped[int | None] = mapped_column(ForeignKey("journal_entries.id"), nullable=True)
+    idempotency_key: Mapped[str] = mapped_column(String(100), nullable=False)
+    payload_hash: Mapped[str] = mapped_column(String(64), nullable=False)
+    note: Mapped[str] = mapped_column(String(500), nullable=False, default="")
+
+
+class LoanPayment(Base):
+    __tablename__ = "loan_payments"
+    __table_args__ = (
+        UniqueConstraint("user_id", "idempotency_key", name="uq_loan_payment_key"),
+        UniqueConstraint("loan_id", "installment_number", name="uq_loan_payment_installment"),
+    )
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    user_id: Mapped[int] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"), nullable=False, index=True)
+    loan_id: Mapped[int] = mapped_column(ForeignKey("loans.id", ondelete="CASCADE"), nullable=False, index=True)
+    installment_number: Mapped[int] = mapped_column(Integer, nullable=False)
+    payment_date: Mapped[date] = mapped_column(Date, nullable=False)
+    amount: Mapped[Decimal] = mapped_column(Numeric(18, 2), nullable=False)
+    principal_paid: Mapped[Decimal] = mapped_column(Numeric(18, 2), nullable=False)
+    interest_paid: Mapped[Decimal] = mapped_column(Numeric(18, 2), nullable=False)
+    outstanding_after: Mapped[Decimal] = mapped_column(Numeric(18, 2), nullable=False)
+    remaining_installments: Mapped[int] = mapped_column(Integer, nullable=False)
+    bank_account_id: Mapped[int] = mapped_column(ForeignKey("bank_accounts.id"), nullable=False)
+    journal_entry_id: Mapped[int] = mapped_column(ForeignKey("journal_entries.id"), nullable=False)
+    idempotency_key: Mapped[str] = mapped_column(String(100), nullable=False)
+    payload_hash: Mapped[str] = mapped_column(String(64), nullable=False)
+    note: Mapped[str] = mapped_column(String(500), nullable=False, default="")

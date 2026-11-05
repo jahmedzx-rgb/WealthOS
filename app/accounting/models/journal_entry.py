@@ -33,3 +33,14 @@ class JournalEntry(Base):
         default=lambda: datetime.now(UTC),
     )
     user = relationship("User", back_populates="journal_entries")
+
+
+class JournalEntryDescriptionAudit(Base):
+    __tablename__ = "journal_entry_description_audits"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    journal_entry_id: Mapped[int] = mapped_column(ForeignKey("journal_entries.id", ondelete="CASCADE"), nullable=False, index=True)
+    user_id: Mapped[int] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"), nullable=False, index=True)
+    previous_description: Mapped[str] = mapped_column(String(255), nullable=False)
+    new_description: Mapped[str] = mapped_column(String(255), nullable=False)
+    changed_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=lambda: datetime.now(UTC), nullable=False)

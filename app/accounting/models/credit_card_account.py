@@ -1,7 +1,7 @@
-from datetime import UTC, datetime
+from datetime import UTC, date, datetime
 from decimal import Decimal
 
-from sqlalchemy import Boolean, DateTime, ForeignKey, Integer, Numeric, String, UniqueConstraint
+from sqlalchemy import Boolean, Date, DateTime, ForeignKey, Integer, Numeric, String, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column
 
 from app.database.base import Base
@@ -22,6 +22,11 @@ class CreditCardAccount(Base):
     minimum_monthly_payment: Mapped[Decimal] = mapped_column(Numeric(18, 2), nullable=False, default=0)
     statement_cutoff_day: Mapped[int | None] = mapped_column(Integer, nullable=True)
     payment_due_day: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    payment_due_date: Mapped[date | None] = mapped_column(Date, nullable=True)
+    statement_cutoff_date: Mapped[date | None] = mapped_column(Date, nullable=True)
+    auto_statement_started_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    auto_statement_opening_balance: Mapped[Decimal | None] = mapped_column(Numeric(18, 2), nullable=True)
+    auto_statement_opening_due: Mapped[Decimal | None] = mapped_column(Numeric(18, 2), nullable=True)
     is_fee_free: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
     annual_fee: Mapped[Decimal] = mapped_column(Numeric(18, 2), nullable=False, default=0)
     fee_renewal_day: Mapped[int | None] = mapped_column(Integer, nullable=True)

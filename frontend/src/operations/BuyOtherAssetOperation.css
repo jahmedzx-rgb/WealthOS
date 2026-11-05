@@ -1,0 +1,94 @@
+.buy-other-asset-operation .income-operation__form {
+  gap: .75rem;
+  padding: .9rem 1.1rem 1rem;
+  border-top: 2px solid #b68a26;
+  background: linear-gradient(145deg, #fff 0%, #fff 66%, #fffdf8 100%);
+}
+
+.buy-other-asset-operation .income-operation__section-heading {
+  padding-bottom: .7rem;
+}
+
+.buy-other-asset-operation .standard-operation__grid {
+  gap: 1rem 1.15rem;
+}
+
+.buy-other-asset-operation .standard-operation__grid label {
+  min-width: 0;
+  gap: .42rem;
+  color: #223d61;
+  font-weight: 650;
+}
+
+.buy-other-asset-operation .standard-operation__grid label > span {
+  font-size: .78rem;
+  line-height: 1.35;
+}
+
+.buy-other-asset-operation .standard-operation__grid input,
+.buy-other-asset-operation .standard-operation__grid select {
+  box-sizing: border-box;
+  height: 46px;
+  padding-inline: .82rem;
+  border-color: #d7dfeb;
+  border-radius: 10px;
+  background-color: rgba(255,255,255,.9);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.95), 0 2px 7px rgba(18,36,64,.025);
+  font-size: .82rem !important;
+  font-weight: 400;
+  transition: border-color .18s ease, box-shadow .18s ease, background .18s ease;
+}
+
+.buy-other-asset-operation .standard-operation__grid input:hover,
+.buy-other-asset-operation .standard-operation__grid select:hover {
+  border-color: #bfcce0;
+  background-color: #fff;
+}
+
+.buy-other-asset-operation .standard-operation__grid input:focus,
+.buy-other-asset-operation .standard-operation__grid select:focus {
+  border-color: #b79542;
+  background-color: #fff;
+  box-shadow: 0 0 0 3px rgba(183,149,66,.09), 0 3px 10px rgba(18,36,64,.04);
+}
+
+.buy-other-asset-operation .standard-operation__grid input::placeholder {
+  color: #8290a3;
+  font-weight: 400;
+}
+
+.buy-other-asset-operation .standard-operation__grid label:nth-child(5) input {
+  color: #122440;
+  font-size: .9rem !important;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.buy-other-asset-operation .standard-operation__grid label:last-child {
+  margin-top: .1rem;
+}
+
+.buy-other-asset-operation .income-operation__actions {
+  min-height: 48px;
+  padding-top: .75rem;
+}
+
+.buy-other-asset-operation .income-operation__actions > span {
+  font-size: .7rem;
+  line-height: 1.5;
+}
+
+.buy-other-asset-operation .income-operation__actions button {
+  min-height: 40px;
+  padding: .65rem 1.15rem;
+  box-shadow: 0 5px 12px rgba(18,36,64,.14);
+}
+
+.buy-other-asset-operation .income-operation__actions button:disabled {
+  box-shadow: none;
+}
+
+@media (max-width: 650px) {
+  .buy-other-asset-operation .income-operation__form { padding: .85rem; }
+  .buy-other-asset-operation .standard-operation__grid { gap: .85rem; }
+}

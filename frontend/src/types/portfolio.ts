@@ -14,7 +14,10 @@ export type PortfolioPosition = {
   security_id: number
   symbol: string
   name: string
+  name_ar?: string | null
+  name_en?: string | null
   security_type: string
+  allocation_type?: string
   exchange: string
   currency_code: string
   quantity: number

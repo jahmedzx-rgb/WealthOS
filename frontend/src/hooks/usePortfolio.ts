@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 
 import { getPortfolioSummary } from '../services/portfolioService'
 import type { PortfolioSummary } from '../types/portfolio'
@@ -14,6 +14,7 @@ export function usePortfolio(
 
   const [error, setError] =
     useState<string | null>(null)
+  const hasLoaded = useRef(false)
 
   const refresh = useCallback(async () => {
     if (portfolioId === null) {
@@ -21,18 +22,22 @@ export function usePortfolio(
       setLoading(false)
       return
     }
-    setLoading(true)
+    if (!hasLoaded.current) setLoading(true)
     setError(null)
     try {
       setData(await getPortfolioSummary(portfolioId))
     } catch (requestError) {
-      setError(requestError instanceof Error ? requestError.message : 'Unable to load portfolio.')
+      if (!hasLoaded.current) setError(requestError instanceof Error ? requestError.message : 'Unable to load portfolio.')
     } finally {
+      hasLoaded.current = true
       setLoading(false)
     }
   }, [portfolioId])
 
-  useEffect(() => { queueMicrotask(() => void refresh()) }, [refresh])
+  useEffect(() => {
+    hasLoaded.current = false
+    queueMicrotask(() => void refresh())
+  }, [refresh])
 
   return {
     data,

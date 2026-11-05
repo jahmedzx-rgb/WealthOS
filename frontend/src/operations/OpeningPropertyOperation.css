@@ -1,0 +1,13 @@
+.opening-property .opening-property__fields { border: 0; padding: 0; margin: 0; min-width: 0; display: grid; gap: 18px; }
+.opening-property .standard-operation__grid { gap: 18px 20px; }
+.opening-property .opening-property__cost { display: grid; gap: 8px; align-content: start; min-width: 0; }
+.opening-property .opening-property__fields label { font-size: 14px; font-weight: 500; line-height: 1.5; }
+.opening-property .opening-property__fields input:not([type="checkbox"]),
+.opening-property .opening-property__fields select { font-size: 14px; font-weight: 400; min-height: 42px; }
+.opening-property .opening-property__fields input::placeholder { font-weight: 400; opacity: .65; }
+.opening-property .opening-property__fields .opening-property__check { display: flex; align-items: center; justify-content: flex-start; gap: 8px; font-size: 13px; font-weight: 400; width: fit-content; margin: 0; cursor: pointer; }
+.opening-property .opening-property__fields .opening-property__check input[type="checkbox"] { appearance: auto; width: 17px; height: 17px; min-width: 17px; min-height: 17px; flex: 0 0 17px; margin: 0; padding: 0; accent-color: #17345a; }
+.opening-property .opening-property__check span { font-size: inherit; font-weight: inherit; }
+.opening-property .income-operation__smart-note strong { display: block; margin-bottom: 6px; }
+.opening-property .income-operation__actions > span { line-height: 1.6; }
+@media (max-width: 600px) { .opening-property .standard-operation__grid { grid-template-columns: minmax(0, 1fr); } }

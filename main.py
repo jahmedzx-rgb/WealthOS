@@ -1,4 +1,6 @@
 import sys
+import asyncio
+from contextlib import asynccontextmanager
 from pathlib import Path
 
 from fastapi import FastAPI, Request
@@ -6,6 +8,7 @@ from fastapi.middleware.trustedhost import TrustedHostMiddleware
 from fastapi.responses import FileResponse, JSONResponse, RedirectResponse
 from sqlalchemy import text
 import hmac
+import os
 
 import app.database.model_registry
 
@@ -29,10 +32,26 @@ def _configure_utf8_console() -> None:
 _configure_utf8_console()
 
 
+@asynccontextmanager
+async def lifespan(_app: FastAPI):
+    from app.investing.services.month_end_snapshot_scheduler import month_end_snapshot_loop
+
+    task = asyncio.create_task(month_end_snapshot_loop(), name="month-end-portfolio-snapshots")
+    try:
+        yield
+    finally:
+        task.cancel()
+        try:
+            await task
+        except asyncio.CancelledError:
+            pass
+
+
 app = FastAPI(
     title=settings.APP_NAME,
     version=settings.APP_VERSION,
     description="WealthOS Personal Finance & Investment Platform",
+    lifespan=lifespan,
 )
 
 trusted_hosts = [host.strip() for host in settings.TRUSTED_HOSTS.split(",") if host.strip()]
@@ -150,6 +169,11 @@ def ready():
     try:
         with SessionLocal() as db:
             db.execute(text("SELECT 1"))
+            if settings.WEB_MODE:
+                expected_head = os.getenv("MIGRATION_HEAD")
+                actual_heads = db.execute(text("SELECT version_num FROM alembic_version")).scalars().all()
+                if not expected_head or actual_heads != [expected_head]:
+                    return JSONResponse(status_code=503, content={"status": "not_ready"})
     except Exception:
         return JSONResponse(status_code=503, content={"status": "not_ready"})
     return {"status": "ready"}

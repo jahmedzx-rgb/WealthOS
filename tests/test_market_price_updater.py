@@ -6,6 +6,7 @@ from unittest.mock import Mock
 import pytest
 
 from app.investing.services.market_price_provider import MarketQuote
+from app.investing.services.market_price_provider import MarketPriceProviderError
 from app.investing.services.market_price_updater import (
     MarketPriceUpdater,
 )
@@ -91,7 +92,7 @@ def test_update_all_only_updates_active_securities():
         price_date=datetime(2026, 8, 5),
     )
     market_price = Mock()
-    updater.security_repository.list.return_value = [
+    updater.security_repository.list_active_held.return_value = [
         active,
         inactive,
     ]
@@ -103,3 +104,29 @@ def test_update_all_only_updates_active_securities():
     provider.get_latest.assert_called_once_with("AAPL")
     db.commit.assert_called_once_with()
     assert result == [market_price]
+
+
+def test_update_securities_limits_refresh_to_requested_positions_and_keeps_partial_successes():
+    updater, db, provider = make_updater()
+    first = make_security(1, "AAPL")
+    second = make_security(2, "MSFT")
+    unrelated = make_security(3, "NVDA")
+    updater.security_repository.list_active_by_ids.return_value = [first, second]
+    provider.get_latest.side_effect = [
+        MarketQuote(Decimal("231.45"), datetime(2026, 8, 5, 16, 0)),
+        MarketPriceProviderError("temporary provider failure"),
+    ]
+    saved_price = Mock()
+    updater.market_price_service.record.return_value = saved_price
+
+    updated, failed_ids = updater.update_securities([1, 2, 1])
+
+    assert updated == [saved_price]
+    assert failed_ids == [2]
+    assert [call.args[0] for call in provider.get_latest.call_args_list] == ["AAPL", "MSFT"]
+    updater.market_price_service.record.assert_called_once_with(
+        security_id=1,
+        price=Decimal("231.45"),
+        price_date=datetime(2026, 8, 5, 16, 0),
+    )
+    db.commit.assert_called_once_with()

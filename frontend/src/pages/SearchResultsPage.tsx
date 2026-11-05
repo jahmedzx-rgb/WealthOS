@@ -1,4 +1,4 @@
-/* eslint-disable react-hooks/set-state-in-effect */
+
 import { ArrowUpRight, BookOpen, BriefcaseBusiness, Building2, CreditCard, FileClock, Landmark, LibraryBig, ListTree, Search, Settings, Sprout, WalletCards } from 'lucide-react'
 import { useEffect, useMemo, useState, type ElementType, type FormEvent } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'

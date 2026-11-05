@@ -31,7 +31,7 @@ export function usePortfolios() {
   }
   useEffect(() => {
     // Loading an external API is the synchronization this effect owns.
-    // eslint-disable-next-line react-hooks/set-state-in-effect
+
     load()
   }, [])
 

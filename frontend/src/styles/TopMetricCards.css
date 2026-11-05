@@ -1,0 +1,34 @@
+/* Shared presentation for page-level summary metrics (pattern B).
+   Use the card's real top border so it follows the card's rounded corners. */
+:is([class*='__metrics'], .month-close-metrics, .report-preview__metrics) > article,
+.stat-grid > .card,
+.managed-portfolio-card__metrics > div {
+  border-top: 2px solid #244c7a !important;
+  transition: border-color 160ms ease, box-shadow 160ms ease;
+}
+
+:is([class*='__metrics'], .month-close-metrics, .report-preview__metrics) > article:hover,
+.stat-grid > .card:hover,
+.managed-portfolio-card__metrics > div:hover {
+  border-top-color: #b68a26 !important;
+}
+
+.positions-page__metrics > article::before { content: none !important; }
+
+:where([class*='__metrics'], .month-close-metrics, .stat-grid, .report-preview__metrics) > article > span:first-child,
+:where([class*='__metrics'], .month-close-metrics, .report-preview__metrics) > article > p:first-child,
+:where(.stat-grid) .stat-card__title,
+:where(.managed-portfolio-card__metrics) > div > small:first-child {
+  width: fit-content;
+  max-width: 100%;
+  padding-bottom: .16rem;
+  border-bottom: 1px solid rgba(182, 138, 38, .58);
+  color: #244c7a;
+  font-weight: 700;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  :is([class*='__metrics'], .month-close-metrics, .report-preview__metrics) > article,
+  .stat-grid > .card,
+  .managed-portfolio-card__metrics > div { transition: border-color 160ms ease, box-shadow 160ms ease; }
+}

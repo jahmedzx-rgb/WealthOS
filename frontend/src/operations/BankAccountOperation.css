@@ -1,0 +1,31 @@
+.bank-account-form .standard-operation__grid { gap: 18px 22px; }
+.bank-account-form .income-operation__form label { gap: 7px; min-width: 0; font-size: 14px; font-weight: 500; line-height: 1.5; }
+.bank-account-form .income-operation__form label > span { font-size: 14px; font-weight: 500; line-height: 1.5; }
+.bank-account-form .income-operation__form input:not([type="checkbox"]),
+.bank-account-form .income-operation__form select { min-height: 44px; padding: 10px 12px; font-size: 14px; font-weight: 400; line-height: 1.5; letter-spacing: normal; }
+.bank-account-form .income-operation__form input::placeholder { font-size: 14px; font-weight: 400; color: var(--text-muted); }
+.bank-account-form .income-operation__section-heading h3,
+.bank-account-form .income-operation__summary-header h3 { font-size: 17px; font-weight: 600; line-height: 1.5; }
+.bank-account-form .income-operation__section-heading p,
+.bank-account-form .income-operation__summary-header p,
+.bank-account-form .income-operation__actions > span { font-size: 13px; font-weight: 400; line-height: 1.65; }
+.bank-account-form .income-operation__form .bank-account-operation__primary { display: flex; align-items: center; gap: 9px; min-height: 44px; padding: 10px 12px; font-size: 13px; font-weight: 400; line-height: 1.6; cursor: pointer; }
+.bank-account-form .bank-account-operation__primary input[type="checkbox"] { width: 17px; height: 17px; min-width: 17px; min-height: 17px; margin: 0; padding: 0; flex: 0 0 17px; }
+.bank-account-form .income-operation__effects p { gap: 12px; flex-wrap: wrap; }
+.bank-account-form .income-operation__effects span,
+.bank-account-form .income-operation__effects strong { font-size: 14px; font-weight: 400; line-height: 1.6; }
+.bank-account-form .income-operation__form button { font-size: 14px; font-weight: 500; }
+.bank-account-form .income-operation__actions { gap: 12px; flex-wrap: wrap; }
+.bank-account-form .bank-account-form__details-row { display: grid; grid-column: 1 / -1; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 18px; align-items: start; }
+.bank-account-form .bank-account-form__details-row.is-edit { grid-template-columns: repeat(2,minmax(0,1fr)); }
+.bank-account-form .bank-account-form__details-row > label:last-child:nth-child(odd) { grid-column: auto; }
+.bank-account-form .bank-account-form__customer { min-width: 0; }
+.bank-account-form .bank-account-form__customer-control { display: flex; gap: 8px; align-items: center; }
+.bank-account-form .bank-account-form__customer-control input { flex: 1; min-width: 0; }
+.bank-account-form .bank-account-form__customer-control button { display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; min-height: 44px; border: 1px solid var(--border-primary); border-radius: 9px; background: var(--surface-primary); color: var(--text-primary); font-family: inherit; font-size: 12px; font-weight: 500; line-height: 1.4; cursor: pointer; transition: background-color .15s, border-color .15s; }
+.bank-account-form .bank-account-form__customer-control button:hover { background: var(--surface-tertiary); border-color: var(--border-hover); }
+.bank-account-form .bank-account-form__customer-control button:focus-visible { outline: 2px solid var(--text-primary); outline-offset: 2px; }
+.bank-account-form .bank-account-form__customer-control { position: relative; }
+.bank-account-form .bank-account-form__customer-control button { max-width: 48%; padding: 8px 10px; white-space: normal; }
+@media(max-width:650px) { .bank-account-form .bank-account-form__details-row,.bank-account-form .bank-account-form__details-row.is-edit { grid-template-columns: minmax(0,1fr); } }
+.bank-account-form .bank-account-form__customer small { font-size: 12px; font-weight: 400; color: var(--text-muted); line-height: 1.5; }

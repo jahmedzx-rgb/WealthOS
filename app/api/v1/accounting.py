@@ -1,5 +1,10 @@
 from fastapi import APIRouter, Depends
+from pydantic import BaseModel, Field
+from app.accounting.services.bank_customer_service import customer_number, save_customer_number
+from app.accounting.schemas.private_loan import PrivateLoanRequest, PrivateLoanPaymentRequest, PrivateLoanUpdateRequest, PrivateLoanPriorPaymentRequest, PrivateLoanPriorPaymentBulkRequest
+from app.accounting.services.private_loan_service import PrivateLoanService
 from sqlalchemy.exc import IntegrityError
+from sqlalchemy import func, or_
 from sqlalchemy.orm import Session
 
 from app.accounting.application.journal_entry import (
@@ -50,25 +55,28 @@ from app.accounting.schemas.withdraw_cash import (
     WithdrawCashRequest,
 )
 from app.database.engine import get_db
-from app.accounting.schemas.loan import LoanRequest, LoanRefinanceRequest, LoanSettlementRequest, LoanUpdateRequest
+from app.accounting.schemas.loan import LoanRequest, LoanRefinanceRequest, LoanSettlementRequest, LoanUpdateRequest, LoanPaymentRequest
 from app.accounting.services.loan_service import LoanService
 from app.accounting.services.financial_summary_service import FinancialSummaryService
+from app.accounting.services.wealth_analytics_service import WealthAnalyticsService
 from app.accounting.models.account import Account
 from app.api.v1.account import current_user
 from app.core.models.user import User
 from app.accounting.models.credit_card_account import CreditCardAccount
-from app.accounting.models.journal_entry import JournalEntry
+from app.accounting.models.journal_entry import JournalEntry, JournalEntryDescriptionAudit
 from app.accounting.models.journal_line import JournalLine
 from app.accounting.schemas.credit_card_account import CreditCardAccountRequest, CreditCardBalanceAdjustmentRequest, CreditCardUpdateRequest
 from app.accounting.models.bank_account import BankAccount, BankAccountIdentifierAudit
 from app.accounting.schemas.bank_account import BankAccountRequest, BankAccountUpdateRequest, BankOpeningBalanceRequest
 from app.accounting.bank_identifiers import mask_bank_account_identifier, normalize_bank_account_identifier
 from app.accounting.models.deposit import Deposit
+from app.accounting.models.loan import Loan
 from app.accounting.models.rental_schedule import RentalSchedule
 from app.accounting.models.property_asset import PropertyAsset
-from app.accounting.schemas.property_asset import PropertyUpdateRequest, PropertyValueAdjustmentRequest
-from app.accounting.schemas.asset_disposition import BreakDepositRequest, SellPropertyRequest
-from app.accounting.schemas.deposit import DepositBalanceAdjustmentRequest, DepositRequest, DepositUpdateRequest
+from app.accounting.schemas.property_asset import OpeningPropertyRequest, PropertyUpdateRequest, PropertyValueAdjustmentRequest
+from app.accounting.services.opening_property_service import OpeningPropertyConflict, OpeningPropertyService
+from app.accounting.schemas.asset_disposition import BreakDepositRequest, DepositMaturitySettlementRequest, SellPropertyRequest
+from app.accounting.schemas.deposit import DepositBalanceAdjustmentRequest, DepositRequest, DepositReturnReconciliationRequest, DepositUpdateRequest, DepositWithdrawalRequest
 from fastapi import HTTPException
 from uuid import uuid4
 from datetime import UTC, date, datetime, timedelta
@@ -81,6 +89,7 @@ from app.accounting.schemas.wealth_products import AlternativeInvestmentRequest,
 from app.accounting.services.wealth_product_service import WealthProductService
 from app.accounting.schemas.expense import ExpenseRequest
 from app.accounting.services.expense_service import ExpenseService
+from app.accounting.services.card_statement_service import statement_view, reset_baseline, validate_card_date
 from app.accounting.schemas.month_close import MonthCloseRequest, MonthReopenRequest
 from app.accounting.services.month_close_service import MonthCloseService
 from app.accounting.models.month_close import MonthClose
@@ -95,6 +104,15 @@ router = APIRouter(
 )
 
 
+class ExpenseCreditCardCorrectionRequest(BaseModel):
+    credit_card_id: int = Field(..., gt=0)
+
+
+class CreditCardStatementCorrectionRequest(BaseModel):
+    issued_statement_balance: Decimal = Field(ge=0)
+    statement_cutoff_date: date
+
+
 @router.post("/expense", status_code=201)
 def record_expense(request: ExpenseRequest, db: Session = Depends(get_db), user: User = Depends(current_user)):
     try:
@@ -107,6 +125,53 @@ def record_expense(request: ExpenseRequest, db: Session = Depends(get_db), user:
         }
     except ValueError as exc:
         raise HTTPException(status_code=422, detail=str(exc)) from exc
+
+
+@router.patch("/expenses/{entry_id}/credit-card")
+def correct_expense_credit_card(entry_id: int, request: ExpenseCreditCardCorrectionRequest, db: Session = Depends(get_db), user: User = Depends(current_user)):
+    entry = db.query(JournalEntry).filter(JournalEntry.id == entry_id, JournalEntry.user_id == user.id).with_for_update().first()
+    if entry is None or not (entry.related_reference or "").startswith("credit-card-expense:"):
+        raise HTTPException(status_code=404, detail="Credit card expense not found.")
+    try:
+        source_card_id = int(entry.related_reference.rsplit(":", 1)[1])
+    except (TypeError, ValueError) as exc:
+        raise HTTPException(status_code=422, detail="The expense has an invalid credit card reference.") from exc
+    if source_card_id == request.credit_card_id:
+        raise HTTPException(status_code=422, detail="The expense is already assigned to this credit card.")
+    cards = db.query(CreditCardAccount).filter(
+        CreditCardAccount.id.in_([source_card_id, request.credit_card_id]),
+        CreditCardAccount.user_id == user.id,
+        CreditCardAccount.is_active.is_(True),
+    ).with_for_update().all()
+    cards_by_id = {card.id: card for card in cards}
+    source_card = cards_by_id.get(source_card_id)
+    target_card = cards_by_id.get(request.credit_card_id)
+    if source_card is None or target_card is None:
+        raise HTTPException(status_code=404, detail="Source or destination credit card not found.")
+    liability_line = db.query(JournalLine).join(Account, JournalLine.account_id == Account.id).filter(
+        JournalLine.journal_entry_id == entry.id,
+        Account.code == 2110,
+        JournalLine.credit > 0,
+    ).one_or_none()
+    if liability_line is None:
+        raise HTTPException(status_code=422, detail="The expense liability amount could not be determined.")
+    amount = liability_line.credit
+    if source_card.current_balance < amount:
+        raise HTTPException(status_code=422, detail="The source card balance is lower than this expense.")
+    if target_card.current_balance + amount > target_card.credit_limit:
+        raise HTTPException(status_code=422, detail="Moving this expense exceeds the destination card limit.")
+    source_card.current_balance -= amount
+    target_card.current_balance += amount
+    entry.related_reference = f"credit-card-expense:{target_card.id}"
+    db.commit()
+    return {
+        "entry_id": entry.id,
+        "amount": amount,
+        "source_card_id": source_card.id,
+        "source_balance": source_card.current_balance,
+        "credit_card_id": target_card.id,
+        "credit_card_balance": target_card.current_balance,
+    }
 
 
 def _model_dict(item):
@@ -142,6 +207,22 @@ def create_alternative_investment(request: AlternativeInvestmentRequest, db: Ses
 @router.get("/financial-summary")
 def financial_summary(db: Session = Depends(get_db), user: User = Depends(current_user)):
     return FinancialSummaryService(db, user.id).get()
+
+
+@router.get("/wealth-analytics")
+def wealth_analytics(period: str = "YTD", db: Session = Depends(get_db), user: User = Depends(current_user)):
+    try:
+        return WealthAnalyticsService(db, user.id).get(period.upper())
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+
+
+@router.get("/activity")
+def monthly_activity(year: int, month: int, db: Session = Depends(get_db), user: User = Depends(current_user)):
+    try:
+        return FinancialSummaryService(db, user.id).activity_for_month(year, month)
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
 
 
 @router.get("/reports")
@@ -281,8 +362,26 @@ def properties(db: Session = Depends(get_db), user: User = Depends(current_user)
         if asset is not None and asset.status != "ACTIVE":
             continue
         name = asset.name if asset else (entry.description.removeprefix("Property Purchase:").split(" · Transfer Tax", 1)[0].strip() or entry.description)
-        result.append({"id": entry.id, "reference": f"property:{entry.id}", "name": name, "usage": asset.usage if asset else "UNSPECIFIED", "income_type": asset.income_type if asset else None, "acquisition_cost": line.debit, "current_value": asset.current_value if asset else line.debit, "purchase_date": entry.transaction_date.date()})
+        result.append({"id": entry.id, "reference": f"property:{entry.id}", "name": name, "usage": asset.usage if asset else "UNSPECIFIED", "income_type": asset.income_type if asset else None, "acquisition_cost": line.debit, "current_value": asset.current_value if asset else line.debit, "purchase_date": entry.transaction_date.date(), "acquisition_date": asset.acquisition_date if asset else None, "opening_date": asset.opening_date if asset else None})
     return result
+
+
+@router.post("/properties/opening", status_code=201)
+def create_opening_property(request: OpeningPropertyRequest, db: Session = Depends(get_db), user: User = Depends(current_user)):
+    try:
+        return OpeningPropertyService(db, user.id).execute(request)
+    except OpeningPropertyConflict as exc:
+        db.rollback()
+        raise HTTPException(status_code=409, detail=str(exc)) from exc
+    except IntegrityError as exc:
+        db.rollback()
+        try:
+            return OpeningPropertyService(db, user.id).recover_idempotent_replay(request)
+        except OpeningPropertyConflict as conflict:
+            raise HTTPException(status_code=409, detail=str(conflict)) from exc
+    except ValueError as exc:
+        db.rollback()
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
 
 
 def _property_record(db: Session, user_id: int, property_id: int):
@@ -387,12 +486,43 @@ def rental_reminders(days: int = 30, db: Session = Depends(get_db), user: User =
 @router.get("/journal-entries")
 def journal_entries(db: Session = Depends(get_db), user: User = Depends(current_user)):
     entries = db.query(JournalEntry).filter(JournalEntry.user_id == user.id).order_by(JournalEntry.transaction_date.desc(), JournalEntry.id.desc()).all()
+    cards = {card.id: card for card in db.query(CreditCardAccount).filter(CreditCardAccount.user_id == user.id).all()}
     result = []
     for entry in entries:
         rows = db.query(JournalLine, Account).join(Account, JournalLine.account_id == Account.id).filter(JournalLine.journal_entry_id == entry.id).order_by(JournalLine.id).all()
-        lines = [{"id": line.id, "account_code": account.code, "account_name": account.name, "debit": line.debit, "credit": line.credit} for line, account in rows]
-        result.append({"id": entry.id, "transaction_date": entry.transaction_date, "description": entry.description, "related_reference": entry.related_reference, "created_at": entry.created_at, "lines": lines})
+        card_detail = None
+        reference = entry.related_reference or ""
+        if reference.startswith(("credit-card-expense:", "credit-card-cashback:", "credit-card-adjustment:", "credit-card:", "opening-credit-card:")):
+            try:
+                card = cards.get(int(reference.rsplit(":", 1)[1]))
+                if card is not None:
+                    card_detail = f"{card.issuer_bank} · {card.card_name} •• {card.last4}"
+            except ValueError:
+                pass
+        lines = [{"id": line.id, "account_code": account.code, "account_name": account.name, "account_detail": card_detail if account.code == 2110 else None, "debit": line.debit, "credit": line.credit} for line, account in rows]
+        edits = db.query(JournalEntryDescriptionAudit).filter(JournalEntryDescriptionAudit.journal_entry_id == entry.id, JournalEntryDescriptionAudit.user_id == user.id).order_by(JournalEntryDescriptionAudit.changed_at.desc(), JournalEntryDescriptionAudit.id.desc()).all()
+        result.append({"id": entry.id, "transaction_date": entry.transaction_date, "description": entry.description, "related_reference": entry.related_reference, "created_at": entry.created_at, "description_edits": [{"id": edit.id, "previous_description": edit.previous_description, "new_description": edit.new_description, "changed_at": edit.changed_at} for edit in edits], "lines": lines})
     return result
+
+
+class JournalEntryDescriptionUpdate(BaseModel):
+    description: str = Field(min_length=3, max_length=255)
+
+
+@router.patch("/journal-entries/{entry_id}/description")
+def update_journal_entry_description(entry_id: int, request: JournalEntryDescriptionUpdate, db: Session = Depends(get_db), user: User = Depends(current_user)):
+    entry = db.query(JournalEntry).filter(JournalEntry.id == entry_id, JournalEntry.user_id == user.id).first()
+    if entry is None:
+        raise HTTPException(status_code=404, detail="Transaction was not found.")
+    description = request.description.strip()
+    if len(description) < 3:
+        raise HTTPException(status_code=422, detail="Description must contain at least 3 characters.")
+    if description == entry.description:
+        raise HTTPException(status_code=422, detail="The description has not changed.")
+    audit = JournalEntryDescriptionAudit(journal_entry_id=entry.id, user_id=user.id, previous_description=entry.description, new_description=description)
+    entry.description = description
+    db.add(audit); db.commit(); db.refresh(entry); db.refresh(audit)
+    return {"id": entry.id, "description": entry.description, "description_edit": {"id": audit.id, "previous_description": audit.previous_description, "new_description": audit.new_description, "changed_at": audit.changed_at}}
 
 
 def _imported_date(value: str | None):
@@ -458,15 +588,142 @@ def reconciliation(db: Session = Depends(get_db), user: User = Depends(current_u
 @router.get("/credit-cards")
 def list_credit_cards(db: Session = Depends(get_db), user: User = Depends(current_user)):
     cards = db.query(CreditCardAccount).filter(CreditCardAccount.user_id == user.id, CreditCardAccount.is_active.is_(True)).order_by(CreditCardAccount.created_at).all()
-    return [{column.name: getattr(card, column.name) for column in card.__table__.columns} for card in cards]
+    return [{**{column.name: getattr(card, column.name) for column in card.__table__.columns}, **statement_view(db, card)} for card in cards]
+
+
+@router.get("/credit-cards/{card_id}/payments")
+def credit_card_payment_history(card_id: int, db: Session = Depends(get_db), user: User = Depends(current_user)):
+    card = db.query(CreditCardAccount).filter(CreditCardAccount.id == card_id, CreditCardAccount.user_id == user.id).first()
+    if card is None:
+        raise HTTPException(status_code=404, detail="Credit card not found.")
+    cards = db.query(CreditCardAccount).filter(CreditCardAccount.user_id == user.id).all()
+    cards_by_id = {item.id: item for item in cards}
+    entries = db.query(JournalEntry).filter(
+        JournalEntry.user_id == user.id,
+        or_(
+            JournalEntry.related_reference == f"credit-card-payment:{card_id}",
+            JournalEntry.related_reference.like(f"credit-card-sadad:%:{card_id}"),
+            JournalEntry.related_reference.like(f"credit-card-sadad:{card_id}:%"),
+        ),
+    ).order_by(JournalEntry.transaction_date.desc(), JournalEntry.id.desc()).all()
+    history = []
+    for entry in entries:
+        reference = entry.related_reference or ""
+        lines = db.query(JournalLine).filter(JournalLine.journal_entry_id == entry.id).all()
+        amount = max((max(line.debit or 0, line.credit or 0) for line in lines), default=0)
+        role, counterpart = "RECEIVED", "Bank account"
+        if reference.startswith("credit-card-sadad:"):
+            _, source_id, target_id = reference.split(":")
+            source, target = cards_by_id.get(int(source_id)), cards_by_id.get(int(target_id))
+            if int(source_id) == card_id:
+                role, other = "FUNDED", target
+            else:
+                role, other = "RECEIVED", source
+            counterpart = f"{other.issuer_bank} · {other.card_name} · •• {other.last4}" if other else "Credit card"
+        history.append({"id": entry.id, "transaction_date": entry.transaction_date, "amount": amount,
+                        "role": role, "counterpart": counterpart, "description": entry.description,
+                        "activity_url": f"/activity/{entry.id}"})
+    projected_statement = statement_view(db, card)
+    cutoff_date = projected_statement.get("statement_cutoff_date")
+    paid_since_statement = sum((item["amount"] for item in history if item["role"] == "RECEIVED" and (cutoff_date is None or item["transaction_date"].date() > cutoff_date)), 0)
+    payment_by_entry = {item["id"]: item for item in history}
+    transaction_entries = db.query(JournalEntry).filter(
+        JournalEntry.user_id == user.id,
+        or_(
+            JournalEntry.related_reference.in_([
+                f"credit-card-expense:{card_id}", f"credit-card-cashback:{card_id}",
+                f"credit-card-adjustment:{card_id}", f"opening-credit-card:{card_id}", f"credit-card:{card_id}",
+                f"credit-card-payment:{card_id}",
+            ]),
+            JournalEntry.related_reference.like(f"credit-card-sadad:%:{card_id}"),
+            JournalEntry.related_reference.like(f"credit-card-sadad:{card_id}:%"),
+        ),
+    ).order_by(JournalEntry.transaction_date.desc(), JournalEntry.id.desc()).all()
+    transactions = []
+    for entry in transaction_entries:
+        reference = entry.related_reference or ""
+        payment = payment_by_entry.get(entry.id)
+        if payment:
+            effect = -payment["amount"] if payment["role"] == "RECEIVED" else payment["amount"]
+            category = "PAYMENT_RECEIVED" if payment["role"] == "RECEIVED" else "PAYMENT_FUNDED"
+            counterpart = payment["counterpart"]
+        else:
+            liability_lines = db.query(JournalLine).join(Account, JournalLine.account_id == Account.id).filter(JournalLine.journal_entry_id == entry.id, Account.code == 2110).all()
+            effect = sum(((line.credit or 0) - (line.debit or 0) for line in liability_lines), 0)
+            category = "PURCHASE" if reference.startswith("credit-card-expense:") else "CASHBACK" if reference.startswith("credit-card-cashback:") else "ADJUSTMENT" if reference.startswith("credit-card-adjustment:") else "OPENING_BALANCE"
+            counterpart = None
+        transactions.append({"id": entry.id, "transaction_date": entry.transaction_date, "amount": abs(effect), "balance_effect": effect,
+                             "category": category, "counterpart": counterpart, "description": entry.description,
+                             "related_reference": entry.related_reference, "is_payment": payment is not None, "activity_url": f"/activity/{entry.id}"})
+    return {"card": {**{column.name: getattr(card, column.name) for column in card.__table__.columns}, **projected_statement}, "payments": history, "transactions": transactions, "paid_since_statement": paid_since_statement}
+
+
+class CreditCardPaymentDateUpdate(BaseModel):
+    transaction_date: datetime
+
+
+@router.patch("/credit-cards/{card_id}/payments/{entry_id}")
+def update_credit_card_payment_date(card_id: int, entry_id: int, request: CreditCardPaymentDateUpdate, db: Session = Depends(get_db), user: User = Depends(current_user)):
+    card = db.query(CreditCardAccount).filter(CreditCardAccount.id == card_id, CreditCardAccount.user_id == user.id).first()
+    if card is None:
+        raise HTTPException(status_code=404, detail="Credit card not found.")
+    entry = db.query(JournalEntry).filter(JournalEntry.id == entry_id, JournalEntry.user_id == user.id).first()
+    reference = entry.related_reference if entry else ""
+    belongs_to_card = reference == f"credit-card-payment:{card_id}" or (
+        reference.startswith("credit-card-sadad:") and str(card_id) in reference.split(":")[1:]
+    )
+    if entry is None or not belongs_to_card:
+        raise HTTPException(status_code=404, detail="Card payment was not found.")
+    corrected = request.transaction_date if request.transaction_date.tzinfo else request.transaction_date.replace(tzinfo=UTC)
+    if corrected > datetime.now(UTC):
+        raise HTTPException(status_code=422, detail="Payment date cannot be in the future.")
+    entry.transaction_date = request.transaction_date
+    db.commit()
+    db.refresh(entry)
+    return {"id": entry.id, "transaction_date": entry.transaction_date, "message": "Card payment date updated successfully."}
+
+
+@router.delete("/credit-cards/{card_id}/payments/{entry_id}")
+def delete_credit_card_payment(card_id: int, entry_id: int, db: Session = Depends(get_db), user: User = Depends(current_user)):
+    entry = db.query(JournalEntry).filter(JournalEntry.id == entry_id, JournalEntry.user_id == user.id).with_for_update().first()
+    reference = entry.related_reference if entry else ""
+    if entry is None or not reference.startswith("credit-card-sadad:"):
+        raise HTTPException(status_code=422, detail="Only card-to-card payments with an identifiable source can be deleted safely.")
+    try:
+        _, source_text, target_text = reference.split(":")
+        source_id, target_id = int(source_text), int(target_text)
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail="The payment source could not be identified safely.") from exc
+    if card_id not in {source_id, target_id}:
+        raise HTTPException(status_code=404, detail="Card payment was not found.")
+    cards = db.query(CreditCardAccount).filter(CreditCardAccount.user_id == user.id, CreditCardAccount.id.in_([source_id, target_id])).with_for_update().all()
+    cards_by_id = {item.id: item for item in cards}
+    source, target = cards_by_id.get(source_id), cards_by_id.get(target_id)
+    if source is None or target is None:
+        raise HTTPException(status_code=404, detail="Source or destination credit card was not found.")
+    lines = db.query(JournalLine).filter(JournalLine.journal_entry_id == entry.id).all()
+    amount = max((max(line.debit or 0, line.credit or 0) for line in lines), default=0)
+    if source.current_balance < amount:
+        raise HTTPException(status_code=409, detail="The funding card balance is now lower than this payment, so it cannot be deleted safely.")
+    target.current_balance += amount
+    target.statement_balance += amount
+    source.current_balance -= amount
+    source.statement_balance = max(0, source.statement_balance - amount)
+    reset_baseline(target, target.statement_balance)
+    reset_baseline(source, source.statement_balance)
+    for line in lines:
+        db.delete(line)
+    db.delete(entry)
+    db.commit()
+    return {"message": "Card payment deleted successfully.", "amount": amount}
 
 
 @router.post("/credit-cards")
 def create_credit_card(request: CreditCardAccountRequest, db: Session = Depends(get_db), user: User = Depends(current_user)):
     if request.used_balance > request.credit_limit:
-        raise HTTPException(status_code=422, detail="لا يمكن أن يتجاوز الرصيد المستخدم الحد الائتماني.")
+        raise HTTPException(status_code=422, detail="Credit used cannot exceed the credit limit.")
     if request.statement_balance is not None and request.statement_balance > request.used_balance:
-        raise HTTPException(status_code=422, detail="لا يمكن أن يتجاوز رصيد كشف الحساب الرصيد المستخدم الحالي.")
+        raise HTTPException(status_code=422, detail="Statement balance cannot exceed current credit used.")
     duplicate = db.query(CreditCardAccount).filter(CreditCardAccount.user_id == user.id, CreditCardAccount.last4 == request.last4).first()
     if duplicate:
         raise HTTPException(status_code=409, detail="توجد بطاقة بهذه الأرقام الأربعة الأخيرة بالفعل.")
@@ -477,18 +734,21 @@ def create_credit_card(request: CreditCardAccountRequest, db: Session = Depends(
                              minimum_monthly_payment=request.minimum_monthly_payment,
                              statement_cutoff_day=request.statement_cutoff_day,
                              payment_due_day=request.payment_due_day,
+                             payment_due_date=request.payment_due_date,
+                             statement_cutoff_date=request.statement_cutoff_date,
                              is_fee_free=request.is_fee_free,
                              annual_fee=0 if request.is_fee_free else request.annual_fee,
                              fee_renewal_day=None if request.is_fee_free else request.fee_renewal_day,
                              fee_renewal_month=None if request.is_fee_free else request.fee_renewal_month,
                              currency_code=request.currency_code.upper())
+    reset_baseline(card, card.statement_balance)
     db.add(card)
     db.flush()
     if request.used_balance > 0:
         retained = db.query(Account).filter(Account.code.in_([3150, 3200])).order_by(Account.code).first()
         card_account = db.query(Account).filter(Account.code == 2110).one()
         entry = JournalEntry(user_id=user.id, description=f"رصيد افتتاحي · {card.card_name} •• {card.last4}",
-                             transaction_date=request.as_of_date, related_reference=f"credit-card:{card.id}")
+                             transaction_date=request.as_of_date, related_reference=f"opening-credit-card:{card.id}")
         db.add(entry)
         db.flush()
         db.add_all([
@@ -516,6 +776,9 @@ def update_credit_card(card_id: int, request: CreditCardUpdateRequest, db: Sessi
     if duplicate:
         raise HTTPException(status_code=409, detail="Another card with these last four digits already exists.")
     card.issuer_bank = request.issuer_bank.strip()
+    projected = statement_view(db, card)
+    if request.statement_balance != projected['statement_balance'] or request.statement_cutoff_day != card.statement_cutoff_day:
+        reset_baseline(card, request.statement_balance)
     card.card_name = request.card_name.strip()
     card.last4 = request.last4
     card.credit_limit = request.credit_limit
@@ -524,6 +787,10 @@ def update_credit_card(card_id: int, request: CreditCardUpdateRequest, db: Sessi
     card.currency_code = requested_currency
     card.statement_cutoff_day = request.statement_cutoff_day
     card.payment_due_day = request.payment_due_day
+    if 'payment_due_date' in request.model_fields_set:
+        card.payment_due_date = request.payment_due_date
+    if 'statement_cutoff_date' in request.model_fields_set:
+        card.statement_cutoff_date = request.statement_cutoff_date
     card.is_fee_free = request.is_fee_free
     card.annual_fee = 0 if request.is_fee_free else request.annual_fee
     card.fee_renewal_day = None if request.is_fee_free else request.fee_renewal_day
@@ -531,6 +798,25 @@ def update_credit_card(card_id: int, request: CreditCardUpdateRequest, db: Sessi
     db.commit()
     db.refresh(card)
     return {column.name: getattr(card, column.name) for column in card.__table__.columns}
+
+
+@router.patch("/credit-cards/{card_id}/issued-statement")
+def correct_issued_credit_card_statement(card_id: int, request: CreditCardStatementCorrectionRequest, db: Session = Depends(get_db), user: User = Depends(current_user)):
+    card = db.query(CreditCardAccount).filter(CreditCardAccount.id == card_id, CreditCardAccount.user_id == user.id, CreditCardAccount.is_active.is_(True)).first()
+    if card is None:
+        raise HTTPException(status_code=404, detail="Credit card not found.")
+    if request.issued_statement_balance > card.credit_limit:
+        raise HTTPException(status_code=422, detail="Issued statement balance cannot exceed the credit limit.")
+    if request.statement_cutoff_date > date.today():
+        raise HTTPException(status_code=422, detail="Statement cutoff date cannot be in the future.")
+    card.auto_statement_opening_balance = request.issued_statement_balance
+    card.auto_statement_opening_due = request.issued_statement_balance
+    card.statement_cutoff_date = request.statement_cutoff_date
+    projected = statement_view(db, card)
+    card.statement_balance = projected["statement_balance"]
+    card.payment_due_date = projected["payment_due_date"]
+    db.commit()
+    return {"id": card.id, **projected}
 
 
 @router.delete("/credit-cards/{card_id}")
@@ -552,14 +838,18 @@ def adjust_credit_card_balance(card_id: int, request: CreditCardBalanceAdjustmen
     card = db.query(CreditCardAccount).filter(CreditCardAccount.id == card_id, CreditCardAccount.user_id == user.id, CreditCardAccount.is_active.is_(True)).first()
     if not card:
         raise HTTPException(status_code=404, detail="Credit card not found.")
+    try:
+        validate_card_date(card, request.adjustment_date)
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
     if request.corrected_balance > card.credit_limit:
-        raise HTTPException(status_code=422, detail="لا يمكن أن يتجاوز الرصيد المصحح الحد الائتماني.")
+        raise HTTPException(status_code=422, detail="Corrected balance cannot exceed the credit limit.")
     difference = request.corrected_balance - card.current_balance
     if difference == 0:
         raise HTTPException(status_code=422, detail="The corrected balance is already the current balance.")
     retained = db.query(Account).filter(Account.code.in_([3250, 3200])).order_by(Account.code.desc()).first()
     card_account = db.query(Account).filter(Account.code == 2110).one()
-    entry = JournalEntry(user_id=user.id, description=f"تسوية رصيد البطاقة الائتمانية · {card.card_name} •• {card.last4} · {request.reason.strip()}", transaction_date=request.adjustment_date, related_reference=f"credit-card-adjustment:{card.id}")
+    entry = JournalEntry(user_id=user.id, description=f"Credit card balance adjustment · {card.card_name} •• {card.last4} · {request.reason.strip()}", transaction_date=request.adjustment_date, related_reference=f"credit-card-adjustment:{card.id}")
     db.add(entry)
     db.flush()
     amount = abs(difference)
@@ -577,7 +867,7 @@ def adjust_credit_card_balance(card_id: int, request: CreditCardBalanceAdjustmen
 
 @router.get("/bank-accounts")
 def list_bank_accounts(db: Session = Depends(get_db), user: User = Depends(current_user)):
-    items = db.query(BankAccount).filter(BankAccount.user_id == user.id).order_by(BankAccount.created_at).all()
+    items = db.query(BankAccount).filter(BankAccount.user_id == user.id, BankAccount.account_type != "DIGITAL_WALLET").order_by(BankAccount.created_at).all()
     result = []
     for item in items:
         opening = _bank_opening_state(db, user.id, item.id)
@@ -586,6 +876,45 @@ def list_bank_accounts(db: Session = Depends(get_db), user: User = Depends(curre
         data["display_name"] = f"{item.bank_name} {data['account_identifier']}"
         result.append({**data, **opening})
     return result
+
+
+@router.get("/digital-wallets")
+def list_digital_wallets(db: Session = Depends(get_db), user: User = Depends(current_user)):
+    items = db.query(BankAccount).filter(BankAccount.user_id == user.id, BankAccount.account_type == "DIGITAL_WALLET").order_by(BankAccount.created_at).all()
+    return [{**{column.name: getattr(item, column.name) for column in item.__table__.columns if column.name != "account_identifier_normalized"}, "account_identifier": mask_bank_account_identifier(item.account_identifier), "display_name": f"{item.bank_name} {mask_bank_account_identifier(item.account_identifier)}"} for item in items]
+
+
+@router.post("/digital-wallets")
+def create_digital_wallet(request: BankAccountRequest, db: Session = Depends(get_db), user: User = Depends(current_user)):
+    identifier = normalize_bank_account_identifier(request.account_identifier)
+    if len(identifier) < 4:
+        raise HTTPException(status_code=422, detail="Wallet number must contain at least 4 characters.")
+    if db.query(BankAccount.id).filter(BankAccount.user_id == user.id, BankAccount.account_identifier_normalized == identifier).first():
+        raise HTTPException(status_code=409, detail="This wallet is already registered.")
+    wallet = BankAccount(user_id=user.id, bank_name=request.bank_name.strip(), account_type="DIGITAL_WALLET", account_name=(request.account_name or "").strip() or request.bank_name.strip(), account_identifier=identifier, account_identifier_normalized=identifier, current_balance=request.opening_balance, currency_code=request.currency_code.upper(), is_primary=False)
+    db.add(wallet); db.flush()
+    if request.opening_balance != 0:
+        cash_ledger = db.query(Account).filter(Account.code == 1175).one()
+        opening_equity = db.query(Account).filter(Account.code.in_([3150, 3200])).order_by(Account.code).first()
+        entry = JournalEntry(user_id=user.id, description=f"Opening digital wallet balance · {wallet.account_name}", transaction_date=request.as_of_date, related_reference=f"opening-digital-wallet:{wallet.id}")
+        db.add(entry); db.flush(); amount = abs(request.opening_balance)
+        db.add_all([JournalLine(journal_entry_id=entry.id, account_id=cash_ledger.id, debit=amount if request.opening_balance > 0 else 0, credit=amount if request.opening_balance < 0 else 0), JournalLine(journal_entry_id=entry.id, account_id=opening_equity.id, debit=amount if request.opening_balance < 0 else 0, credit=amount if request.opening_balance > 0 else 0)])
+    db.commit(); db.refresh(wallet)
+    return {**{column.name: getattr(wallet, column.name) for column in wallet.__table__.columns if column.name != "account_identifier_normalized"}, "account_identifier": mask_bank_account_identifier(wallet.account_identifier)}
+
+
+@router.put("/digital-wallets/{wallet_id}")
+def update_digital_wallet(wallet_id: int, request: BankAccountUpdateRequest, db: Session = Depends(get_db), user: User = Depends(current_user)):
+    wallet = db.query(BankAccount).filter(BankAccount.id == wallet_id, BankAccount.user_id == user.id, BankAccount.account_type == "DIGITAL_WALLET").first()
+    if wallet is None:
+        raise HTTPException(status_code=404, detail="Digital wallet not found.")
+    identifier = normalize_bank_account_identifier(request.account_identifier)
+    duplicate = db.query(BankAccount.id).filter(BankAccount.user_id == user.id, BankAccount.id != wallet.id, BankAccount.account_identifier_normalized == identifier).first()
+    if duplicate:
+        raise HTTPException(status_code=409, detail="This wallet is already registered.")
+    wallet.bank_name=request.bank_name.strip();wallet.account_name=(request.account_name or "").strip() or wallet.bank_name;wallet.account_identifier=identifier;wallet.account_identifier_normalized=identifier
+    db.commit();db.refresh(wallet)
+    return {**{column.name:getattr(wallet,column.name) for column in wallet.__table__.columns if column.name!="account_identifier_normalized"},"account_identifier":mask_bank_account_identifier(wallet.account_identifier)}
 
 
 def _bank_opening_state(db: Session, user_id: int, bank_account_id: int) -> dict:
@@ -616,13 +945,17 @@ def create_bank_account(request: BankAccountRequest, db: Session = Depends(get_d
     if duplicate:
         raise HTTPException(status_code=409, detail="This bank account is already registered. Merging requires a separate workflow.")
     account_name = (request.account_name or "").strip() or request.bank_name.strip()
-    has_accounts = db.query(BankAccount.id).filter(BankAccount.user_id == user.id).first() is not None
+    try:
+        save_customer_number(db,user.id,request.bank_name,request.customer_number)
+    except ValueError as error:
+        db.rollback()
+        raise HTTPException(status_code=409,detail=str(error)) from error
     if request.is_primary:
         db.query(BankAccount).filter(BankAccount.user_id == user.id).update({BankAccount.is_primary: False})
     account = BankAccount(user_id=user.id, bank_name=request.bank_name.strip(), account_type=request.account_type,
                           account_name=account_name, account_identifier=identifier, account_identifier_normalized=identifier,
                           current_balance=request.opening_balance,
-                          currency_code=request.currency_code.upper(), is_primary=request.is_primary or not has_accounts)
+                          currency_code=request.currency_code.upper(), is_primary=request.is_primary)
     db.add(account)
     try:
         db.flush()
@@ -661,7 +994,7 @@ def get_bank_account(bank_account_id: int, db: Session = Depends(get_db), user: 
     account = db.query(BankAccount).filter(BankAccount.id == bank_account_id, BankAccount.user_id == user.id).first()
     if account is None:
         raise HTTPException(status_code=404, detail="Bank account not found.")
-    return {column.name: getattr(account, column.name) for column in account.__table__.columns if column.name != "account_identifier_normalized"}
+    return {**{column.name: getattr(account, column.name) for column in account.__table__.columns if column.name != "account_identifier_normalized"}, 'customer_number':customer_number(db,user.id,account.bank_name)}
 
 
 @router.put("/bank-accounts/{bank_account_id}")
@@ -679,6 +1012,8 @@ def update_bank_account(bank_account_id: int, request: BankAccountUpdateRequest,
         account.account_identifier = normalized
         account.account_identifier_normalized = normalized
     account.bank_name = request.bank_name.strip()
+    if 'customer_number' in request.model_fields_set:
+        save_customer_number(db,user.id,account.bank_name,request.customer_number,replace=True)
     account.account_type = request.account_type
     account.account_name = (request.account_name or "").strip() or account.bank_name
     try:
@@ -792,29 +1127,39 @@ def create_bank_card(request: BankCardRequest, db: Session = Depends(get_db), us
 
 @router.get("/deposits")
 def list_deposits(db: Session = Depends(get_db), user: User = Depends(current_user)):
-    items = db.query(Deposit).filter(Deposit.user_id == user.id, Deposit.status == "ACTIVE").order_by(Deposit.created_at).all()
-    return [{column.name: getattr(item, column.name) for column in item.__table__.columns} for item in items]
+    items = db.query(Deposit).filter(Deposit.user_id == user.id).order_by(Deposit.created_at.desc()).all()
+    result = []
+    for item in items:
+        latest_return = db.query(JournalEntry).filter(JournalEntry.user_id == user.id, JournalEntry.related_reference == f"deposit-return:{item.id}").order_by(JournalEntry.transaction_date.desc()).first()
+        cumulative_return = db.query(func.coalesce(func.sum(JournalLine.credit - JournalLine.debit), 0)).join(JournalEntry, JournalLine.journal_entry_id == JournalEntry.id).join(Account, JournalLine.account_id == Account.id).filter(JournalEntry.user_id == user.id, JournalEntry.related_reference == f"deposit-return:{item.id}", Account.code == 4400).scalar() if item.product_type == "INCOME_SAVINGS" else item.actual_return
+        result.append({**{column.name: getattr(item, column.name) for column in item.__table__.columns}, "actual_return": cumulative_return, "standard_annual_return_rate": item.annual_return_rate, "annual_return_rate": item.effective_annual_return_rate, "accrual_start_date": latest_return.transaction_date.date() if latest_return else item.start_date})
+    return result
 
 
 @router.post("/deposits")
 def create_deposit(request: DepositRequest, db: Session = Depends(get_db), user: User = Depends(current_user)):
-    funding = db.query(BankAccount).filter(BankAccount.id == request.funding_bank_account_id, BankAccount.user_id == user.id).first()
-    if funding is None:
-        raise HTTPException(status_code=404, detail="Funding account was not found.")
-    destination_id = request.income_bank_account_id or request.funding_bank_account_id
-    destination = db.query(BankAccount).filter(BankAccount.id == destination_id, BankAccount.user_id == user.id).first()
-    if destination is None:
-        raise HTTPException(status_code=404, detail="Income destination account was not found.")
     currency = request.currency_code.upper()
-    if funding.currency_code != currency or destination.currency_code != currency:
+    funding = None
+    if request.funding_bank_account_id is not None:
+        funding = db.query(BankAccount).filter(BankAccount.id == request.funding_bank_account_id, BankAccount.user_id == user.id).first()
+        if funding is None:
+            raise HTTPException(status_code=404, detail="Funding account was not found.")
+    destination_id = request.income_bank_account_id
+    destination = db.query(BankAccount).filter(BankAccount.id == destination_id, BankAccount.user_id == user.id).first() if destination_id else None
+    if request.income_bank_account_id is not None and destination is None:
+        raise HTTPException(status_code=404, detail="Income destination account was not found.")
+    if (funding is not None and funding.currency_code != currency) or (destination is not None and destination.currency_code != currency):
         raise HTTPException(status_code=422, detail="Deposit and selected bank accounts must use the same currency.")
-    if request.principal_amount > funding.current_balance:
+    if request.recording_method == "BANK" and funding is None:
+        raise HTTPException(status_code=422, detail="Funding account is required for a bank-funded deposit.")
+    if funding is not None and request.recording_method == "BANK" and request.principal_amount > funding.current_balance:
         raise HTTPException(status_code=422, detail="Deposit amount exceeds the selected bank account balance.")
     deposit = Deposit(
         user_id=user.id, provider_name=request.provider_name.strip(), product_name=request.product_name.strip(),
-        product_type=request.product_type, funding_bank_account_id=funding.id, income_bank_account_id=destination.id,
+        product_type=request.product_type, funding_bank_account_id=funding.id if funding else None, income_bank_account_id=destination.id if destination else None,
         principal_amount=request.principal_amount, current_balance=request.principal_amount,
         annual_return_rate=request.annual_return_rate, payout_frequency=request.payout_frequency,
+        payout_schedule=[{"payout_date": item.payout_date.isoformat(), "amount": str(item.amount)} for item in request.payout_schedule],
         start_date=request.start_date, maturity_date=request.maturity_date, auto_renew=request.auto_renew,
         currency_code=currency, status="ACTIVE",
     )
@@ -824,15 +1169,17 @@ def create_deposit(request: DepositRequest, db: Session = Depends(get_db), user:
     deposit_ledger = db.query(Account).filter(Account.code == 1160).first()
     if deposit_ledger is None:
         raise HTTPException(status_code=503, detail="The deposit ledger account is not configured. Apply the latest database update and try again.")
-    entry = JournalEntry(user_id=user.id, description=f"Deposit funded · {deposit.product_name} · {deposit.provider_name}",
-                         transaction_date=request.transaction_date, related_reference=f"deposit:{deposit.id}")
+    opening = request.recording_method == "OPENING"
+    entry = JournalEntry(user_id=user.id, description=f"{'Opening deposit balance' if opening else 'Deposit funded'} · {deposit.product_name} · {deposit.provider_name}",
+                         transaction_date=request.transaction_date, related_reference=f"{'opening-deposit' if opening else 'deposit'}:{deposit.id}")
     db.add(entry)
     db.flush()
-    db.add_all([
-        JournalLine(journal_entry_id=entry.id, account_id=deposit_ledger.id, debit=request.principal_amount, credit=0),
-        JournalLine(journal_entry_id=entry.id, account_id=bank_ledger.id, debit=0, credit=request.principal_amount),
-    ])
-    funding.current_balance -= request.principal_amount
+    credit_ledger = db.query(Account).filter(Account.code == 3150).first() if opening else bank_ledger
+    if credit_ledger is None:
+        raise HTTPException(status_code=503, detail="Opening balance equity is not configured.")
+    db.add_all([JournalLine(journal_entry_id=entry.id, account_id=deposit_ledger.id, debit=request.principal_amount, credit=0), JournalLine(journal_entry_id=entry.id, account_id=credit_ledger.id, debit=0, credit=request.principal_amount)])
+    if not opening:
+        funding.current_balance -= request.principal_amount
     db.commit()
     db.refresh(deposit)
     return {column.name: getattr(deposit, column.name) for column in deposit.__table__.columns}
@@ -843,18 +1190,50 @@ def update_deposit(deposit_id: int, request: DepositUpdateRequest, db: Session =
     deposit = db.query(Deposit).filter(Deposit.id == deposit_id, Deposit.user_id == user.id, Deposit.status == "ACTIVE").first()
     if deposit is None:
         raise HTTPException(status_code=404, detail="لم يتم العثور على الوديعة.")
-    destination_id = request.income_bank_account_id or deposit.funding_bank_account_id
-    destination = db.query(BankAccount).filter(BankAccount.id == destination_id, BankAccount.user_id == user.id).first()
-    if destination is None:
+    destination_id = request.income_bank_account_id
+    destination = db.query(BankAccount).filter(BankAccount.id == destination_id, BankAccount.user_id == user.id).first() if destination_id else None
+    if request.income_bank_account_id is not None and destination is None:
         raise HTTPException(status_code=404, detail="Income destination account was not found.")
-    if destination.currency_code != deposit.currency_code:
+    if destination is not None and destination.currency_code != deposit.currency_code:
         raise HTTPException(status_code=422, detail="The income destination must use the deposit currency.")
+    if request.source_loan_id is not None:
+        source_loan = db.query(Loan).filter(Loan.id == request.source_loan_id, Loan.user_id == user.id).first()
+        funding_bank = db.query(BankAccount).filter(BankAccount.id == request.historical_funding_bank_account_id, BankAccount.user_id == user.id).first()
+        if source_loan is None:
+            raise HTTPException(status_code=404, detail="Source loan was not found.")
+        if funding_bank is None:
+            raise HTTPException(status_code=404, detail="Historical receiving account was not found.")
+        if funding_bank.currency_code != deposit.currency_code:
+            raise HTTPException(status_code=422, detail="Deposit and historical receiving account must use the same currency.")
+        if deposit.source_loan_id is not None and deposit.source_loan_id != source_loan.id:
+            raise HTTPException(status_code=422, detail="This deposit is already linked to another source loan.")
+        if deposit.source_loan_id is None:
+            already_allocated = sum(((item.historical_funding_amount or item.principal_amount) for item in db.query(Deposit).filter(Deposit.user_id == user.id, Deposit.source_loan_id == source_loan.id, Deposit.id != deposit.id).all()), Decimal("0"))
+            allocated = request.historical_funding_amount
+            if allocated > deposit.principal_amount:
+                raise HTTPException(status_code=422, detail="Historical funding amount cannot exceed the deposit principal.")
+            if already_allocated + allocated > source_loan.amount_received:
+                raise HTTPException(status_code=422, detail="Linked deposits cannot exceed the net loan proceeds received.")
+            bank_ledger = db.query(Account).filter(Account.code == 1120).one()
+            opening_equity = db.query(Account).filter(Account.code == 3150).one()
+            historical_at = datetime.combine(request.historical_funding_date, datetime.min.time(), tzinfo=UTC)
+            inflow = JournalEntry(user_id=user.id, description=f"Historical loan proceeds allocated to deposit · {source_loan.name}", transaction_date=historical_at, related_reference=f"opening-historical-link:loan:{source_loan.id}:deposit:{deposit.id}:bank-account:{funding_bank.id}:in")
+            db.add(inflow); db.flush()
+            db.add_all([JournalLine(journal_entry_id=inflow.id, account_id=bank_ledger.id, debit=allocated, credit=0), JournalLine(journal_entry_id=inflow.id, account_id=opening_equity.id, debit=0, credit=allocated)])
+            outflow = JournalEntry(user_id=user.id, description=f"Historical deposit funding · {deposit.product_name}", transaction_date=historical_at, related_reference=f"opening-historical-link:loan:{source_loan.id}:deposit:{deposit.id}:bank-account:{funding_bank.id}:out")
+            db.add(outflow); db.flush()
+            db.add_all([JournalLine(journal_entry_id=outflow.id, account_id=opening_equity.id, debit=allocated, credit=0), JournalLine(journal_entry_id=outflow.id, account_id=bank_ledger.id, debit=0, credit=allocated)])
+        deposit.source_loan_id = source_loan.id
+        deposit.funding_bank_account_id = funding_bank.id
+        deposit.historical_funding_date = request.historical_funding_date
+        deposit.historical_funding_amount = request.historical_funding_amount
     deposit.provider_name = request.provider_name.strip()
     deposit.product_name = request.product_name.strip()
     deposit.product_type = request.product_type
-    deposit.income_bank_account_id = destination.id
+    deposit.income_bank_account_id = destination.id if destination else None
     deposit.annual_return_rate = request.annual_return_rate
     deposit.payout_frequency = request.payout_frequency
+    deposit.payout_schedule = [{"payout_date": item.payout_date.isoformat(), "amount": str(item.amount)} for item in request.payout_schedule]
     deposit.start_date = request.start_date
     deposit.maturity_date = request.maturity_date
     deposit.auto_renew = request.auto_renew
@@ -892,26 +1271,88 @@ def break_deposit(deposit_id: int, request: BreakDepositRequest, db: Session = D
     return {"message":"تم فك الوديعة بنجاح.","deposit_id":deposit.id,"amount_received":request.amount_received,"closure_cost":loss}
 
 
+@router.post("/deposits/{deposit_id}/settle-maturity")
+def settle_deposit_maturity(deposit_id: int, request: DepositMaturitySettlementRequest, db: Session = Depends(get_db), user: User = Depends(current_user)):
+    deposit = db.query(Deposit).filter(Deposit.id == deposit_id, Deposit.user_id == user.id, Deposit.status.in_(["ACTIVE", "MATURED"])).first()
+    if deposit is None:
+        raise HTTPException(status_code=404, detail="Deposit awaiting maturity settlement was not found.")
+    if deposit.maturity_date is None or request.transaction_date.date() < deposit.maturity_date:
+        raise HTTPException(status_code=422, detail="The deposit cannot be settled before its maturity date.")
+    if request.action == "PENDING":
+        deposit.status = "MATURED"
+        deposit.settlement_action = "PENDING"
+        db.commit(); db.refresh(deposit)
+        return {"message": "Deposit marked as awaiting settlement.", "deposit_id": deposit.id, "new_deposit_id": None, "principal": deposit.current_balance, "income": 0}
+
+    bank = None
+    if request.action in {"PAYOUT_ALL", "REINVEST_PRINCIPAL"}:
+        bank = db.query(BankAccount).filter(BankAccount.id == request.destination_bank_account_id, BankAccount.user_id == user.id).first()
+        if bank is None:
+            raise HTTPException(status_code=404, detail="Destination bank account was not found.")
+        if bank.currency_code != deposit.currency_code:
+            raise HTTPException(status_code=422, detail="Destination account must use the deposit currency.")
+
+    deposit_ledger = db.query(Account).filter(Account.code == 1160).one()
+    income_ledger = db.query(Account).filter(Account.code == 4400).one()
+    bank_ledger = db.query(Account).filter(Account.code == 1120).one()
+    principal = deposit.current_balance
+    income = request.actual_return
+    new_deposit = None
+    if request.action == "PAYOUT_ALL":
+        principal_entry = JournalEntry(user_id=user.id, description=f"Deposit principal returned · {deposit.product_name}", transaction_date=request.transaction_date, related_reference=f"deposit-maturity:{deposit.id}:principal-return")
+        db.add(principal_entry); db.flush()
+        db.add_all([JournalLine(journal_entry_id=principal_entry.id, account_id=bank_ledger.id, debit=principal, credit=0), JournalLine(journal_entry_id=principal_entry.id, account_id=deposit_ledger.id, debit=0, credit=principal)])
+        bank.current_balance += principal + income
+    else:
+        duration = max(1, (deposit.maturity_date - deposit.start_date).days)
+        reinvested = principal + income if request.action in {"REINVEST_ALL", "PROVIDER_BALANCE"} else principal
+        provider_balance = request.action == "PROVIDER_BALANCE"
+        new_deposit = Deposit(user_id=user.id, provider_name=deposit.provider_name, product_name=request.provider_balance_name if provider_balance else deposit.product_name, product_type="INCOME_SAVINGS" if provider_balance else deposit.product_type, funding_bank_account_id=None if provider_balance else deposit.funding_bank_account_id, income_bank_account_id=None if provider_balance else deposit.income_bank_account_id, principal_amount=reinvested, current_balance=reinvested, annual_return_rate=request.provider_standard_rate if provider_balance else deposit.annual_return_rate, promotional_annual_return_rate=request.provider_annual_rate if provider_balance else None, promotional_rate_end_date=request.provider_promotional_end_date.date() if provider_balance else None, payout_frequency="DAILY" if provider_balance else deposit.payout_frequency, payout_schedule=[], start_date=request.transaction_date.date(), maturity_date=None if provider_balance else request.transaction_date.date() + timedelta(days=duration), auto_renew=False if provider_balance else deposit.auto_renew, currency_code=deposit.currency_code, status="ACTIVE")
+        db.add(new_deposit); db.flush()
+        if request.action == "REINVEST_PRINCIPAL":
+            bank.current_balance += income
+    if income > 0:
+        income_entry = JournalEntry(user_id=user.id, description=f"Deposit income · {deposit.product_name}", transaction_date=request.transaction_date, related_reference=f"deposit-maturity:{deposit.id}:income")
+        db.add(income_entry); db.flush()
+        income_destination = deposit_ledger if request.action in {"REINVEST_ALL", "PROVIDER_BALANCE"} else bank_ledger
+        db.add_all([JournalLine(journal_entry_id=income_entry.id, account_id=income_destination.id, debit=income, credit=0), JournalLine(journal_entry_id=income_entry.id, account_id=income_ledger.id, debit=0, credit=income)])
+    deposit.current_balance = 0
+    deposit.status = "RENEWED" if new_deposit else "CLOSED"
+    deposit.settled_at = request.transaction_date
+    deposit.settlement_action = request.action
+    deposit.settlement_bank_account_id = bank.id if bank else None
+    deposit.actual_return = income
+    db.commit()
+    return {"message": "Deposit maturity settled successfully.", "deposit_id": deposit.id, "new_deposit_id": new_deposit.id if new_deposit else None, "principal": principal, "income": income}
+
+
 @router.post("/deposits/{deposit_id}/balance-adjustment")
 def adjust_deposit_balance(deposit_id: int, request: DepositBalanceAdjustmentRequest, db: Session = Depends(get_db), user: User = Depends(current_user)):
     deposit = db.query(Deposit).filter(Deposit.id == deposit_id, Deposit.user_id == user.id, Deposit.status == "ACTIVE").first()
     if deposit is None:
         raise HTTPException(status_code=404, detail="Deposit was not found.")
     funding = db.query(BankAccount).filter(BankAccount.id == deposit.funding_bank_account_id, BankAccount.user_id == user.id).first()
-    if funding is None:
-        raise HTTPException(status_code=404, detail="The deposit funding account was not found.")
     difference = request.corrected_balance - deposit.current_balance
     if difference == 0:
         raise HTTPException(status_code=422, detail="The corrected balance is already the current balance.")
-    if difference > 0 and difference > funding.current_balance:
+    if funding is not None and difference > 0 and difference > funding.current_balance:
         raise HTTPException(status_code=422, detail="The funding account does not have enough balance for this correction.")
     bank_ledger = db.query(Account).filter(Account.code == 1120).one()
     deposit_ledger = db.query(Account).filter(Account.code == 1160).one()
+    adjustment_equity = None
+    if funding is None:
+        adjustment_equity = db.query(Account).filter(Account.code.in_([3250, 3200])).order_by(Account.code.desc()).first()
+        if adjustment_equity is None:
+            raise HTTPException(status_code=422, detail="A balance adjustment account is required for this correction.")
     amount = abs(difference)
-    entry = JournalEntry(user_id=user.id, description=f"تسوية رصيد الوديعة · {deposit.product_name} · {request.reason.strip()}", transaction_date=request.adjustment_date, related_reference=f"deposit-adjustment:{deposit.id}")
+    entry = JournalEntry(user_id=user.id, description=f"Deposit balance adjustment · {deposit.product_name} · {request.reason.strip()}", transaction_date=request.adjustment_date, related_reference=f"deposit-adjustment:{deposit.id}")
     db.add(entry)
     db.flush()
-    if difference > 0:
+    if funding is None and difference > 0:
+        lines = [JournalLine(journal_entry_id=entry.id, account_id=deposit_ledger.id, debit=amount, credit=0), JournalLine(journal_entry_id=entry.id, account_id=adjustment_equity.id, debit=0, credit=amount)]
+    elif funding is None:
+        lines = [JournalLine(journal_entry_id=entry.id, account_id=adjustment_equity.id, debit=amount, credit=0), JournalLine(journal_entry_id=entry.id, account_id=deposit_ledger.id, debit=0, credit=amount)]
+    elif difference > 0:
         lines = [JournalLine(journal_entry_id=entry.id, account_id=deposit_ledger.id, debit=amount, credit=0), JournalLine(journal_entry_id=entry.id, account_id=bank_ledger.id, debit=0, credit=amount)]
         funding.current_balance -= amount
     else:
@@ -923,6 +1364,64 @@ def adjust_deposit_balance(deposit_id: int, request: DepositBalanceAdjustmentReq
     db.commit()
     db.refresh(deposit)
     return {column.name: getattr(deposit, column.name) for column in deposit.__table__.columns}
+
+
+@router.post("/deposits/{deposit_id}/reconcile-return")
+def reconcile_deposit_return(deposit_id: int, request: DepositReturnReconciliationRequest, db: Session = Depends(get_db), user: User = Depends(current_user)):
+    deposit = db.query(Deposit).filter(Deposit.id == deposit_id, Deposit.user_id == user.id, Deposit.status == "ACTIVE", Deposit.product_type == "INCOME_SAVINGS").first()
+    if deposit is None:
+        raise HTTPException(status_code=404, detail="Active income savings balance was not found.")
+    income = request.confirmed_balance - deposit.current_balance
+    if income <= 0:
+        raise HTTPException(status_code=422, detail="The confirmed balance must include a positive unrecorded return.")
+    deposit_ledger = db.query(Account).filter(Account.code == 1160).one()
+    income_ledger = db.query(Account).filter(Account.code == 4400).one()
+    entry = JournalEntry(user_id=user.id, description=f"Deposit income reconciliation · {deposit.product_name}", transaction_date=request.transaction_date, related_reference=f"deposit-return:{deposit.id}")
+    db.add(entry); db.flush()
+    db.add_all([JournalLine(journal_entry_id=entry.id, account_id=deposit_ledger.id, debit=income, credit=0), JournalLine(journal_entry_id=entry.id, account_id=income_ledger.id, debit=0, credit=income)])
+    deposit.current_balance = request.confirmed_balance
+    deposit.principal_amount = request.confirmed_balance
+    db.commit(); db.refresh(deposit)
+    return {"message": "Deposit return reconciled successfully.", "deposit_id": deposit.id, "income": income, "current_balance": deposit.current_balance, "accrual_start_date": request.transaction_date.date()}
+
+
+@router.post("/deposits/{deposit_id}/withdraw")
+def withdraw_from_deposit(deposit_id: int, request: DepositWithdrawalRequest, db: Session = Depends(get_db), user: User = Depends(current_user)):
+    deposit = db.query(Deposit).filter(Deposit.id == deposit_id, Deposit.user_id == user.id, Deposit.status == "ACTIVE", Deposit.product_type == "INCOME_SAVINGS").with_for_update().first()
+    if deposit is None:
+        raise HTTPException(status_code=404, detail="Active income savings balance was not found.")
+    bank = db.query(BankAccount).filter(BankAccount.id == request.destination_bank_account_id, BankAccount.user_id == user.id).with_for_update().first()
+    if bank is None:
+        raise HTTPException(status_code=404, detail="Destination bank account was not found.")
+    if bank.currency_code != deposit.currency_code:
+        raise HTTPException(status_code=422, detail="Destination account must use the deposit currency.")
+    if request.confirmed_balance < deposit.current_balance:
+        raise HTTPException(status_code=422, detail="The confirmed provider balance cannot be below the recorded deposit balance.")
+    income = request.confirmed_balance - deposit.current_balance
+    prior_income = db.query(func.coalesce(func.sum(JournalLine.credit - JournalLine.debit), 0)).join(JournalEntry, JournalLine.journal_entry_id == JournalEntry.id).join(Account, JournalLine.account_id == Account.id).filter(JournalEntry.user_id == user.id, JournalEntry.related_reference == f"deposit-return:{deposit.id}", Account.code == 4400).scalar()
+    deposit_ledger = db.query(Account).filter(Account.code == 1160).one()
+    income_ledger = db.query(Account).filter(Account.code == 4400).one()
+    bank_ledger = db.query(Account).filter(Account.code == 1120).one()
+    if income > 0:
+        income_entry = JournalEntry(user_id=user.id, description=f"Deposit income reconciliation · {deposit.product_name}", transaction_date=request.transaction_date, related_reference=f"deposit-return:{deposit.id}")
+        db.add(income_entry); db.flush()
+        db.add_all([JournalLine(journal_entry_id=income_entry.id, account_id=deposit_ledger.id, debit=income, credit=0), JournalLine(journal_entry_id=income_entry.id, account_id=income_ledger.id, debit=0, credit=income)])
+    withdrawal = JournalEntry(user_id=user.id, description=f"Deposit withdrawal · {deposit.product_name}", transaction_date=request.transaction_date, related_reference=f"deposit-withdrawal:{deposit.id}")
+    db.add(withdrawal); db.flush()
+    db.add_all([JournalLine(journal_entry_id=withdrawal.id, account_id=bank_ledger.id, debit=request.amount, credit=0), JournalLine(journal_entry_id=withdrawal.id, account_id=deposit_ledger.id, debit=0, credit=request.amount)])
+    remaining_balance = request.confirmed_balance - request.amount
+    deposit.current_balance = remaining_balance
+    if request.close_deposit:
+        deposit.status = "CLOSED"
+        deposit.settled_at = request.transaction_date
+        deposit.settlement_action = "PAYOUT_ALL"
+        deposit.settlement_bank_account_id = bank.id
+        deposit.actual_return = prior_income + income
+    else:
+        deposit.principal_amount = remaining_balance
+    bank.current_balance += request.amount
+    db.commit(); db.refresh(deposit)
+    return {"message": "Income savings deposit closed successfully." if request.close_deposit else "Deposit withdrawal posted successfully.", "deposit_id": deposit.id, "income": income, "withdrawn": request.amount, "current_balance": deposit.current_balance, "bank_balance": bank.current_balance, "closed": request.close_deposit}
 
 
 @router.get("/accounts")
@@ -1095,6 +1594,56 @@ def create_loan(request: LoanRequest, db: Session = Depends(get_db), user: User 
     return {column.name: getattr(loan, column.name) for column in loan.__table__.columns}
 
 
+@router.post('/private-loans')
+def create_private_loan(request: PrivateLoanRequest, db: Session = Depends(get_db), user: User = Depends(current_user)):
+    try:
+        return loan_dict(PrivateLoanService(db, user.id).create(request))
+    except (ValueError, IntegrityError) as error:
+        db.rollback()
+        raise HTTPException(status_code=422, detail=str(error) if isinstance(error, ValueError) else 'Conflicting request. Refresh and retry.') from error
+
+
+@router.post('/private-loans/{loan_id}/payments')
+def pay_private_loan(loan_id: int, request: PrivateLoanPaymentRequest, db: Session = Depends(get_db), user: User = Depends(current_user)):
+    try:
+        return loan_dict(PrivateLoanService(db, user.id).pay(loan_id, request))
+    except (ValueError, IntegrityError) as error:
+        db.rollback()
+        raise HTTPException(status_code=422, detail=str(error) if isinstance(error, ValueError) else 'Conflicting request. Refresh and retry.') from error
+
+
+@router.get('/private-loans/{loan_id}/history')
+def private_loan_history(loan_id: int, db: Session = Depends(get_db), user: User = Depends(current_user)):
+    try:
+        return PrivateLoanService(db, user.id).history(loan_id)
+    except ValueError as error:
+        raise HTTPException(status_code=404, detail=str(error)) from error
+
+@router.patch('/private-loans/{loan_id}')
+def update_private_loan(loan_id: int, request: PrivateLoanUpdateRequest, db: Session = Depends(get_db), user: User = Depends(current_user)):
+    try:
+        return loan_dict(PrivateLoanService(db, user.id).update(loan_id, request))
+    except ValueError as error:
+        db.rollback()
+        raise HTTPException(status_code=422, detail=str(error)) from error
+
+@router.post('/private-loans/{loan_id}/pre-opening-payments')
+def add_private_loan_prior_payment(loan_id: int, request: PrivateLoanPriorPaymentRequest, db: Session = Depends(get_db), user: User = Depends(current_user)):
+    try:
+        return PrivateLoanService(db, user.id).add_prior_payment_detail(loan_id, request)
+    except (ValueError, IntegrityError) as error:
+        db.rollback()
+        raise HTTPException(status_code=422, detail=str(error) if isinstance(error, ValueError) else 'Conflicting request. Refresh and retry.') from error
+
+@router.post('/private-loans/{loan_id}/pre-opening-payments/bulk')
+def add_private_loan_prior_payments(loan_id: int, request: PrivateLoanPriorPaymentBulkRequest, db: Session = Depends(get_db), user: User = Depends(current_user)):
+    try:
+        return PrivateLoanService(db, user.id).add_prior_payment_details(loan_id, request)
+    except (ValueError, IntegrityError) as error:
+        db.rollback()
+        raise HTTPException(status_code=422, detail=str(error) if isinstance(error, ValueError) else 'Conflicting request. Refresh and retry.') from error
+
+
 @router.get("/loans")
 def list_loans(db: Session = Depends(get_db), user: User = Depends(current_user)):
     loans = LoanService(db, user.id).list()
@@ -1118,6 +1667,25 @@ def void_loan(loan_id: int, db: Session = Depends(get_db), user: User = Depends(
 @router.post("/loans/{loan_id}/settle")
 def settle_loan(loan_id: int, request: LoanSettlementRequest, db: Session = Depends(get_db), user: User = Depends(current_user)):
     return loan_dict(LoanService(db, user.id).settle(loan_id, request))
+
+
+@router.post("/loans/{loan_id}/payments")
+def record_loan_payment(loan_id: int, request: LoanPaymentRequest, db: Session = Depends(get_db), user: User = Depends(current_user)):
+    try:
+        payment = LoanService(db, user.id).record_payment(loan_id, request)
+        return {column.name: getattr(payment, column.name) for column in payment.__table__.columns}
+    except (ValueError, IntegrityError) as error:
+        db.rollback()
+        raise HTTPException(status_code=422, detail=str(error) if isinstance(error, ValueError) else "Conflicting payment. Refresh and retry.") from error
+
+
+@router.get("/loans/{loan_id}/payments")
+def get_loan_payments(loan_id: int, db: Session = Depends(get_db), user: User = Depends(current_user)):
+    try:
+        payments = LoanService(db, user.id).payment_history(loan_id)
+        return [{column.name: getattr(payment, column.name) for column in payment.__table__.columns} for payment in payments]
+    except ValueError as error:
+        raise HTTPException(status_code=404, detail=str(error)) from error
 
 
 @router.post("/loans/{loan_id}/refinance")

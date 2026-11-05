@@ -1,15 +1,16 @@
-from datetime import datetime
+from datetime import date, datetime
 from decimal import Decimal
 from pydantic import BaseModel, Field
 
 
 class CreditCardAccountRequest(BaseModel):
+    payment_due_date: date | None = None
+    statement_cutoff_date: date | None = None
     issuer_bank: str = Field(min_length=1, max_length=120)
     card_name: str = Field(min_length=1, max_length=120)
     last4: str = Field(pattern=r"^\d{4}$")
     credit_limit: Decimal = Field(gt=0)
     used_balance: Decimal = Field(default=0, ge=0)
-    statement_balance: Decimal | None = Field(default=None, ge=0)
     minimum_monthly_payment: Decimal = Field(default=0, ge=0)
     statement_balance: Decimal = Field(default=0, ge=0)
     statement_cutoff_day: int = Field(ge=1, le=31)
@@ -23,6 +24,9 @@ class CreditCardAccountRequest(BaseModel):
 
 
 class CreditCardUpdateRequest(BaseModel):
+    payment_due_date: date | None = None
+    statement_cutoff_date: date | None = None
+    statement_balance: Decimal = Field(default=0, ge=0)
     issuer_bank: str = Field(min_length=1, max_length=120)
     card_name: str = Field(min_length=1, max_length=120)
     last4: str = Field(pattern=r"^\d{4}$")

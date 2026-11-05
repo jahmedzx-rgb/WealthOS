@@ -1,0 +1,8 @@
+.property-purchase .standard-operation__grid { gap: 18px 20px; }
+.property-purchase .income-operation__form label { font-size: 14px; font-weight: 500; line-height: 1.5; }
+.property-purchase .income-operation__form input,
+.property-purchase .income-operation__form select { font-size: 14px; font-weight: 400; min-height: 42px; }
+.property-purchase .income-operation__form input::placeholder { font-weight: 400; }
+.property-purchase .income-operation__effects p { gap: 12px; flex-wrap: wrap; }
+.property-purchase .income-operation__effects strong { font-size: 14px; font-weight: 500; }
+.property-purchase .income-operation__smart-note { font-size: 13px; line-height: 1.6; }

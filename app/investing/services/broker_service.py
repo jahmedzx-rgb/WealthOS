@@ -62,7 +62,10 @@ class BrokerService:
             execution_partner = catalog_item.execution_partner
             commission_rate = commission_rate if commission_rate is not None else effective_commission_rate(catalog_item)
             commission_tax_rate = commission_tax_rate if commission_tax_rate is not None else effective_vat_rate(catalog_item)
-        if commission_rate is None:
+        # Catalog brokers with an unverified/variable fee schedule can be
+        # registered before the user has a confirmed rate. Trading remains
+        # blocked by the API until commission settings are completed.
+        if commission_rate is None and catalog_item is None:
             raise ValueError("Enter the broker commission rate before saving.")
         if commission_tax_rate is None:
             raise ValueError("Enter the VAT rate applied to the brokerage service before saving.")

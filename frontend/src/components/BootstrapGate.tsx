@@ -14,36 +14,52 @@ export default function BootstrapGate({ children }: { children: ReactNode }) {
   const [inviteCode, setInviteCode] = useState('')
   const [locale, setLocale] = useState<'ar' | 'en'>(direction === 'rtl' ? 'ar' : 'en')
   const [error, setError] = useState('')
+  const [submitting, setSubmitting] = useState(false)
 
-  const probe = () => fetch(`${API}/account/me`, { credentials: 'same-origin' }).then(response => {
-    if (response.ok) setMode('ready')
-    else if (response.status === 401) setMode('auth')
-    else if (response.status === 423) setMode('local')
-    else setMode('error')
-  }).catch(() => setMode('error'))
+  const probe = () => {
+    const controller = new AbortController()
+    const timeout = window.setTimeout(() => controller.abort(), 12000)
+    return fetch(`${API}/account/me`, { credentials: 'same-origin', signal: controller.signal }).then(response => {
+      if (response.ok) setMode('ready')
+      else if (response.status === 401) setMode('auth')
+      else if (response.status === 423) setMode('local')
+      else setMode('error')
+    }).catch(() => setMode('error')).finally(() => window.clearTimeout(timeout))
+  }
 
   useEffect(() => { probe() }, [])
 
   async function submit(event: FormEvent) {
     event.preventDefault()
+    if (submitting) return
+    setSubmitting(true)
     setError('')
-    const response = await fetch(`${API}/auth/${registering ? 'register' : 'login'}`, {
-      method: 'POST', credentials: 'same-origin', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(registering ? { username, password, locale, invite_code: inviteCode } : { username, password }),
-    })
-    if (response.ok) return probe()
-    const payload = await response.json().catch(() => null) as { detail?: { key?: string } } | null
-    const key = payload?.detail?.key
-    const messages: Record<string, string> = direction === 'rtl'
-      ? { 'auth.invalid_credentials': 'اسم المستخدم أو كلمة المرور غير صحيحة.', 'auth.username_taken': 'اسم المستخدم مستخدم بالفعل.', 'auth.registration_full': 'اكتمل عدد حسابات النسخة التجريبية.', 'auth.password_weak': 'اختر كلمة مرور أقوى من 12 حرفًا على الأقل.' }
-      : { 'auth.invalid_credentials': 'The username or password is incorrect.', 'auth.username_taken': 'That username is already in use.', 'auth.registration_full': 'The beta account limit has been reached.', 'auth.password_weak': 'Choose a stronger password with at least 12 characters.' }
-    setError(messages[key ?? ''] ?? (direction === 'rtl' ? 'تعذر إكمال الطلب.' : 'Unable to complete the request.'))
+    const controller = new AbortController()
+    const timeout = window.setTimeout(() => controller.abort(), 15_000)
+    try {
+      const response = await fetch(`${API}/auth/${registering ? 'register' : 'login'}`, {
+        method: 'POST', credentials: 'same-origin', headers: { 'Content-Type': 'application/json' }, signal: controller.signal,
+        body: JSON.stringify(registering ? { username, password, locale, invite_code: inviteCode } : { username, password }),
+      })
+      if (response.ok) { await probe(); return }
+      const payload = await response.json().catch(() => null) as { detail?: { key?: string } } | null
+      const key = payload?.detail?.key
+      const messages: Record<string, string> = direction === 'rtl'
+        ? { 'auth.invalid_credentials': 'اسم المستخدم أو كلمة المرور غير صحيحة.', 'auth.username_taken': 'اسم المستخدم مستخدم بالفعل.', 'auth.registration_full': 'اكتمل عدد حسابات النسخة التجريبية.', 'auth.password_weak': 'اختر كلمة مرور أقوى من 12 حرفًا على الأقل.' }
+        : { 'auth.invalid_credentials': 'The username or password is incorrect.', 'auth.username_taken': 'That username is already in use.', 'auth.registration_full': 'The beta account limit has been reached.', 'auth.password_weak': 'Choose a stronger password with at least 12 characters.' }
+      setError(messages[key ?? ''] ?? (direction === 'rtl' ? 'تعذر إكمال الطلب.' : 'Unable to complete the request.'))
+    } catch {
+      setError(direction === 'rtl' ? 'انتهت مهلة الاتصال. تحقق من النتيجة قبل إعادة المحاولة.' : 'The connection timed out. Check the result before trying again.')
+    } finally {
+      window.clearTimeout(timeout)
+      setSubmitting(false)
+    }
   }
 
   if (mode === 'local') return <SetupGate>{children}</SetupGate>
   if (mode === 'ready') return children
   if (mode === 'loading') return <div className="app-route-loading">{direction === 'rtl' ? 'جارٍ تحضير WealthOS…' : 'Preparing WealthOS…'}</div>
-  if (mode === 'error') return <div className="app-route-loading">{direction === 'rtl' ? 'تعذر الاتصال بالخدمة.' : 'Unable to connect to the service.'}</div>
+  if (mode === 'error') return <div className="app-route-loading">{direction === 'rtl' ? 'الخدمة لا تستجيب.' : 'The service is not responding.'}<button type="button" onClick={() => { setMode('loading'); void probe() }} style={{ display: 'block', margin: '12px auto' }}>{direction === 'rtl' ? 'إعادة المحاولة' : 'Retry'}</button></div>
 
   return <main className="setup-wizard" dir={direction}><form className="setup-wizard__card" onSubmit={submit}>
     <header><img className="setup-wizard__brand" src={wealthosIcon} alt="WealthOS"/><div><small>WEB BETA</small><h1>{registering ? (direction === 'rtl' ? 'إنشاء حساب' : 'Create account') : (direction === 'rtl' ? 'تسجيل الدخول' : 'Sign in')}</h1></div></header>
@@ -54,6 +70,6 @@ export default function BootstrapGate({ children }: { children: ReactNode }) {
       {registering && <label>Invite code<input type="password" autoComplete="off" value={inviteCode} onChange={event => setInviteCode(event.target.value)} required minLength={16}/></label>}
       {error && <p className="setup-wizard__error">{error}</p>}
     </div>
-    <footer><button type="button" className="secondary" onClick={() => { setRegistering(!registering); setError('') }}>{registering ? (direction === 'rtl' ? 'لدي حساب' : 'I have an account') : (direction === 'rtl' ? 'إنشاء حساب' : 'Create account')}</button><button type="submit">{registering ? (direction === 'rtl' ? 'إنشاء' : 'Create') : (direction === 'rtl' ? 'دخول' : 'Sign in')}</button></footer>
+    <footer><button type="button" disabled={submitting} className="secondary" onClick={() => { setRegistering(!registering); setError('') }}>{registering ? (direction === 'rtl' ? 'لدي حساب' : 'I have an account') : (direction === 'rtl' ? 'إنشاء حساب' : 'Create account')}</button><button type="submit" disabled={submitting}>{submitting ? (direction === 'rtl' ? 'جارٍ الاتصال…' : 'Connecting…') : registering ? (direction === 'rtl' ? 'إنشاء' : 'Create') : (direction === 'rtl' ? 'دخول' : 'Sign in')}</button></footer>
   </form></main>
 }

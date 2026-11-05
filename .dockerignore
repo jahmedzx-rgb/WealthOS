@@ -1,4 +1,15 @@
 .git
+tmp
+work
+.launch-index
+*.xml
+*.dump
+*.sql
+*.pem
+*.key
+*.db-*
+*.sqlite-*
+*.sqlite3-*
 .env
 .env.*
 !.env.example

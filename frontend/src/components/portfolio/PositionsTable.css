@@ -3,14 +3,18 @@
   font-weight: 700;
   letter-spacing: -0.01em;
 }
-.positions-table__symbol small { display:block;margin-top:.16rem;color:var(--text-muted);font-size:.62rem;font-weight:500;letter-spacing:0;white-space:nowrap; }
+.positions-table{--broker-gradient:linear-gradient(120deg,#244c7a 0%,#7396bd 100%)}
+.positions-table:has(.broker-logo){border-top:3px solid transparent;background:linear-gradient(#e7ebf1,#e7ebf1) padding-box,var(--broker-gradient) border-box}
+.positions-table:has(.broker-logo):hover{border-top-color:transparent}
+.positions-table .card__content{position:relative;overflow:hidden;padding-top:0;border:1.5px solid transparent;border-radius:12px;background:linear-gradient(#98a5b7,#98a5b7) padding-box,var(--broker-gradient) border-box;box-shadow:0 2px 8px color-mix(in srgb,var(--broker-accent,#244c7a) 10%,transparent)}
+.positions-table__symbol small { display:block;margin-top:.2rem;color:var(--text-muted);font-size:.68rem;font-weight:500;line-height:1.35;letter-spacing:0;white-space:nowrap; }
 
 .positions-table__number {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-.positions-table__price small { display: block; margin-top: .18rem; color: var(--text-muted); font-size: .62rem; font-weight: 500; white-space: nowrap; }
+.positions-table__price small { display: block; margin-top: .2rem; color: var(--text-muted); font-size: .68rem; line-height:1.35; font-weight: 500; white-space: nowrap; }
 
 .positions-table__pl {
   text-align: right;
@@ -25,3 +29,72 @@
 .positions-table__pl--negative {
   color: #dc2626;
 }
+.positions-table .table td.positions-table__pl--positive{color:#16804f}
+.positions-table .table td.positions-table__pl--negative{color:#dc2626}
+.positions-table__symbol strong{display:block;margin-top:.14rem;font-size:.72rem;line-height:1.35;color:var(--text-primary)}
+.positions-table .table{table-layout:fixed}.positions-table .positions-table__symbol{width:205px}.positions-table__symbol strong{width:165px;max-width:100%;white-space:normal;overflow:visible;overflow-wrap:normal;word-break:normal;text-wrap:balance;line-height:1.42}
+.positions-table .table th,.positions-table .table td{padding-left:.65rem;padding-right:.65rem}
+.positions-table .table th{box-sizing:border-box;padding:.56rem .35rem;text-align:center!important;vertical-align:middle;white-space:nowrap;color:#1d426f;font-size:.71rem;font-weight:750;letter-spacing:.045em}
+.positions-table .table thead{background:linear-gradient(180deg,#f8fafc 0%,#eaf0f7 100%)}.positions-table .table thead th{border-bottom:2px solid rgba(182,138,38,.52)}
+.positions-table .table tbody tr:nth-child(odd){background:#fff}
+.positions-table .table tbody tr:nth-child(even){background:#f5f6f8}
+.positions-table .table tbody tr:hover{background:#edf2f7}
+.positions-table .table tbody tr:not(:last-child)>td{border-bottom:1px solid color-mix(in srgb,var(--broker-accent,#244c7a) 48%,#fff)}
+.positions-table .table td{padding-top:.46rem;padding-bottom:.46rem}
+.positions-table .table tbody td:not(:first-child){text-align:center}
+.positions-table .table th:not(:last-child),.positions-table .table td:not(:last-child){border-inline-end:1px solid #e8edf4}
+.positions-table .table th:not(:last-child){border-inline-end-color:#dfe6ef}
+.positions-table .table .positions-table__quantity{width:82px}
+.positions-table .table .positions-table__price-column{width:92px}
+.positions-table .table .positions-table__cost-price{width:100px;white-space:nowrap}
+.positions-table .table .positions-table__cost-basis{width:112px}
+.positions-table .table .positions-table__market-value{width:112px;white-space:nowrap}
+.positions-table .table .positions-table__fair-value{width:112px}
+.positions-table .table th.positions-table__fair-value{white-space:nowrap;line-height:1.2}
+.positions-table .table td.positions-table__fair-value .fair-value-editor{width:100%;flex-direction:column;justify-content:center;gap:.28rem}
+.positions-table .table td.positions-table__fair-value .fair-value-editor>span{flex-direction:column;justify-content:center;gap:.08rem;white-space:normal;text-align:center}
+.positions-table .table td.positions-table__fair-value .fair-value-editor>span>small{display:block;font-size:.58rem;line-height:1.15}
+.positions-table .table td.positions-table__fair-value .fair-value-editor button{padding:.18rem .38rem;font-size:.68rem;line-height:1.2}
+.positions-table .table td.positions-table__fair-value .fair-value-editor.is-editing input{width:100%;box-sizing:border-box;text-align:center}
+.positions-table .table .positions-table__unrealized{width:122px;white-space:nowrap}
+.positions-table .table .positions-table__dividend-yield{width:108px;white-space:nowrap}
+.positions-table .table .positions-table__distribution-frequency{width:122px;white-space:normal;line-height:1.25}
+.positions-table .table .positions-table__yield-on-cost{width:104px;white-space:nowrap}
+.positions-table .table .positions-table__weight{width:78px;white-space:nowrap}
+.positions-table__design{position:relative}.positions-table__design>button{display:flex;align-items:center;gap:.35rem;padding:.45rem .65rem;border:1px solid #c7d5e7;border-radius:8px;background:#fff;color:#17385f;font:inherit;font-size:.72rem;font-weight:700;cursor:pointer}.positions-table__design>div{position:absolute;z-index:20;top:calc(100% + 6px);right:0;display:grid;min-width:215px;padding:.45rem;border:1px solid var(--border-primary);border-radius:10px;background:#fff;box-shadow:0 12px 28px rgba(16,39,70,.14)}.positions-table__design label{display:flex;align-items:center;gap:.5rem;padding:.42rem .5rem;border-radius:7px;color:var(--text-secondary);font-size:.72rem;cursor:pointer}.positions-table__design label:hover{background:var(--surface-secondary)}.positions-table__design input{accent-color:#17385f}.positions-table__design .positions-table__design-disabled{cursor:not-allowed;opacity:.45}.positions-table__design>div>small{padding:.45rem .5rem .2rem;border-top:1px solid var(--border-primary);color:var(--text-muted);font-size:.66rem}
+.positions-table__actions{display:flex;align-items:center;gap:.4rem}.positions-table__collapse{display:grid;width:34px;height:34px;place-items:center;border:1px solid #c7d5e7;border-radius:8px;background:var(--surface-primary);color:#244c7a;cursor:pointer;transition:background .15s ease,border-color .15s ease}.positions-table__collapse:hover{border-color:var(--broker-accent,#244c7a);background:var(--surface-secondary)}.positions-table.is-collapsed .card__content{display:none}
+.positions-table__broker-title{display:flex;align-items:center;gap:.6rem}.positions-table__broker-title>.broker-logo{width:34px;height:34px;flex-basis:34px;border-radius:9px}.positions-table__broker-copy{display:grid;gap:.16rem}.positions-table__broker-copy>small{padding-inline-start:.25rem;color:var(--text-muted);font-size:.86rem;font-weight:500;line-height:1.25}
+.positions-table:has(.broker-logo.brand-alinma){--broker-accent:#5546a3;--broker-gradient:linear-gradient(120deg,#494087 0%,#7066ae 55%,#a59bd6 100%)}
+.positions-table:has(.broker-logo.brand-snb){--broker-accent:#00664f;--broker-gradient:linear-gradient(120deg,#00493e 0%,#00715b 58%,#36a58a 100%)}
+.positions-table:has(.broker-logo.brand-alkhabeer){--broker-accent:#173252;--broker-gradient:linear-gradient(120deg,#10284a 0%,#1b3a63 58%,#71849d 100%)}
+.positions-table:has(.broker-logo.brand-abyan-capital){--broker-accent:#244c9a;--broker-gradient:linear-gradient(120deg,#14285e 0%,#244c9a 58%,#5886d3 100%)}
+.positions-table:has(.broker-logo.brand-abyan-trading){--broker-accent:#174b9b;--broker-gradient:linear-gradient(120deg,#07183c 0%,#174b9b 52%,#1766e8 100%)}
+.positions-table:has(.broker-logo.brand-abyan){--broker-accent:#244c9a;--broker-gradient:linear-gradient(120deg,#14285e 0%,#244c9a 58%,#5886d3 100%)}
+.positions-table:has(.broker-logo.brand-riyad){--broker-accent:#008f86;--broker-gradient:linear-gradient(120deg,#006a67 0%,#008f86 55%,#54bdb1 100%)}
+.positions-table:has(.broker-logo.brand-rajhi){--broker-accent:#243aa5;--broker-gradient:linear-gradient(120deg,#1715c5 0%,#2921f2 58%,#7772ff 100%)}
+.positions-table:has(.broker-logo.brand-derayah){--broker-accent:#762b46;--broker-gradient:linear-gradient(120deg,#542035 0%,#762b46 58%,#b06078 100%)}
+.positions-table:has(.broker-logo.brand-sahm){--broker-accent:#00a9a2;--broker-gradient:linear-gradient(120deg,#007f7a 0%,#00a9a2 58%,#47d0c5 100%)}
+.positions-table:has(.broker-logo.brand-bilad){--broker-accent:#07955f;--broker-gradient:linear-gradient(120deg,#087446 0%,#07955f 58%,#4ac78b 100%)}
+.positions-table:has(.broker-logo.brand-hsbc){--broker-accent:#d71920;--broker-gradient:linear-gradient(120deg,#9e0010 0%,#d71920 58%,#f26972 100%)}
+.positions-table:has(.broker-logo.brand-ibkr){--broker-accent:#d71920;--broker-gradient:linear-gradient(120deg,#a90000 0%,#d71920 55%,#373b43 100%)}
+.positions-table:has(.broker-logo.brand-webull){--broker-accent:#1769e0;--broker-gradient:linear-gradient(120deg,#1247a4 0%,#1769e0 58%,#75baff 100%)}
+.positions-table:has(.broker-logo.brand-aljazira){--broker-accent:#007b53;--broker-gradient:linear-gradient(120deg,#07533c 0%,#07815c 58%,#65b990 100%)}
+.positions-table:has(.broker-logo.brand-anb){--broker-accent:#087b99;--broker-gradient:linear-gradient(120deg,#07506b 0%,#087b99 58%,#60b5c8 100%)}
+.positions-table:has(.broker-logo.brand-sab){--broker-accent:#155a96;--broker-gradient:linear-gradient(120deg,#0b3b70 0%,#155a96 58%,#da3445 100%)}
+.positions-table:has(.broker-logo.brand-bsf){--broker-accent:#a91d35;--broker-gradient:linear-gradient(120deg,#68162c 0%,#a91d35 58%,#344b71 100%)}
+.positions-table:has(.broker-logo.brand-alistithmar){--broker-accent:#8d6b24;--broker-gradient:linear-gradient(120deg,#604819 0%,#98732c 58%,#ccb36e 100%)}
+.positions-table:has(.broker-logo.brand-jadwa){--broker-accent:#21805a;--broker-gradient:linear-gradient(120deg,#14583e 0%,#21805a 58%,#6eb891 100%)}
+.positions-table:has(.broker-logo.brand-gib){--broker-accent:#1769aa;--broker-gradient:linear-gradient(120deg,#0f4779 0%,#1769aa 58%,#62a8d4 100%)}
+.positions-table:has(.broker-logo.brand-yaqeen){--broker-accent:#3156a4;--broker-gradient:linear-gradient(120deg,#233a79 0%,#3156a4 58%,#c2344a 100%)}
+.positions-table:has(.broker-logo.brand-awaed){--broker-accent:#23835e;--broker-gradient:linear-gradient(120deg,#155b41 0%,#23835e 58%,#75bd91 100%)}
+.positions-table:has(.broker-logo.brand-fidelity){--broker-accent:#2d7542;--broker-gradient:linear-gradient(120deg,#16492a 0%,#2d7542 58%,#75ae55 100%)}
+.positions-table:has(.broker-logo.brand-schwab){--broker-accent:#2877a7;--broker-gradient:linear-gradient(120deg,#14547c 0%,#2877a7 58%,#71b2d4 100%)}
+.positions-table:has(.broker-logo.brand-etrade){--broker-accent:#168149;--broker-gradient:linear-gradient(120deg,#12633a 0%,#168149 58%,#2a73a8 100%)}
+.positions-table:has(.broker-logo.brand-robinhood){--broker-accent:#21894b;--broker-gradient:linear-gradient(120deg,#165d34 0%,#21894b 58%,#72c58b 100%)}
+.positions-table:has(.broker-logo.brand-vanguard){--broker-accent:#b21f31;--broker-gradient:linear-gradient(120deg,#711322 0%,#b21f31 58%,#d56b6e 100%)}
+.positions-table:has(.broker-logo.brand-merrill){--broker-accent:#1c7755;--broker-gradient:linear-gradient(120deg,#124a55 0%,#1c7755 58%,#7960a8 100%)}
+.positions-table:has(.broker-logo.brand-tradestation){--broker-accent:#d44b24;--broker-gradient:linear-gradient(120deg,#7e2a1a 0%,#d44b24 58%,#34383d 100%)}
+.positions-table:has(.broker-logo.brand-tastytrade){--broker-accent:#6337a4;--broker-gradient:linear-gradient(120deg,#41246f 0%,#6337a4 58%,#a287d4 100%)}
+.positions-table:has(.broker-logo.brand-sofi){--broker-accent:#202c4c;--broker-gradient:linear-gradient(120deg,#121d38 0%,#26385f 58%,#6684bc 100%)}
+.positions-table:has(.broker-logo.brand-public){--broker-accent:#18734b;--broker-gradient:linear-gradient(120deg,#124832 0%,#18734b 58%,#74b58e 100%)}
+.positions-table:has(.broker-logo.brand-moomoo){--broker-accent:#6244ad;--broker-gradient:linear-gradient(120deg,#3a286b 0%,#6244ad 58%,#aa91e3 100%)}

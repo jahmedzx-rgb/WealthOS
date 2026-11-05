@@ -11,17 +11,19 @@ import Operations from '../components/dashboard/Operations'
 import RecentActivity from '../components/dashboard/RecentActivity'
 import WealthAllocationOverview from '../components/dashboard/WealthAllocationOverview'
 import { usePortfolio } from '../hooks/usePortfolio'
-import { useCurrency } from '../context/CurrencyContext'
+import { usePortfolioPriceSync } from '../hooks/usePortfolioPriceSync'
+import { supportedCurrencies, useCurrency } from '../context/CurrencyContext'
 import FormattedMoney from '../components/ui/FormattedMoney'
 import { formatDateTime } from '../utils/dateFormat'
 import PageHeader from '../components/ui/PageHeader'
 import { useFinancialSummary } from '../hooks/useFinancialSummary'
-import { getConsolidatedPerformanceHistory, updateMarketPrices, type PortfolioPerformanceHistory } from '../services/portfolioService'
+import { getConsolidatedPerformanceHistory, type PortfolioPerformanceHistory } from '../services/portfolioService'
 import { useLanguage } from '../context/LanguageContext'
+import { formatDisplayPercent } from '../utils/localeFormat'
 
 export default function PortfolioDashboardPage() {
   const { formatMoney } = useCurrency()
-  const { t } = useLanguage()
+  const { language, t } = useLanguage()
   const [selectedPeriod, setSelectedPeriod] = useState<'1W' | '1M' | '1Y' | 'YTD'>('YTD')
   const [performanceHistory, setPerformanceHistory] = useState<PortfolioPerformanceHistory | null>(null)
   const [lastUpdatedAt, setLastUpdatedAt] = useState(() => {
@@ -38,7 +40,7 @@ export default function PortfolioDashboardPage() {
   } = usePortfolio('consolidated')
   const financial = useFinancialSummary()
 
-  useEffect(()=>{let active=true;updateMarketPrices().then(()=>{if(active)return refresh()}).catch(()=>undefined);return()=>{active=false}},[refresh])
+  usePortfolioPriceSync(data?.positions, refresh)
 
   useEffect(() => {
     let active = true
@@ -100,13 +102,16 @@ export default function PortfolioDashboardPage() {
   }
 
   const portfolioCurrency = data.portfolio.base_currency_code as Parameters<typeof formatMoney>[1]
-  const formatCurrency = (value: number) => formatMoney(value, portfolioCurrency)
-
   const formatCompactCurrency = (value: number) => formatMoney(value, portfolioCurrency, true)
 
   // Accounting assets are recorded at cost; live unrealized P/L marks investments to market.
   const consolidatedNetWorth = financial.data.net_worth + data.summary.unrealized_pl
   const availableCash = financial.data.available_cash
+  const portfolioSarRate=supportedCurrencies.find(item=>item.code===portfolioCurrency)?.sarRate??1
+  const marketInvestmentsSar=Number(data.summary.market_value)*portfolioSarRate
+  const depositInvestmentsSar=financial.data.deposits.reduce((sum,item)=>sum+Number(item.current_balance)*(supportedCurrencies.find(currency=>currency.code===item.currency_code)?.sarRate??1),0)
+  const propertyAssetsSar=financial.data.asset_breakdown.filter(item=>item.code===1210).reduce((sum,item)=>sum+Number(item.balance),0)
+  const totalInvestmentsSar=marketInvestmentsSar+depositInvestmentsSar+propertyAssetsSar
 
   const hasPerformanceHistory = performanceHistory?.has_sufficient_history === true
   const periodPerformance = { percentage: Number(performanceHistory?.percentage ?? 0), value: Number(performanceHistory?.change ?? 0) }
@@ -168,14 +173,14 @@ export default function PortfolioDashboardPage() {
               <div className="portfolio-dashboard__growth-metric">
                 <span>{t('Return')}</span>
                 <strong>{hasPerformanceHistory?<FormattedMoney value={formatCompactCurrency(periodPerformance.value)} sign={positivePerformance?'+':''}/>:<span>—</span>}</strong>
-                <small className={hasPerformanceHistory ? undefined : 'is-building'}>{hasPerformanceHistory?`${performanceSign}${periodPerformance.percentage.toFixed(1)}%`:t('Building history')}</small>
+                <small className={hasPerformanceHistory ? undefined : 'is-building'}>{hasPerformanceHistory?`${performanceSign}${formatDisplayPercent(periodPerformance.percentage, 1, language)}`:t('Building history')}</small>
               </div>
               </div>
             </section>
           </div>
           <div className="portfolio-dashboard__insight-group">
             <header className="portfolio-dashboard__insight-title"><span><ShieldCheck size={18}/></span><div><h2>{t('Financial Health')}</h2><small>{t('Assets, liquidity, obligations, and risk')}</small></div></header>
-            <FinancialHealthCard cash={formatMoney(availableCash, 'SAR')} investments={formatCurrency(data.summary.market_value)} dbr={financial.data.dbr} score={financial.data.health_score} riskLevel={financial.data.risk_level}/>
+            <FinancialHealthCard cash={formatMoney(availableCash, 'SAR')} investments={formatMoney(totalInvestmentsSar,'SAR')} dbr={financial.data.dbr} score={financial.data.health_score} riskLevel={financial.data.risk_level}/>
           </div>
         </section>
 

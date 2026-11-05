@@ -1,0 +1,45 @@
+.operation-workspace .credit-card-form .standard-operation__form { gap: 10px; padding-block: 14px; }
+.operation-workspace .credit-card-form .credit-card-operation__grid { grid-template-columns: minmax(0,1fr) 150px; column-gap: 14px; row-gap: 9px; }
+.operation-workspace .credit-card-form .credit-card-operation__identity-row,
+.operation-workspace .credit-card-form .credit-card-operation__schedule-row { grid-template-columns: repeat(3,minmax(0,1fr)); gap: 10px; }
+.operation-workspace .credit-card-form .credit-card-operation__schedule-row { grid-template-columns: minmax(0,135px) minmax(0,135px) minmax(0,1fr); }
+.operation-workspace .credit-card-form .credit-card-operation__balance-row { grid-template-columns: minmax(0,.8fr) minmax(0,.8fr) minmax(0,1.25fr) minmax(0,1.15fr); gap: 8px; }
+.operation-workspace .credit-card-form .credit-card-operation__grid label { gap: 3px; grid-template-rows: auto auto; align-content: start; min-width: 0; }
+.operation-workspace .credit-card-form .credit-card-operation__grid label > span:first-child { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 7px; min-height: 24px; font-size: 14px; font-weight: 500; line-height: 1.5; }
+.operation-workspace .credit-card-form .credit-card-operation__minimum-label { flex: 0 1 auto; white-space: normal; line-height: 1.5; }
+.operation-workspace .credit-card-form .credit-card-operation__payment-line { display: inline-flex; align-items: center; gap: 5px; white-space: nowrap; }
+.operation-workspace .credit-card-form .credit-card-operation__payment-line .operation-field__info { flex: 0 0 auto; margin: 0; }
+.operation-workspace .credit-card-form .credit-card-operation__balance-row label:nth-child(3) > span:first-child { white-space: nowrap; flex-wrap: nowrap; }
+.operation-workspace .credit-card-form .operation-field__optional { position: static; margin: 0; transform: none; font-size: 12px; font-weight: 400; }
+.operation-workspace .credit-card-form .credit-card-operation__balance-row label { grid-template-rows: minmax(44px,auto) 44px; }
+.operation-workspace .credit-card-form .credit-card-operation__fee-row { display: flex !important; grid-column: 2; grid-row: 1 / span 4; flex-direction: column; gap: 9px; padding: 12px; }
+.operation-workspace .credit-card-form .credit-card-operation__fee-row header { grid-column: 1 / -1; }
+.operation-workspace .credit-card-form .standard-operation__form input,
+.operation-workspace .credit-card-form .standard-operation__form select { height: 44px !important; min-height: 44px; font-size: 14px; font-weight: 400; line-height: 1.5; }
+.operation-workspace .credit-card-form input::placeholder { font-size: 14px; font-weight: 400; }
+.operation-workspace .credit-card-form .credit-card-operation__day-month { box-sizing: border-box; height: 38px; min-height: 38px; }
+.operation-workspace .credit-card-form .credit-card-operation__day-month input,
+.operation-workspace .credit-card-form .credit-card-operation__day-month select { box-sizing: border-box; width: 100%; min-width: 0; height: 36px !important; min-height: 36px; padding: 0; text-align: center; }
+.operation-workspace .credit-card-form .credit-card-operation__schedule-row > label > select,
+.operation-workspace .credit-card-form .credit-card-operation__schedule-row .credit-card-operation__day-month { box-sizing: border-box; height: 38px !important; min-height: 38px; }
+.operation-workspace .credit-card-form .credit-card-operation__day-month { grid-template-columns: 3ch auto 4ch; justify-content: start; gap: 3px; padding-inline: 10px; direction: ltr; }
+.operation-workspace .credit-card-form .credit-card-operation__schedule-row .credit-card-operation__day-month input,
+.operation-workspace .credit-card-form .credit-card-operation__schedule-row .credit-card-operation__day-month select { height: 36px !important; min-height: 36px; padding: 0; text-align: center; }
+.operation-workspace .credit-card-form .credit-card-operation__free-card > button { height: 44px; font-size: 14px; font-weight: 400; text-align: start; }
+.credit-card-form .income-operation__section-heading h3,
+.credit-card-form .income-operation__summary-header h3 { font-size: 17px; font-weight: 600; }
+.credit-card-form .income-operation__effects p { flex-wrap: wrap; gap: 10px; }
+.credit-card-form .income-operation__effects span,
+.credit-card-form .income-operation__effects strong { font-size: 14px; font-weight: 400; line-height: 1.6; }
+.credit-card-form .income-operation__actions { flex-wrap: wrap; gap: 12px; }
+.credit-card-form .income-operation__actions > span { flex: 1 1 240px; font-size: 13px; font-weight: 400; line-height: 1.6; }
+.operation-workspace .credit-card-form .credit-card-operation__balance-tools { grid-row: auto; }
+@media(max-width:650px) {
+  .operation-workspace .credit-card-form .credit-card-operation__grid { grid-template-columns: minmax(0,1fr); }
+  .operation-workspace .credit-card-form .credit-card-operation__fee-row { grid-column: 1; grid-row: auto; }
+  .operation-workspace .credit-card-form .credit-card-operation__balance-row label { grid-template-rows: auto auto; }
+  .operation-workspace .credit-card-form .credit-card-operation__identity-row,
+  .operation-workspace .credit-card-form .credit-card-operation__schedule-row,
+  .operation-workspace .credit-card-form .credit-card-operation__balance-row,
+  .operation-workspace .credit-card-form .credit-card-operation__fee-row { grid-template-columns: minmax(0,1fr); }
+}

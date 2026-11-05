@@ -1,0 +1,23 @@
+.scheduled-loan .standard-operation__grid { gap: 18px 22px; }
+.scheduled-loan .income-operation__form label { gap: 7px; min-width: 0; line-height: 1.5; font-size: 14px; font-weight: 500; }
+.scheduled-loan .income-operation__form label > span { font-size: 14px; font-weight: 500; line-height: 1.5; }
+.scheduled-loan .income-operation__form input,
+.scheduled-loan .income-operation__form select { min-height: 44px; padding: 10px 12px; font-size: 14px; font-weight: 400; line-height: 1.5; letter-spacing: normal; }
+.scheduled-loan .income-operation__form input::placeholder { font-size: 14px; font-weight: 400; color: var(--text-muted); opacity: 1; }
+.scheduled-loan .income-operation__section-heading h3,
+.scheduled-loan .income-operation__summary-header h3 { font-size: 17px; font-weight: 600; line-height: 1.5; }
+.scheduled-loan .income-operation__section-heading p,
+.scheduled-loan .income-operation__summary-header p { font-size: 13px; line-height: 1.6; }
+.scheduled-loan__kind { display: grid; gap: 7px; width: min(360px, 100%); margin: 0 0 6px; color: var(--text-primary); font-size: 14px; font-weight: 500; }
+.scheduled-loan__kind select { appearance: auto; -webkit-appearance: auto; -moz-appearance: auto; width: 100%; min-height: 44px; padding: 10px 12px; border: 1px solid var(--border-primary); border-radius: 8px; background: var(--surface-primary); color: var(--text-primary); font: inherit; }
+.scheduled-loan__kind select:hover,
+.scheduled-loan__kind select:focus { border-color: #caaa65; }
+.scheduled-loan .income-operation__effects p { gap: 12px; flex-wrap: wrap; }
+.scheduled-loan .income-operation__effects span,
+.scheduled-loan .income-operation__effects strong { font-size: 14px; font-weight: 400; line-height: 1.6; }
+.scheduled-loan .standard-operation__preview > strong { font-size: 20px; font-weight: 600; line-height: 1.5; }
+.scheduled-loan .income-operation__smart-note p,
+.scheduled-loan .income-operation__actions > span { font-size: 13px; font-weight: 400; line-height: 1.7; }
+.scheduled-loan .income-operation__actions { flex-wrap: wrap; gap: 12px; }
+.scheduled-loan .income-operation__actions > span { flex: 1 1 240px; }
+.scheduled-loan .income-operation__actions button { font-size: 14px; font-weight: 500; }

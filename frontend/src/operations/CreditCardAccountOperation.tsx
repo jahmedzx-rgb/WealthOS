@@ -1,3 +1,7 @@
+import { cardDayMonth, cardDateThisYear } from '../utils/cardDueDate'
+import AmountInput from '../components/AmountInput'
+import './CreditCardAccountOperation.css'
+import DateInput from '../components/DateInput'
 import { useEffect, useState, type FormEvent } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import OperationForm from './OperationForm'
@@ -5,7 +9,7 @@ import { adjustCreditCardBalance, createCreditCardAccount, getFinancialSummary, 
 import { supportedCurrencies, useCurrency } from '../context/CurrencyContext'
 import type { Currency } from '../context/CurrencyContext'
 import { Info } from 'lucide-react'
-import { formatDayMonth, formatWealthDate, normalizeWealthDateInput, parseDayMonth, parseWealthDate } from '../utils/dateFormat'
+import { formatWealthDate, normalizeWealthDateInput, parseDayMonth, parseWealthDate } from '../utils/dateFormat'
 import { useLanguage } from '../context/LanguageContext'
 import { formatDisplayInteger, formatDisplayPercent } from '../utils/localeFormat'
 
@@ -16,14 +20,6 @@ const nowLocal = () => {
 const monthFromLocalDate=(value:string)=>String((new Date(value).getMonth()||0)+1).padStart(2,'0')
 const currentMonth=()=>String(new Date().getMonth()+1).padStart(2,'0')
 
-const nextMonthlyDate = (day:number|null) => {
-  if(!day)return `/${currentMonth()}`
-  const now=new Date()
-  const candidate=(year:number,month:number)=>new Date(year,month,Math.min(day,new Date(year,month+1,0).getDate()))
-  let result=candidate(now.getFullYear(),now.getMonth())
-  if(result<new Date(now.getFullYear(),now.getMonth(),now.getDate()))result=candidate(now.getFullYear(),now.getMonth()+1)
-  return formatDayMonth(result)
-}
 
 function FieldInfo({label,text}:{label:string;text:string}) {
   const [open,setOpen]=useState(false)
@@ -35,7 +31,7 @@ function DayMonthInput({value,onChange,disabled=false}:{value:string;onChange:(v
   const{t,language}=useLanguage()
   const [day='',month=currentMonth()]=value.split('/')
   const months=Array.from({length:12},(_,index)=>String(index+1).padStart(2,'0'))
-  return <span className={`credit-card-operation__day-month${disabled?' is-disabled':''}`}><input aria-label={t('Day')} inputMode="numeric" maxLength={2} placeholder={t('DD')} value={day} disabled={disabled} onChange={(event)=>onChange(`${event.target.value.replace(/\D/g,'').slice(0,2)}/${month}`)} onBlur={()=>{if(day.length===1)onChange(`${day.padStart(2,'0')}/${month}`)}}/><i>/</i><select aria-label={t('Month')} value={month} disabled={disabled} onChange={(event)=>onChange(`${day}/${event.target.value}`)}>{months.map(item=><option value={item} key={item}>{formatDisplayInteger(Number(item),language)}</option>)}</select></span>
+return <span className={`credit-card-operation__day-month${disabled?' is-disabled':''}`}><input aria-label={t('Day')} inputMode="numeric" maxLength={2} placeholder={t('DD')} value={day} disabled={disabled} onChange={(event)=>onChange(`${event.target.value.replace(/\D/g,'').slice(0,2)}/${month}`)} onBlur={()=>{if(day.length===1)onChange(`${day.padStart(2,'0')}/${month}`)}}/><i>/</i><select aria-label={t('Month')} value={month} disabled={disabled} onChange={(event)=>onChange(`${day}/${event.target.value}`)}>{months.map(item=><option value={item} key={item}>{formatDisplayInteger(Number(item),language).padStart(2,language==='ar'?'٠':'0')}</option>)}</select></span>
 }
 
 export default function CreditCardAccountOperation() {
@@ -64,7 +60,7 @@ export default function CreditCardAccountOperation() {
       setCards(summary.credit_cards)
       const card = summary.credit_cards.find((item)=>String(item.id)===editCardId)
       if (card) {
-        setForm((current)=>({...current,issuer_bank:card.issuer_bank,card_name:card.card_name,last4:card.last4,credit_limit:String(card.credit_limit),used_balance:String(card.current_balance),statement_balance:String(card.statement_balance),minimum_monthly_payment:String(card.minimum_monthly_payment||''),statement_cutoff_day:nextMonthlyDate(card.statement_cutoff_day),payment_due_day:nextMonthlyDate(card.payment_due_day),is_fee_free:card.is_fee_free,annual_fee:String(card.annual_fee||''),fee_renewal_date:card.fee_renewal_day&&card.fee_renewal_month?`${String(card.fee_renewal_day).padStart(2,'0')}/${String(card.fee_renewal_month).padStart(2,'0')}`:`/${currentMonth()}`,currency_code:card.currency_code as Currency}))
+        setForm((current)=>({...current,issuer_bank:card.issuer_bank,card_name:card.card_name,last4:card.last4,credit_limit:String(card.credit_limit),used_balance:String(card.current_balance),statement_balance:String(card.statement_balance),minimum_monthly_payment:String(card.minimum_monthly_payment||''),statement_cutoff_day:cardDayMonth(card.statement_cutoff_date,card.statement_cutoff_day),payment_due_day:cardDayMonth(card.payment_due_date,card.payment_due_day),is_fee_free:card.is_fee_free,annual_fee:String(card.annual_fee||''),fee_renewal_date:card.fee_renewal_day&&card.fee_renewal_month?`${String(card.fee_renewal_day).padStart(2,'0')}/${String(card.fee_renewal_month).padStart(2,'0')}`:`/${currentMonth()}`,currency_code:card.currency_code as Currency}))
       } else {
         setStatus('Credit card not found.')
       }
@@ -73,9 +69,10 @@ export default function CreditCardAccountOperation() {
   const submit = async (event:FormEvent) => {
     event.preventDefault()
     setStatus('')
+    const cutoffISO=cardDateThisYear(form.statement_cutoff_day), dueISO=cardDateThisYear(form.payment_due_day)
     const cutoffDate=parseDayMonth(form.statement_cutoff_day), dueDate=parseDayMonth(form.payment_due_day), renewalDate=parseDayMonth(form.fee_renewal_date)
     const cutoff=cutoffDate?.day??0, due=dueDate?.day??0
-    if (!cutoffDate||!dueDate) {
+    if (!cutoffDate||!dueDate||!cutoffISO||!dueISO) {
       setStatus('Enter valid statement cutoff and payment due dates in DD/MM format.')
       return
     }
@@ -86,7 +83,7 @@ export default function CreditCardAccountOperation() {
         return
       }
       setSaving(true)
-      try { await updateCreditCard(Number(editCardId),{issuer_bank:form.issuer_bank,card_name:form.card_name,last4:form.last4,credit_limit:limit,statement_balance:statementBalance,minimum_monthly_payment:Number(form.minimum_monthly_payment)||0,statement_cutoff_day:cutoff,payment_due_day:due,is_fee_free:form.is_fee_free,annual_fee:form.is_fee_free?0:Number(form.annual_fee)||0,fee_renewal_day:form.is_fee_free?null:renewalDate?.day??null,fee_renewal_month:form.is_fee_free?null:renewalDate?.month??null,currency_code:form.currency_code}); setStatus('Credit card details updated successfully.') }
+      try { await updateCreditCard(Number(editCardId),{issuer_bank:form.issuer_bank,card_name:form.card_name,last4:form.last4,credit_limit:limit,statement_balance:statementBalance,minimum_monthly_payment:Number(form.minimum_monthly_payment)||0,statement_cutoff_day:cutoff,payment_due_day:due,payment_due_date:dueISO,statement_cutoff_date:cutoffISO,is_fee_free:form.is_fee_free,annual_fee:form.is_fee_free?0:Number(form.annual_fee)||0,fee_renewal_day:form.is_fee_free?null:renewalDate?.day??null,fee_renewal_month:form.is_fee_free?null:renewalDate?.month??null,currency_code:form.currency_code}); setStatus('Credit card details updated successfully.') }
       catch(error){setStatus(error instanceof Error?error.message:'Unable to update the credit card.')}
       finally{setSaving(false)}
       return
@@ -97,7 +94,7 @@ export default function CreditCardAccountOperation() {
     }
     setSaving(true)
     try {
-      await createCreditCardAccount({...form, credit_limit:limit, used_balance:used, statement_balance:statementBalance, minimum_monthly_payment:Number(form.minimum_monthly_payment)||0, statement_cutoff_day:cutoff, payment_due_day:due, annual_fee:form.is_fee_free?0:Number(form.annual_fee)||0,fee_renewal_day:form.is_fee_free?null:renewalDate?.day??null,fee_renewal_month:form.is_fee_free?null:renewalDate?.month??null, as_of_date:new Date(form.as_of_date).toISOString()})
+      await createCreditCardAccount({...form, credit_limit:limit, used_balance:used, statement_balance:statementBalance, minimum_monthly_payment:Number(form.minimum_monthly_payment)||0, statement_cutoff_day:cutoff, payment_due_day:due,payment_due_date:dueISO,statement_cutoff_date:cutoffISO, annual_fee:form.is_fee_free?0:Number(form.annual_fee)||0,fee_renewal_day:form.is_fee_free?null:renewalDate?.day??null,fee_renewal_month:form.is_fee_free?null:renewalDate?.month??null, as_of_date:new Date(form.as_of_date).toISOString()})
       setStatus('Credit card saved and its opening balance was posted to liabilities.')
       setForm({ issuer_bank:'', card_name:'', last4:'', credit_limit:'', used_balance:'', statement_balance:'', minimum_monthly_payment:'', statement_cutoff_day:`/${currentMonth()}`, payment_due_day:`/${currentMonth()}`, is_fee_free:false, annual_fee:'', fee_renewal_date:`/${currentMonth()}`, currency_code:baseCurrency, as_of_date:nowLocal() })
     } catch (error) { setStatus(error instanceof Error?error.message:'Unable to save the credit card.') }
@@ -113,7 +110,7 @@ export default function CreditCardAccountOperation() {
     catch(error){setStatus(error instanceof Error?error.message:'Unable to adjust the card balance.')}
     finally{setSaving(false)}
   }
-  if(editMode)return <OperationForm title="Edit Credit Card" onSubmit={(event)=>void submit(event)} preview={<>
+  if(editMode)return <OperationForm className="credit-card-form" title="Edit Credit Card" onSubmit={(event)=>void submit(event)} preview={<>
     <div className="standard-operation__preview"><span>Current used balance</span><strong>{formatMoney(used,form.currency_code as Currency)}</strong><small>Updated only through posted card transactions</small></div>
     <div className="income-operation__effects"><h4>Card position</h4><p><span>Credit limit</span><strong>{formatMoney(limit,form.currency_code as Currency)}</strong></p><p><span>Available credit</span><strong>{formatMoney(available,form.currency_code as Currency)}</strong></p><p><span>Utilization</span><strong>{formatDisplayPercent(utilization,1,language)}</strong></p></div>
   </>}>
@@ -124,28 +121,28 @@ export default function CreditCardAccountOperation() {
         <label><span>Last 4 Digits</span><input value={form.last4} maxLength={4} inputMode="numeric" onChange={(e)=>update('last4',e.target.value.replace(/\D/g,''))} /></label>
       </div>
       <div className="credit-card-operation__balance-row">
-        <label><span>Credit Limit</span><input type="number" min={used} step="0.01" value={form.credit_limit} onChange={(e)=>update('credit_limit',e.target.value)} /></label>
-        <label><span>Credit Used</span><input type="number" value={form.used_balance} readOnly /></label>
-        <label><span>Statement Balance <FieldInfo label="About statement balance" text="The amount due from the latest issued statement. Newer card purchases remain in Credit Used but are not included here." /></span><input type="number" min="0" max={used} step="0.01" value={form.statement_balance} onChange={(e)=>update('statement_balance',e.target.value)} /></label>
-        <label><span><span className="credit-card-operation__minimum-label">Minimum Monthly<br/>Payment</span><em className="operation-field__optional">Optional</em><FieldInfo label="About minimum monthly payment" text="The minimum amount shown on your card statement. It is included in DBR. If left empty, WealthOS estimates it as 5% of the current card balance." /></span><input type="number" min="0" step="0.01" value={form.minimum_monthly_payment} onChange={(e)=>update('minimum_monthly_payment',e.target.value)} /></label>
+        <label><span>Credit Limit</span><AmountInput type="number" min={used} step="0.01" value={form.credit_limit} onChange={(e)=>update('credit_limit',e.target.value)} /></label>
+        <label><span>Credit Used</span><AmountInput type="number" value={form.used_balance} readOnly /></label>
+        <label><span>Statement Balance <FieldInfo label="About statement balance" text="The amount due from the latest issued statement. Newer card purchases remain in Credit Used but are not included here." /></span><AmountInput type="number" min="0" max={used} step="0.01" value={form.statement_balance} onChange={(e)=>update('statement_balance',e.target.value)} /></label>
+        <label><span><span className="credit-card-operation__minimum-label">Minimum Monthly<br/><span className="credit-card-operation__payment-line">Payment <em className="operation-field__optional">Optional</em><FieldInfo label="About minimum monthly payment" text="The minimum amount shown on your card statement. It is included in DBR. If left empty, WealthOS estimates it as 5% of the current card balance." /></span></span></span><AmountInput type="number" min="0" step="0.01" value={form.minimum_monthly_payment} onChange={(e)=>update('minimum_monthly_payment',e.target.value)} /></label>
       </div>
       <div className="credit-card-operation__schedule-row">
-        <label><span>Cutoff Date <FieldInfo label="About cutoff date" text="Enter the day. The month follows the transaction date automatically and remains editable." /></span><DayMonthInput value={form.statement_cutoff_day} onChange={(value)=>update('statement_cutoff_day',value)} /></label>
-        <label><span>Due Date <FieldInfo label="About due date" text="Enter the day. The month follows the transaction date automatically and remains editable." /></span><DayMonthInput value={form.payment_due_day} onChange={(value)=>update('payment_due_day',value)} /></label>
+        <label><span>Cutoff Date <FieldInfo label="About cutoff date" text="DD/MM" /></span><DayMonthInput value={form.statement_cutoff_day} onChange={value=>update('statement_cutoff_day',value)} /></label>
+        <label><span>Due Date <FieldInfo label="About due date" text="DD/MM" /></span><DayMonthInput value={form.payment_due_day} onChange={value=>update('payment_due_day',value)} /></label>
         <label><span>Currency <FieldInfo label="About card currency" text="A card with an outstanding balance keeps its original currency. Settle the card in full before changing its currency." /></span><select value={form.currency_code} onChange={(e)=>update('currency_code',e.target.value as Currency)} disabled={used>0}>{enabledCurrencies.map(code=>{const item=supportedCurrencies.find(currency=>currency.code===code);return <option key={code} value={code}>{item?.symbol} - {item?.name}</option>})}</select></label>
       </div>
       <aside className="credit-card-operation__fee-row">
         <header><strong>Card Costs</strong><small>Annual card charges</small></header>
         <label className="credit-card-operation__free-card"><span>Fee Type</span><button type="button" role="checkbox" aria-checked={form.is_fee_free} className={form.is_fee_free?'is-selected':''} onClick={()=>setForm(current=>({...current,is_fee_free:!current.is_fee_free}))}><i>{form.is_fee_free?'✓':''}</i> Free Card</button></label>
-        <label><span>Annual Fee</span><input type="number" min="0" step="0.01" value={form.annual_fee} disabled={form.is_fee_free} onChange={(e)=>update('annual_fee',e.target.value)} /></label>
+        <label><span>Annual Fee</span><AmountInput type="number" min="0" step="0.01" value={form.annual_fee} disabled={form.is_fee_free} onChange={(e)=>update('annual_fee',e.target.value)} /></label>
         <label><span>Fee Renewal Date</span><DayMonthInput value={form.fee_renewal_date} disabled={form.is_fee_free} onChange={(value)=>update('fee_renewal_date',value)} /></label>
       </aside>
       <div className="credit-card-operation__balance-tools"><button className="credit-card-operation__adjust" type="button" onClick={()=>{setAdjusting(current=>!current);setAdjustment(current=>({...current,corrected_balance:form.used_balance}))}}>Adjust Balance</button><FieldInfo label="About balance adjustments" text="Use this only to correct a mismatch with the bank statement. Frequent adjustments create accounting corrections and can reduce the reliability of your financial history." /></div>
     </div>
-    {adjusting?<section className="credit-card-operation__adjustment"><header><strong>Balance Adjustment</strong><small>Posts an accounting correction to this card.</small></header><div><label><span>Corrected Balance</span><input type="number" min="0" max={limit} step="0.01" value={adjustment.corrected_balance} onChange={(e)=>setAdjustment(current=>({...current,corrected_balance:e.target.value}))}/></label><label><span>Adjustment Date</span><input inputMode="numeric" maxLength={10} placeholder="DD/MM/YYYY" value={adjustment.adjustment_date} onChange={(e)=>setAdjustment(current=>({...current,adjustment_date:normalizeWealthDateInput(e.target.value)}))}/></label><label><span>Reason</span><input value={adjustment.reason} maxLength={240} placeholder="Why is this correction needed?" onChange={(e)=>setAdjustment(current=>({...current,reason:e.target.value}))}/></label></div><footer><button type="button" onClick={()=>setAdjusting(false)}>Cancel</button><button type="button" disabled={saving} onClick={()=>void saveAdjustment()}>{saving?'Posting…':'Post Adjustment'}</button></footer></section>:null}
-    <div className="income-operation__actions"><span>{status||'Balance changes remain protected and follow posted transactions.'}</span><button type="submit" disabled={saving||!cards.length}>{saving?'Saving…':'Save Changes'}</button></div>
+    {adjusting?<section className="credit-card-operation__adjustment"><header><strong>Balance Adjustment</strong><small>Posts an accounting correction to this card.</small></header><div><label><span>Corrected Balance</span><AmountInput type="number" min="0" max={limit} step="0.01" value={adjustment.corrected_balance} onChange={(e)=>setAdjustment(current=>({...current,corrected_balance:e.target.value}))}/></label><label><span>Adjustment Date</span><input inputMode="numeric" maxLength={10} placeholder="DD/MM/YYYY" value={adjustment.adjustment_date} onChange={(e)=>setAdjustment(current=>({...current,adjustment_date:normalizeWealthDateInput(e.target.value)}))}/></label><label><span>Reason</span><input value={adjustment.reason} maxLength={240} placeholder="Why is this correction needed?" onChange={(e)=>setAdjustment(current=>({...current,reason:e.target.value}))}/></label></div><footer><button type="button" onClick={()=>setAdjusting(false)}>Cancel</button><button type="button" disabled={saving} onClick={()=>void saveAdjustment()}>{saving?'Posting…':'Post Adjustment'}</button></footer></section>:null}
+    <div className="income-operation__actions"><span className={status==='Card balance adjusted and the accounting correction was posted.'?'is-success':undefined}>{status||'Balance changes remain protected and follow posted transactions.'}</span><button type="submit" disabled={saving||!cards.length}>{saving?'Saving…':'Save Changes'}</button></div>
   </OperationForm>
-  return <OperationForm title="Credit card details" onSubmit={(event)=>void submit(event)} preview={<>
+  return <OperationForm className="credit-card-form" title="Credit card details" onSubmit={(event)=>void submit(event)} preview={<>
     <div className="standard-operation__preview"><span>Total credit limit</span><strong>{formatMoney(limit)}</strong><small>{formatDisplayPercent(utilization,1,language)} utilized</small></div>
     <div className="income-operation__effects"><h4>Financial impact</h4><p><span>Credit used</span><strong>{formatMoney(used)}</strong></p><p><span>Available credit</span><strong>{formatMoney(available)}</strong></p><p><span>Monthly DBR obligation</span><strong>{formatMoney(monthlyObligation)}</strong></p></div>
   </>}>
@@ -156,23 +153,23 @@ export default function CreditCardAccountOperation() {
         <label><span>Last 4 Digits</span><input value={form.last4} maxLength={4} inputMode="numeric" onChange={(e)=>update('last4',e.target.value.replace(/\D/g,''))} placeholder="0000" /></label>
       </div>
       <div className="credit-card-operation__balance-row">
-        <label><span>Credit Limit</span><input type="number" min="0" step="0.01" value={form.credit_limit} onChange={(e)=>update('credit_limit',e.target.value)} /></label>
-        <label><span>Credit Used</span><input type="number" min="0" step="0.01" value={form.used_balance} onChange={(e)=>update('used_balance',e.target.value)} /></label>
-        <label><span>Statement Balance <FieldInfo label="About statement balance" text="Enter the amount due on the latest issued statement. Leave newer purchases only in Credit Used." /></span><input type="number" min="0" max={used} step="0.01" value={form.statement_balance} onChange={(e)=>update('statement_balance',e.target.value)} /></label>
-        <label><span><span className="credit-card-operation__minimum-label">Minimum Monthly<br/>Payment</span><em className="operation-field__optional">Optional</em><FieldInfo label="About minimum monthly payment" text="The minimum amount shown on your card statement. It is included in DBR. If left empty, WealthOS estimates it as 5% of the current card balance." /></span><input type="number" min="0" step="0.01" value={form.minimum_monthly_payment} onChange={(e)=>update('minimum_monthly_payment',e.target.value)} /></label>
+        <label><span>Credit Limit</span><AmountInput type="number" min="0" step="0.01" value={form.credit_limit} onChange={(e)=>update('credit_limit',e.target.value)} /></label>
+        <label><span>Credit Used</span><AmountInput type="number" min="0" step="0.01" value={form.used_balance} onChange={(e)=>update('used_balance',e.target.value)} /></label>
+        <label><span>Statement Balance <FieldInfo label="About statement balance" text="Enter the amount due on the latest issued statement. Leave newer purchases only in Credit Used." /></span><AmountInput type="number" min="0" max={used} step="0.01" value={form.statement_balance} onChange={(e)=>update('statement_balance',e.target.value)} /></label>
+        <label><span><span className="credit-card-operation__minimum-label">Minimum Monthly<br/><span className="credit-card-operation__payment-line">Payment <em className="operation-field__optional">Optional</em><FieldInfo label="About minimum monthly payment" text="The minimum amount shown on your card statement. It is included in DBR. If left empty, WealthOS estimates it as 5% of the current card balance." /></span></span></span><AmountInput type="number" min="0" step="0.01" value={form.minimum_monthly_payment} onChange={(e)=>update('minimum_monthly_payment',e.target.value)} /></label>
       </div>
       <div className="credit-card-operation__schedule-row">
-        <label><span>Cutoff Date <FieldInfo label="About cutoff date" text="Enter the day. The month follows the transaction date automatically and remains editable." /></span><DayMonthInput value={form.statement_cutoff_day} onChange={(value)=>update('statement_cutoff_day',value)} /></label>
-        <label><span>Due Date <FieldInfo label="About due date" text="Enter the day. The month follows the transaction date automatically and remains editable." /></span><DayMonthInput value={form.payment_due_day} onChange={(value)=>update('payment_due_day',value)} /></label>
+        <label><span>Cutoff Date <FieldInfo label="About cutoff date" text="DD/MM" /></span><DayMonthInput value={form.statement_cutoff_day} onChange={value=>update('statement_cutoff_day',value)} /></label>
+        <label><span>Due Date <FieldInfo label="About due date" text="DD/MM" /></span><DayMonthInput value={form.payment_due_day} onChange={value=>update('payment_due_day',value)} /></label>
         <label><span>Currency <FieldInfo label="About card currency" text="The card currency is selected from your enabled currencies. Your base currency is selected automatically for a new card." /></span><select value={form.currency_code} onChange={(e)=>update('currency_code',e.target.value as Currency)}>{enabledCurrencies.map(code=>{const item=supportedCurrencies.find(currency=>currency.code===code);return <option key={code} value={code}>{item?.symbol} - {item?.name}</option>})}</select></label>
       </div>
       <aside className="credit-card-operation__fee-row">
         <header><strong>Card Costs</strong><small>Annual card charges</small></header>
         <label className="credit-card-operation__free-card"><span>Fee Type</span><button type="button" role="checkbox" aria-checked={form.is_fee_free} className={form.is_fee_free?'is-selected':''} onClick={()=>setForm(current=>({...current,is_fee_free:!current.is_fee_free}))}><i>{form.is_fee_free?'✓':''}</i> Free Card</button></label>
-        <label><span>Annual Fee</span><input type="number" min="0" step="0.01" value={form.annual_fee} disabled={form.is_fee_free} onChange={(e)=>update('annual_fee',e.target.value)} /></label>
+        <label><span>Annual Fee</span><AmountInput type="number" min="0" step="0.01" value={form.annual_fee} disabled={form.is_fee_free} onChange={(e)=>update('annual_fee',e.target.value)} /></label>
         <label><span>Fee Renewal Date</span><DayMonthInput value={form.fee_renewal_date} disabled={form.is_fee_free} onChange={(value)=>update('fee_renewal_date',value)} /></label>
       </aside>
-      <label className="credit-card-operation__balance-date"><span>Balance Date</span><input type="datetime-local" value={form.as_of_date} onChange={(e)=>updateBalanceDate(e.target.value)} /></label>
+      <label className="credit-card-operation__balance-date"><span>Balance Date</span><DateInput type="datetime-local" value={form.as_of_date} onChange={(e)=>updateBalanceDate(e.target.value)} /></label>
     </div>
     <div className="income-operation__actions"><span>{status || 'The full used balance becomes a liability; DBR uses the entered payment or estimates 5% when left empty.'}</span><button type="submit" disabled={saving}>{saving?'Saving…':'Add Credit Card'}</button></div>
   </OperationForm>

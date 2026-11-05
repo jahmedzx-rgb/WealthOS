@@ -1,0 +1,54 @@
+.activity-page > header {
+  justify-content: flex-start;
+}
+
+.activity-page__month {
+  display: grid;
+  grid-template-columns: 32px minmax(150px, auto) 32px;
+  align-items: center;
+  gap: .45rem;
+  margin-inline-start: auto;
+  padding: .38rem .48rem;
+  border: 1px solid var(--border-primary);
+  border-radius: 10px;
+  background: var(--surface-primary);
+  box-shadow: var(--shadow-card);
+}
+
+.activity-page__month button {
+  display: grid;
+  width: 32px;
+  height: 32px;
+  place-items: center;
+  border: 1px solid var(--border-primary);
+  border-radius: 8px;
+  background: var(--surface-secondary);
+  color: #223d61;
+  cursor: pointer;
+}
+
+.activity-page__month button:disabled {
+  opacity: .35;
+  cursor: default;
+}
+
+.activity-page__month div {
+  display: grid;
+  gap: .05rem;
+  text-align: center;
+}
+
+.activity-page__month small {
+  color: var(--text-muted);
+  font-size: .62rem;
+}
+
+.activity-page__month strong {
+  color: #122440;
+  font-size: .82rem;
+  white-space: nowrap;
+}
+
+@media(max-width:760px){
+  .activity-page__month { width: 100%; margin-inline-start: 0; grid-template-columns:32px 1fr 32px; }
+}

@@ -7,6 +7,7 @@ import type { LucideIcon } from 'lucide-react'
 type Props = {
   children: ReactNode
   title?: string
+  titleNode?: ReactNode
   subtitle?: string
   action?: ReactNode
   className?: string
@@ -16,6 +17,7 @@ type Props = {
 export default function Card({
   children,
   title,
+  titleNode,
   subtitle,
   action,
   className,
@@ -31,10 +33,10 @@ export default function Card({
         .filter(Boolean)
         .join(' ')}
     >
-      {(title || subtitle || action) && (
+      {(title || titleNode || subtitle || action) && (
         <header className="card__header">
           <div>
-            {title && <div className="card__title-row">{Icon&&<span className="card__title-icon"><Icon size={15}/></span>}<h3 className="card__title">{t(title)}</h3></div>}
+            {(title || titleNode) && <div className="card__title-row">{Icon&&<span className="card__title-icon"><Icon size={15}/></span>}<h3 className="card__title">{titleNode??t(title!)}</h3></div>}
 
             {subtitle && (
               <p className="card__subtitle">

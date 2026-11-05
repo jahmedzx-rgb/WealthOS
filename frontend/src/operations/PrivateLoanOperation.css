@@ -1,0 +1,21 @@
+.private-loan fieldset { border: 0; padding: 0; margin: 0; min-width: 0; }
+.private-loan .standard-operation__grid { gap: 18px 20px; }
+.private-loan .income-operation__form label { font-size: 14px; font-weight: 500; }
+.private-loan .income-operation__form input,.private-loan .income-operation__form select { font-size: 14px; font-weight: 400; }
+.private-loan .income-operation__effects p { gap: 12px; flex-wrap: wrap; }
+.private-loan .income-operation__smart-note { line-height: 1.6; }
+.private-loan .income-operation__section-heading h3,
+.private-loan .income-operation__summary-header h3 { font-size: 17px; font-weight: 600; line-height: 1.5; }
+.private-loan .income-operation__form label { line-height: 1.6; gap: 7px; }
+.private-loan .income-operation__form label > span { font-size: 14px; font-weight: 500; }
+.private-loan .income-operation__form input,
+.private-loan .income-operation__form select { min-height: 44px; line-height: 1.5; padding: 10px 12px; letter-spacing: normal; }
+.private-loan .income-operation__form input::placeholder { font-size: 14px; font-weight: 400; }
+.private-loan .income-operation__form button { font-size: 13px; font-weight: 500; line-height: 1.5; }
+.private-loan .income-operation__effects span,
+.private-loan .income-operation__effects strong { font-size: 14px; line-height: 1.6; font-weight: 400; }
+.private-loan .standard-operation__preview > strong { font-size: 24px; line-height: 1.4; font-weight: 600; }
+.private-loan .income-operation__smart-note p,
+.private-loan .income-operation__actions > span { font-size: 13px; line-height: 1.7; font-weight: 400; }
+.private-loan .income-operation__actions { flex-wrap: wrap; gap: 12px; }
+.private-loan .income-operation__actions > span { flex: 1 1 240px; }

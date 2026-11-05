@@ -20,7 +20,7 @@ load_dotenv()
 database_url = config.attributes.get("database_url_override") or os.getenv("DATABASE_URL")
 if not database_url:
     raise RuntimeError("DATABASE_URL is required for migrations.")
-config.set_main_option("sqlalchemy.url", database_url)
+config.set_main_option("sqlalchemy.url", database_url.replace("%", "%%"))
 
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)

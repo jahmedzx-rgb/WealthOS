@@ -24,7 +24,7 @@ class MarketSecurityRequest(BaseModel):
     symbol: str = Field(min_length=1, max_length=20)
     market_symbol: str = Field(min_length=1, max_length=30)
     name: str = Field(min_length=2, max_length=200)
-    security_type: str = Field(pattern="^(STOCK|ETF|REIT)$")
+    security_type: str = Field(pattern="^(STOCK|ETF|REIT|OPTION)$")
     exchange: str = Field(min_length=2, max_length=50)
     currency_code: str = Field(default="", max_length=3)
 
@@ -36,4 +36,20 @@ class MarketSecurityRequest(BaseModel):
     @field_validator("name")
     @classmethod
     def clean_name(cls, value: str) -> str:
+        return value.strip()
+
+
+class PrivateFundRequest(BaseModel):
+    symbol: str = Field(min_length=2, max_length=20)
+    name: str = Field(min_length=2, max_length=200)
+    currency_code: str = Field(default="SAR", min_length=3, max_length=3)
+
+    @field_validator("symbol", "currency_code")
+    @classmethod
+    def normalize_private_fund_code(cls, value: str) -> str:
+        return value.strip().upper()
+
+    @field_validator("name")
+    @classmethod
+    def clean_private_fund_name(cls, value: str) -> str:
         return value.strip()

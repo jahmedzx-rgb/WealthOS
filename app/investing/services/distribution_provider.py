@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from datetime import date, datetime, timezone
+from datetime import date, datetime, timedelta, timezone
 from decimal import Decimal, InvalidOperation
 import json
 from urllib.error import HTTPError, URLError
@@ -57,7 +57,7 @@ class SahmkDistributionProvider:
         payload = _load_json(
             f"{self.BASE_URL}/{code}/?{urlencode({'limit': 10})}",
             self.timeout_seconds,
-            {"Authorization": f"Bearer {self.api_key}"},
+            {"X-API-Key": self.api_key},
         )
         history_dates: list[date] = []
         for item in [*payload.get("history", []), *payload.get("upcoming", [])]:
@@ -92,12 +92,56 @@ class VerifiedSaudiExchangeDistributionProvider:
             eligibility_date=date(2026, 8, 11),
             frequency="QUARTERLY",
         ),
+        "4336": DistributionEvent(
+            # The issuer states payment will be made within 35 business days;
+            # use the end of that window as the expected payment date.
+            distribution_date=date(2026, 12, 17),
+            amount_per_unit=Decimal("0.08"),
+            source="Mulkia official announcement — payable within 35 business days",
+            eligibility_date=date(2026, 11, 2),
+            frequency="QUARTERLY",
+        ),
+        "7010": DistributionEvent(
+            distribution_date=date(2026, 11, 19),
+            amount_per_unit=Decimal("0.55"),
+            source="Saudi Exchange official announcement",
+            eligibility_date=date(2026, 11, 2),
+            frequency="QUARTERLY",
+        ),
     }
 
     def get_upcoming(self, symbol: str) -> DistributionEvent | None:
         code = symbol.split(".", 1)[0].strip()
         event = self.EVENTS.get(code)
         return event if event and event.distribution_date >= date.today() else None
+
+
+class VerifiedFundDistributionProvider:
+    """Time-bounded official fund announcements used before market feeds normalize the event."""
+
+    EVENTS = {
+        "GPTY": DistributionEvent(
+            distribution_date=date(2026, 10, 29),
+            amount_per_unit=Decimal("0.2620"),
+            source="YieldMax official distribution schedule",
+            eligibility_date=date(2026, 10, 28),
+            date_kind="payment",
+            frequency="WEEKLY",
+        ),
+        "FEPI": DistributionEvent(
+            distribution_date=date(2026, 10, 29),
+            amount_per_unit=Decimal("0.1964"),
+            source="REX Shares official distribution schedule",
+            eligibility_date=date(2026, 10, 28),
+            date_kind="payment",
+            frequency="WEEKLY",
+        ),
+    }
+
+    def get_upcoming(self, symbol: str) -> DistributionEvent | None:
+        code = symbol.split(".", 1)[0].strip().upper()
+        event = self.EVENTS.get(code)
+        return event if event and event.distribution_date >= date.today() - timedelta(days=7) else None
 
 
 class YahooDistributionProvider:
@@ -128,6 +172,32 @@ class YahooDistributionProvider:
         candidates = [DistributionEvent(event_date, amount, "Yahoo Finance", event_date, "eligibility", frequency)
                       for event_date, amount in parsed_events if event_date >= date.today()]
         return min(candidates, key=lambda event: event.distribution_date) if candidates else None
+
+    def get_trailing_year_summary(self, symbol: str) -> tuple[Decimal | None, str | None]:
+        query = urlencode({"range": "1y", "interval": "1d", "events": "div"})
+        payload = _load_json(f"{self.BASE_URL}/{symbol}?{query}", self.timeout_seconds)
+        try:
+            events = payload["chart"]["result"][0].get("events", {}).get("dividends", {}).values()
+        except (KeyError, IndexError, TypeError):
+            return None, None
+        cutoff = date.today() - timedelta(days=365)
+        total = Decimal("0")
+        distribution_dates: list[date] = []
+        for item in events:
+            try:
+                event_date = datetime.fromtimestamp(int(item["date"]), tz=timezone.utc).date()
+                amount = Decimal(str(item["amount"]))
+            except (KeyError, TypeError, ValueError, InvalidOperation):
+                continue
+            if cutoff <= event_date <= date.today() and amount > 0:
+                total += amount
+                distribution_dates.append(event_date)
+        return (total if total > 0 else None,
+                infer_distribution_frequency(distribution_dates) if distribution_dates else None)
+
+    def get_trailing_year_total(self, symbol: str) -> Decimal | None:
+        total, _ = self.get_trailing_year_summary(symbol)
+        return total
 
 
 class MultiSourceDistributionProvider:

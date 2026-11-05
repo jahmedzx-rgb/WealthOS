@@ -11,6 +11,8 @@ from app.accounting.services.funds_transfer_service import (
 )
 from app.accounting.models.rental_schedule import RentalSchedule
 from app.accounting.models.bank_account import BankAccount
+from app.accounting.models.credit_card_account import CreditCardAccount
+from app.accounting.services.card_statement_service import statement_view, validate_card_date
 
 
 class IncomeService:
@@ -31,6 +33,7 @@ class IncomeService:
             )
         )
         bank_account = None
+        credit_card = None
         if request.destination_bank_account_id is not None:
             if destination_account.code != 1120:
                 raise ValueError("لا يمكن ربط الحساب البنكي إلا بحسابات البنوك في دفتر الأستاذ.")
@@ -42,6 +45,22 @@ class IncomeService:
             request.accounting_category
             or request.income_source
         ).upper()
+
+        if request.destination_credit_card_id is not None:
+            if income_source != "CASHBACK":
+                raise ValueError("Credit cards can only receive cashback income.")
+            if destination_account.code != 2110:
+                raise ValueError("Credit card cashback must post to the credit card liability account.")
+            credit_card = self.db.query(CreditCardAccount).filter(
+                CreditCardAccount.id == request.destination_credit_card_id,
+                CreditCardAccount.user_id == self.funds_transfer_service.user_id,
+                CreditCardAccount.is_active.is_(True),
+            ).with_for_update().first()
+            if credit_card is None:
+                raise ValueError("The selected credit card was not found.")
+            if request.amount > credit_card.current_balance:
+                raise ValueError("Cashback cannot exceed the card's outstanding balance.")
+            validate_card_date(credit_card, request.transaction_date)
 
         if income_source == "SALARY":
             income_account = (
@@ -91,17 +110,29 @@ class IncomeService:
                 .get_other_income_account()
             )
 
+        outstanding_statement = (
+            statement_view(self.db, credit_card)["statement_balance"]
+            if credit_card is not None
+            else None
+        )
         entry = self.funds_transfer_service.execute(
             from_account_id=income_account.id,
             to_account_id=destination_account.id,
             amount=request.amount,
             description=request.description,
             transaction_date=request.transaction_date,
-            related_reference=request.linked_source,
+            related_reference=(
+                f"credit-card-cashback:{credit_card.id}"
+                if credit_card is not None
+                else request.linked_source
+            ),
             auto_commit=False,
         )
         if bank_account is not None:
             bank_account.current_balance += request.amount
+        if credit_card is not None:
+            credit_card.current_balance -= request.amount
+            credit_card.statement_balance = max(outstanding_statement - request.amount, 0)
         if income_source == "RENTAL" and request.linked_source and request.linked_source.startswith("property:") and request.rent_frequency and request.next_rent_due_date:
             schedule = self.db.query(RentalSchedule).filter(
                 RentalSchedule.user_id == self.funds_transfer_service.user_id,

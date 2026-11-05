@@ -1,7 +1,7 @@
 from datetime import UTC, date, datetime
 from decimal import Decimal
 
-from sqlalchemy import Date, DateTime, ForeignKey, Numeric, UniqueConstraint
+from sqlalchemy import Boolean, Date, DateTime, ForeignKey, JSON, Numeric, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column
 
 from app.database.base import Base
@@ -19,4 +19,9 @@ class PortfolioValuationSnapshot(Base):
     market_value: Mapped[Decimal] = mapped_column(Numeric(20, 6), nullable=False)
     total_cost: Mapped[Decimal] = mapped_column(Numeric(20, 6), nullable=False)
     total_return: Mapped[Decimal] = mapped_column(Numeric(20, 6), nullable=False)
+    positions_snapshot: Mapped[list | None] = mapped_column(JSON, nullable=True)
+    historical_portfolio_ids: Mapped[list | None] = mapped_column(JSON, nullable=True)
+    positions_as_of_date: Mapped[date | None] = mapped_column(Date, nullable=True)
+    positions_complete: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
+    is_month_end: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
     recorded_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(UTC), nullable=False)

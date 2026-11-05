@@ -1,7 +1,7 @@
 import { Info } from 'lucide-react'
 
 import './FinancialHealthCard.css'
-import { formatDisplayPercent } from '../../utils/localeFormat'
+import { formatDisplayInteger, formatDisplayPercent } from '../../utils/localeFormat'
 import { useLanguage } from '../../context/LanguageContext'
 import FormattedMoney from '../ui/FormattedMoney'
 
@@ -20,7 +20,7 @@ export default function FinancialHealthCard({
   investments,
   riskLevel,
 }: FinancialHealthCardProps) {
-  const {t}=useLanguage()
+  const {language,t}=useLanguage()
   const riskClass = `is-${riskLevel.toLowerCase()}`
   const healthLabel = score >= 80 ? 'Healthy' : score >= 60 ? 'Watch' : 'At Risk'
   return (
@@ -28,7 +28,7 @@ export default function FinancialHealthCard({
       <div className="financial-health__indicators">
         <div className="financial-health__score" aria-label={`Financial health score ${score} out of 100`}>
           <small className="financial-health__indicator-label">{t('Health Score')}</small>
-          <div><strong>{score}</strong><span>/100</span></div>
+          <div><strong>{formatDisplayInteger(score, language)}</strong><span>/{formatDisplayInteger(100, language)}</span></div>
           <em className="financial-health__substatus">{t(healthLabel)}</em>
         </div>
 
@@ -55,7 +55,7 @@ export default function FinancialHealthCard({
               </span>
             </button>
           </div>
-          <strong>{formatDisplayPercent(dbr)}</strong>
+          <strong>{formatDisplayPercent(dbr, 1, language)}</strong>
           <small className="financial-health__status financial-health__substatus">{t(dbr < 25 ? 'Healthy' : dbr < 40 ? 'Moderate' : 'High')}</small>
         </div>
 

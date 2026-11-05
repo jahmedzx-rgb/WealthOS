@@ -75,6 +75,21 @@ def test_unknown_broker_requires_commission_rate(db):
         BrokerService(db).create(name="North Star Brokerage")
 
 
+def test_abyan_trading_can_be_registered_without_guessing_us_commission(db):
+    abyan, _ = broker_match("Abyan Trading")
+    assert abyan is not None
+    assert effective_commission_rate(abyan) is None
+    assert effective_commission_source(abyan) is None
+    assert effective_vat_rate(abyan) == Decimal("15")
+
+    broker = BrokerService(db).create(name="Abyan Trading")
+
+    assert broker.name == "Abyan Trading"
+    assert broker.country == "Saudi Arabia"
+    assert broker.commission_rate is None
+    assert broker.commission_tax_rate == Decimal("15")
+
+
 @pytest.mark.parametrize(
     ("query", "expected"),
     [

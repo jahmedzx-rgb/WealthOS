@@ -1,7 +1,7 @@
 from datetime import date, datetime
 from decimal import Decimal
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, model_validator
 
 
 class IncomeRequest(BaseModel):
@@ -17,6 +17,7 @@ class IncomeRequest(BaseModel):
         gt=0,
     )
     destination_bank_account_id: int | None = Field(default=None, gt=0)
+    destination_credit_card_id: int | None = Field(default=None, gt=0)
 
     amount: Decimal = Field(
         ...,
@@ -38,3 +39,13 @@ class IncomeRequest(BaseModel):
     rent_frequency: str | None = Field(default=None, pattern="^(MONTHLY|QUARTERLY|SEMI_ANNUAL|ANNUAL)$")
     next_rent_due_date: date | None = None
     rent_property_name: str | None = Field(default=None, max_length=160)
+
+    @model_validator(mode="after")
+    def validate_destination(self):
+        destinations = sum(value is not None for value in (
+            self.destination_bank_account_id,
+            self.destination_credit_card_id,
+        ))
+        if destinations > 1:
+            raise ValueError("Select only one income destination.")
+        return self

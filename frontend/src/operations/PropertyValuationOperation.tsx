@@ -1,3 +1,4 @@
+import DateInput from '../components/DateInput'
 import { useEffect, useState, type FormEvent } from 'react'
 import OperationForm from './OperationForm'
 import { adjustPropertyValue, getProperties, type PropertyAsset } from '../services/accountingService'
@@ -17,7 +18,7 @@ export default function PropertyValuationOperation(){
     <div className="standard-operation__grid">
       <label><span>{t('Property')}</span><select required value={form.property_id} onChange={event=>set('property_id',event.target.value)}><option value="">{t('Select Property')}</option>{properties.map(item=><option value={item.id} key={item.id}>{item.name} · {formatMoney(item.current_value)}</option>)}</select></label>
       <label><span>{t('Market Value')}</span><input required min="0" step="0.01" type="number" value={form.corrected_value} onChange={event=>set('corrected_value',event.target.value)} placeholder="0.00"/></label>
-      <label><span>{t('Valuation Date')}</span><input required type="datetime-local" value={form.adjustment_date} onChange={event=>set('adjustment_date',event.target.value)}/></label>
+      <label><span>{t('Valuation Date')}</span><DateInput required type="datetime-local" value={form.adjustment_date} onChange={event=>set('adjustment_date',event.target.value)}/></label>
       <label><span>{t('Valuation Source / Notes')}</span><input required minLength={3} maxLength={255} value={form.reason} onChange={event=>set('reason',event.target.value)} placeholder={t('e.g. Certified valuation or market estimate')}/></label>
     </div>
     <div className="income-operation__actions"><span>{message||t('Changes update the property value, wealth, and balance sheet together.')}</span><button type="submit" disabled={saving||!property||value<0}>{t(saving?'Posting…':'Update Valuation')}</button></div>

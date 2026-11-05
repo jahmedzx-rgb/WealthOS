@@ -27,6 +27,10 @@ const categoryNames: Record<string, string> = {
   FUND: 'Funds',
   BOND: 'Bonds & Sukuk',
   REIT: 'REITs',
+  MUTUAL_FUND: 'Mutual Funds',
+  OPTION: 'Options',
+  COVERED_CALL: 'Covered Calls',
+  CASH_SECURED_PUT: 'Cash-Secured Puts',
   DEPOSIT: 'Deposits',
   PRIVATE_CREDIT: 'Private Credit',
   CASH: 'Cash',
@@ -36,18 +40,19 @@ const categoryNames: Record<string, string> = {
 }
 
 const colors = ['#243f68', '#5274a4', '#16855a', '#b68a26', '#8a94a3', '#725d91']
+const categoryColors:Record<string,string>={DEPOSIT:'#16855a'}
+const categoryRoute=(type:string)=>type==='REAL_ESTATE'?'/properties':type==='DEPOSIT'?'/investing/deposits':type==='CASH'?'/investing/cash':type==='SAVINGS'?'/investing/saving-circles':type==='OTHER_ASSETS'||type==='PRIVATE_CREDIT'?'/investing/alternative-investments':`/investing/positions?type=${encodeURIComponent(type)}`
 
 export default function WealthAllocationOverview({ allocation, positions, totalValue, assetBreakdown=[], deposits=[], compact=false, showLink=true, realEstateReturn=0 }: Props) {
   const { formatMoney } = useCurrency()
-  const { t } = useLanguage()
+  const { t, language } = useLanguage()
   const normalizedAllocation = new Map<string,number>()
   for (const [type, weight] of Object.entries(allocation)) {
-    const assetClass = type === 'REIT' ? 'STOCK' : type
-    normalizedAllocation.set(assetClass, (normalizedAllocation.get(assetClass) ?? 0) + weight)
+    normalizedAllocation.set(type, (normalizedAllocation.get(type) ?? 0) + weight)
   }
   const marketCategories = [...normalizedAllocation.entries()]
     .map(([type, weight], index) => {
-      const categoryPositions = positions.filter((position) => (position.security_type === 'REIT' ? 'STOCK' : position.security_type) === type)
+      const categoryPositions = positions.filter((position) => (position.allocation_type??position.security_type) === type)
       const totalCost = categoryPositions.reduce((sum, position) => sum + position.total_cost, 0)
       const unrealizedProfit = categoryPositions.reduce((sum, position) => sum + position.unrealized_pl, 0)
       return {
@@ -55,19 +60,19 @@ export default function WealthAllocationOverview({ allocation, positions, totalV
         label: t(categoryNames[type] ?? type.replaceAll('_', ' ')),
         weight: weight * 100,
         value: totalValue * weight,
-        returnPercentage: totalCost ? (unrealizedProfit / totalCost) * 100 : 0,
-        color: colors[index % colors.length],
+        returnPercentage: totalCost ? (unrealizedProfit / Math.abs(totalCost)) * 100 : 0,
+        color: categoryColors[type]??colors[index % colors.length],
       }
     })
   const ledgerGroups=new Map<string,number>()
   for(const asset of assetBreakdown){
     if(asset.code>=1310&&asset.code<=1390)continue
-    const type=asset.code===1160?'DEPOSIT':asset.code===1170?'SAVINGS':asset.code===1210?'REAL_ESTATE':asset.code>=1110&&asset.code<=1150?'CASH':'OTHER_ASSETS'
+    const type=asset.code===1160?'DEPOSIT':asset.code===1170?'SAVINGS':asset.code===1210?'REAL_ESTATE':asset.code===1175||asset.code>=1110&&asset.code<=1150?'CASH':'OTHER_ASSETS'
     ledgerGroups.set(type,(ledgerGroups.get(type)??0)+asset.balance)
   }
   const depositBalance=deposits.reduce((sum,item)=>sum+item.current_balance,0)
   const depositAnnualReturn=depositBalance?deposits.reduce((sum,item)=>sum+item.current_balance*item.annual_return_rate,0)/depositBalance:0
-  const ledgerCategories=[...ledgerGroups.entries()].filter(([,value])=>value>0).map(([type,value],index)=>({type,label:t(categoryNames[type]??type.replaceAll('_',' ')),value,returnPercentage:type==='DEPOSIT'?depositAnnualReturn:type==='REAL_ESTATE'?realEstateReturn:0,color:colors[(marketCategories.length+index)%colors.length],weight:0}))
+  const ledgerCategories=[...ledgerGroups.entries()].filter(([,value])=>value>0).map(([type,value],index)=>({type,label:t(categoryNames[type]??type.replaceAll('_',' ')),value,returnPercentage:type==='DEPOSIT'?depositAnnualReturn:type==='REAL_ESTATE'?realEstateReturn:0,color:categoryColors[type]??colors[(marketCategories.length+index)%colors.length],weight:0}))
   const mergedCategories=new Map<string,(typeof marketCategories)[number]>()
   for(const item of [...marketCategories,...ledgerCategories]){
     const existing=mergedCategories.get(item.type)
@@ -87,7 +92,7 @@ export default function WealthAllocationOverview({ allocation, positions, totalV
       <div className="wealth-allocation__grid">
         <div>
           <div className="wealth-allocation__total">
-            <span>{t('Total assets by class')}</span>
+            <span>{t('Total assets at current value')}</span>
             <strong><FormattedMoney value={formatMoney(totalAssets, 'SAR')}/></strong>
           </div>
 
@@ -98,8 +103,8 @@ export default function WealthAllocationOverview({ allocation, positions, totalV
           <div className="wealth-allocation__legend">
             {categories.map((item) => (
               <div key={item.type}>
-                <span><i style={{ background: item.color }} />{item.label}</span>
-                <strong style={{ color: item.color }}>{formatDisplayPercent(item.weight)}</strong>
+                <span className="wealth-allocation__category-label"><i style={{ background: item.color }} />{item.label}</span>
+                <strong style={{ color: item.color }}>{formatDisplayPercent(item.weight,1,language)}</strong>
               </div>
             ))}
           </div>
@@ -109,10 +114,10 @@ export default function WealthAllocationOverview({ allocation, positions, totalV
           <div className="wealth-allocation__table-head"><span>{t('Class')}</span><span>{t('Value')}</span><span>{t('Return')}</span><span>{t('Weight')}</span></div>
           {categories.map((item) => {
             return <div key={item.type}>
-              <strong>{item.label}</strong>
+              <Link className="wealth-allocation__category-link wealth-allocation__category-link--table" to={categoryRoute(item.type)}>{item.label}</Link>
               <span><FormattedMoney value={formatMoney(item.value, 'SAR')}/></span>
-              <span className={item.returnPercentage >= 0 ? 'is-positive' : 'is-negative'}>{marketCategories.some(category=>category.type===item.type)||item.type==='DEPOSIT'&&depositBalance>0||item.type==='REAL_ESTATE'?<>{item.returnPercentage >= 0 ? '+' : ''}{formatDisplayPercent(item.returnPercentage)}</>:'—'}</span>
-              <span>{formatDisplayPercent(item.weight)}</span>
+              <span className={item.returnPercentage >= 0 ? 'is-positive' : 'is-negative'}>{marketCategories.some(category=>category.type===item.type)||item.type==='DEPOSIT'&&depositBalance>0||item.type==='REAL_ESTATE'?<>{item.returnPercentage >= 0 ? '+' : ''}{formatDisplayPercent(item.returnPercentage,1,language)}</>:'—'}</span>
+              <span>{formatDisplayPercent(item.weight,1,language)}</span>
             </div>
           })}
         </div>}

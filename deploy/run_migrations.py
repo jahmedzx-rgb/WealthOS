@@ -9,6 +9,7 @@ import psycopg2
 from alembic import command
 from alembic.config import Config
 from alembic.script import ScriptDirectory
+from deploy.validate_env import validate_environment
 
 
 MIGRATION_LOCK_ID = 905_710_042
@@ -36,6 +37,9 @@ def _provision_invites(connection) -> None:
 
 
 def main() -> None:
+    validate_environment()
+    # Reject malformed invite configuration before making any schema changes.
+    _invite_hashes_from_env()
     alembic_config = Config("alembic.ini")
     source_heads = ScriptDirectory.from_config(alembic_config).get_heads()
     expected_head = os.environ["MIGRATION_HEAD"]

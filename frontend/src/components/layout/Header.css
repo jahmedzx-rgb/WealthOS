@@ -292,4 +292,15 @@
 .notification-menu[dir='rtl'] .notification-menu__group strong,
 .notification-menu[dir='rtl'] .notification-menu__group small { text-align: right; }
 .notification-menu[dir='rtl'] .notification-menu__empty { text-align: right; }
+.notification-menu__enable{display:flex;width:calc(100% - 1.3rem);align-items:center;gap:.55rem;margin:.55rem .65rem 0;padding:.55rem .65rem;border:1px solid #cbd9eb;border-radius:9px;background:#f4f8fd;color:#204da9;text-align:left;cursor:pointer}.notification-menu__enable span,.notification-menu__enable strong,.notification-menu__enable small{display:block}.notification-menu__enable strong{font-size:.65rem}.notification-menu__enable small{margin-top:.12rem;color:var(--text-muted);font-size:.57rem}.notification-menu__permission-note{margin:.55rem .65rem 0;padding:.5rem .6rem;border-radius:8px;background:#fff4e7;color:#95610b;font-size:.59rem}.notification-menu[dir='rtl'] .notification-menu__enable{text-align:right}
+.notification-menu__item{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;border-radius:9px}.notification-menu__item:hover{background:var(--surface-tertiary)}.notification-menu__item>button:first-child{display:grid;grid-template-columns:34px minmax(0,1fr);align-items:center;gap:.55rem;min-width:0;padding:.55rem;border:0;background:transparent;color:var(--text-primary);text-align:left;cursor:pointer}.notification-menu__item .notification-menu__read{margin-inline-end:.45rem;padding:.25rem .35rem;border:0;background:transparent;color:#2c60d6;font-size:.56rem;font-weight:700;white-space:nowrap;cursor:pointer}.notification-menu[dir='rtl'] .notification-menu__item>button:first-child{text-align:right}
 @media(max-width:520px){.notification-menu[dir='rtl']{right:.6rem;left:.6rem}}
+
+/* Improve notification readability while keeping the existing menu layout. */
+.notification-menu > header strong { font-size: .88rem; }
+.notification-menu > header span { font-size: .68rem; }
+.notification-menu__group > p { font-size: .62rem; }
+.notification-menu__group strong { font-size: .74rem; }
+.notification-menu__group small { font-size: .66rem; line-height: 1.4; }
+.notification-menu__group em { font-size: .66rem; }
+.notification-menu__item .notification-menu__read { font-size: .63rem; }

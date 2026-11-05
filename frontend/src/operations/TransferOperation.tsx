@@ -1,3 +1,4 @@
+import DateInput from '../components/DateInput'
 import { useEffect, useState } from 'react'
 import type { FormEvent } from 'react'
 
@@ -99,7 +100,7 @@ export default function TransferOperation() {
       <div>
         <label>{t('Transaction Date')}</label>
 
-        <input
+        <DateInput
           type="datetime-local"
           value={transactionDate}
           onChange={(event) =>

@@ -1,7 +1,7 @@
 from datetime import UTC, date, datetime
 from decimal import Decimal
 
-from sqlalchemy import Boolean, Date, DateTime, ForeignKey, Numeric, String
+from sqlalchemy import JSON, Boolean, Date, DateTime, ForeignKey, Numeric, String
 from sqlalchemy.orm import Mapped, mapped_column
 
 from app.database.base import Base
@@ -15,15 +15,31 @@ class Deposit(Base):
     provider_name: Mapped[str] = mapped_column(String(120), nullable=False)
     product_name: Mapped[str] = mapped_column(String(120), nullable=False)
     product_type: Mapped[str] = mapped_column(String(40), nullable=False)
-    funding_bank_account_id: Mapped[int] = mapped_column(ForeignKey("bank_accounts.id"), nullable=False)
+    funding_bank_account_id: Mapped[int | None] = mapped_column(ForeignKey("bank_accounts.id"), nullable=True)
+    source_loan_id: Mapped[int | None] = mapped_column(ForeignKey("loans.id", ondelete="SET NULL"), nullable=True)
+    historical_funding_date: Mapped[date | None] = mapped_column(Date, nullable=True)
+    historical_funding_amount: Mapped[Decimal | None] = mapped_column(Numeric(18, 2), nullable=True)
+    settled_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    settlement_action: Mapped[str | None] = mapped_column(String(30), nullable=True)
+    settlement_bank_account_id: Mapped[int | None] = mapped_column(ForeignKey("bank_accounts.id", ondelete="SET NULL"), nullable=True)
+    actual_return: Mapped[Decimal | None] = mapped_column(Numeric(18, 2), nullable=True)
     income_bank_account_id: Mapped[int | None] = mapped_column(ForeignKey("bank_accounts.id"), nullable=True)
     principal_amount: Mapped[Decimal] = mapped_column(Numeric(18, 2), nullable=False)
     current_balance: Mapped[Decimal] = mapped_column(Numeric(18, 2), nullable=False)
     annual_return_rate: Mapped[Decimal] = mapped_column(Numeric(8, 4), nullable=False, default=0)
+    promotional_annual_return_rate: Mapped[Decimal | None] = mapped_column(Numeric(8, 4), nullable=True)
+    promotional_rate_end_date: Mapped[date | None] = mapped_column(Date, nullable=True)
     payout_frequency: Mapped[str] = mapped_column(String(30), nullable=False)
+    payout_schedule: Mapped[list] = mapped_column(JSON, nullable=False, default=list)
     start_date: Mapped[date] = mapped_column(Date, nullable=False)
     maturity_date: Mapped[date | None] = mapped_column(Date, nullable=True)
     auto_renew: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
     currency_code: Mapped[str] = mapped_column(String(3), nullable=False, default="SAR")
     status: Mapped[str] = mapped_column(String(20), nullable=False, default="ACTIVE")
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=lambda: datetime.now(UTC), nullable=False)
+
+    @property
+    def effective_annual_return_rate(self) -> Decimal:
+        if self.promotional_annual_return_rate is not None and self.promotional_rate_end_date is not None and date.today() < self.promotional_rate_end_date:
+            return self.promotional_annual_return_rate
+        return self.annual_return_rate

@@ -1,0 +1,216 @@
+/* Refined Fiori navigation skin. Scoped to the application sidebar only. */
+.sidebar {
+  --sb-bg: #202933;
+  --sb-text: #f0f4f8;
+  --sb-muted: #a5b2c0;
+  --sb-line: #3a4652;
+  --sb-navy: #f0f4f8;
+  --sb-active: #2a3948;
+  --sb-hover: #27323d;
+  --sb-gold: #d6b764;
+  --sb-gold-soft: rgba(214, 183, 100, .12);
+  position: sticky;
+  top: 0;
+  align-self: flex-start;
+  flex: 0 0 244px;
+  width: 244px;
+  height: 100vh;
+  min-height: 0;
+  box-sizing: border-box;
+  padding: 1.1rem .8rem 1.25rem;
+  overflow: hidden;
+  border-inline-end: 1px solid var(--sb-line);
+  background: var(--sb-bg);
+  box-shadow: 5px 0 18px rgba(0, 0, 0, .16);
+  color: var(--sb-text);
+}
+
+.sidebar::before {
+  position: absolute;
+  inset: 0 0 auto;
+  height: 3px;
+  background: linear-gradient(90deg, var(--sb-gold), rgba(214, 183, 100, .38) 48%, transparent);
+  content: '';
+  pointer-events: none;
+}
+
+.sidebar::after { display: none; }
+.sidebar--collapsed { width: 72px; flex-basis: 72px; }
+
+.sidebar__brand {
+  min-height: 49px;
+  margin: 0 .3rem 1rem;
+  color: var(--sb-text);
+}
+
+.sidebar__brand::after {
+  right: 0;
+  bottom: -.78rem;
+  height: 1px;
+  background: linear-gradient(90deg, rgba(214, 183, 100, .54), var(--sb-line) 42%);
+}
+
+.sidebar__brand-mark { filter: none; }
+.sidebar__brand-name { color: var(--sb-text); font-size: 1.05rem; font-weight: 700; letter-spacing: -.02em; }
+.sidebar__brand-lockup small { color: var(--sb-muted); font-size: .6rem; letter-spacing: .14em; }
+
+.sidebar__greeting {
+  inset-inline-start: 0;
+  gap: .65rem;
+  margin: 0 .2rem .9rem;
+  padding: .45rem .5rem .65rem;
+  border-bottom: 1px solid var(--sb-line);
+}
+
+.sidebar__greeting > span,
+.sidebar__greeting > span.is-sun,
+.sidebar__greeting > span.is-moon {
+  width: 30px;
+  height: 30px;
+  flex-basis: 30px;
+  border: 1px solid rgba(214, 183, 100, .22);
+  background: var(--sb-gold-soft);
+  color: var(--sb-gold);
+  box-shadow: none;
+}
+
+.sidebar__greeting > span.is-sun { overflow: hidden; }
+.sidebar__greeting > span.is-sun svg {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  filter: none;
+  animation: none;
+}
+
+.sidebar__greeting > span.is-moon { background: var(--sb-hover); color: var(--sb-muted); }
+.sidebar__greeting strong { color: var(--sb-text); font-size: .82rem; }
+.sidebar__greeting small { color: var(--sb-muted); font-size: .68rem; }
+.sidebar--collapsed .sidebar__greeting { inset-inline-start: 0; margin-inline: 0; }
+
+.sidebar__navigation {
+  min-height: 0;
+  gap: .72rem;
+  overflow-y: auto;
+  padding-bottom: .4rem;
+  scrollbar-color: var(--sb-line) transparent;
+  scrollbar-width: thin;
+}
+.sidebar__nav-section { gap: .22rem; }
+.sidebar__nav-section > p {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  padding: 0 .72rem .2rem;
+  color: var(--sb-muted);
+  font-size: .62rem;
+  font-weight: 700;
+  letter-spacing: .13em;
+}
+
+.sidebar__nav-section > p::after {
+  height: 1px;
+  flex: 1;
+  background: linear-gradient(90deg, var(--sb-gold) 0 18px, var(--sb-line) 18px);
+  content: '';
+  opacity: .72;
+}
+
+.sidebar__nav-section > div { gap: .12rem; }
+
+.sidebar a,
+.sidebar__group-toggle {
+  min-height: 40px;
+  border: 1px solid transparent;
+  border-radius: .42rem;
+  color: var(--sb-text);
+  font-size: .84rem;
+  font-weight: 520;
+  transition: color .16s ease, background .16s ease, border-color .16s ease;
+}
+
+.sidebar a { padding: 0 .72rem; }
+.sidebar a svg,
+.sidebar__group-toggle > svg { color: var(--sb-muted); transition: color .16s ease; }
+.sidebar a::after { display: none; }
+
+.sidebar a:hover,
+.sidebar__group-toggle:hover {
+  transform: none;
+  border-color: var(--sb-line);
+  background: var(--sb-hover);
+  color: var(--sb-navy);
+}
+
+.sidebar a:hover svg,
+.sidebar__group-toggle:hover > svg { color: var(--sb-gold); }
+
+.sidebar a.active,
+.sidebar__group-toggle.active {
+  border-color: transparent;
+  background: var(--sb-active);
+  box-shadow: inset 2px 0 var(--sb-gold);
+  color: var(--sb-navy);
+  font-weight: 650;
+}
+
+.sidebar a.active svg,
+.sidebar__group-toggle.active > svg { color: var(--sb-navy); }
+.sidebar a.active:hover,
+.sidebar__group-toggle.active:hover { border-color: rgba(214, 183, 100, .18); background: var(--sb-active); }
+
+.sidebar__group-toggle { gap: .65rem; padding: 0 .72rem; font-family: inherit; }
+.sidebar__chevron { color: var(--sb-muted); }
+.sidebar__group-line { display: none !important; }
+.sidebar__group > .sidebar__submenu {
+  gap: .12rem;
+  margin: .12rem 0 .32rem;
+  padding-inline-start: .78rem;
+  border-inline-start: 1px solid var(--sb-line);
+}
+
+.sidebar .sidebar__submenu a {
+  min-height: 34px;
+  padding: 0 .68rem;
+  border-radius: .35rem;
+  color: var(--sb-muted);
+  font-size: .78rem;
+  font-weight: 500;
+}
+
+.sidebar .sidebar__submenu a:hover { background: var(--sb-hover); color: var(--sb-navy); }
+.sidebar .sidebar__submenu a:hover svg { color: var(--sb-gold); }
+.sidebar .sidebar__submenu a.active {
+  border-color: transparent;
+  background: var(--sb-active);
+  box-shadow: inset 2px 0 var(--sb-gold);
+  color: var(--sb-navy);
+  font-weight: 650;
+}
+
+.sidebar .sidebar__submenu a.active::after { display: none; }
+.sidebar .sidebar__submenu a em { background: var(--sb-gold-soft); color: var(--sb-navy); font-size: .62rem; }
+
+.sidebar__utilities { border-color: var(--sb-line); }
+.sidebar__utilities button,
+.sidebar__utilities a {
+  border-color: var(--sb-line);
+  background: var(--sb-bg);
+  color: var(--sb-muted);
+}
+.sidebar__utilities button:hover,
+.sidebar__utilities a:hover { border-color: rgba(214, 183, 100, .45); background: var(--sb-hover); color: var(--sb-navy); }
+.sidebar__utilities a.active { border-color: rgba(214, 183, 100, .45); background: var(--sb-gold-soft); color: var(--sb-navy); }
+
+.sidebar__brand-lockup small { color: #b9a77f; }
+
+.sidebar--collapsed .sidebar__nav-section > p::after { display: none; }
+.sidebar--collapsed .sidebar__greeting { border: 0; }
+
+@media (max-width: 760px) {
+  .sidebar { width: 72px; flex-basis: 72px; }
+  .sidebar__brand-lockup,
+  .sidebar a span { display: none; }
+  .sidebar a { justify-content: center; padding: 0; }
+}

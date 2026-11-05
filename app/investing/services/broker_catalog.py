@@ -21,6 +21,7 @@ class BrokerCatalogItem:
 BROKER_CATALOG = (
     BrokerCatalogItem("Al Rajhi Tadawul", "Saudi Arabia", "https://www.alrajhi-capital.com", ("Al Rajhi Capital", "Al Rajhi", "Rajhi Capital", "الراجحي تداول", "الراجحي", "الراجحي المالية"), institution_name="Al Rajhi Capital"),
     BrokerCatalogItem("Al Rajhi Global", "Saudi Arabia", "https://www.alrajhi-capital.com", ("Rajhi Global", "AlRajhi Global", "الراجحي قلوبال", "الراجحي جلوبال", "الراجحي العالمي"), institution_name="Al Rajhi Capital", execution_partner="Interactive Brokers (IBKR)"),
+    BrokerCatalogItem("Alkhabeer Global", "Saudi Arabia", "https://www.alkhabeer.com", ("Al Khabeer Global", "Khabeer Global", "الخبير قلوبال", "الخبير جلوبال", "الخبير العالمي"), institution_name="Alkhabeer Capital"),
     BrokerCatalogItem("AlAhli Tadawul", "Saudi Arabia", "https://www.alahlicapital.com", ("SNB Capital", "AlAhli Capital", "NCB Capital", "الأهلي تداول", "الاهلي تداول", "الأهلي المالية", "الاهلي المالية"), Decimal("0.155"), "Saudi Exchange published maximum", Decimal("15"), "Saudi Arabia standard VAT", "SNB Capital"),
     BrokerCatalogItem("AlAhli Global", "Saudi Arabia", "https://www.alahlicapital.com", ("SNB Global", "Ahli Global", "SNB International", "الأهلي قلوبال", "الاهلي قلوبال", "الأهلي جلوبال", "الاهلي جلوبال"), None, None, Decimal("15"), "Saudi Arabia standard VAT", "SNB Capital"),
     BrokerCatalogItem("Riyad Capital", "Saudi Arabia", "https://www.riyadcapital.com", ("Riyad Bank Capital", "الرياض المالية")),
@@ -40,7 +41,7 @@ BROKER_CATALOG = (
     BrokerCatalogItem("Yaqeen Capital", "Saudi Arabia", "https://www.yaqeen.sa", ("Falcom", "يقين كابيتال")),
     BrokerCatalogItem("Awaed Capital", "Saudi Arabia", "https://www.awaed.com", ("Awaed Alosool", "عوائد", "عوائد الأصول")),
     BrokerCatalogItem("Sahm Capital", "Saudi Arabia", "https://www.sahmcapital.com", ("Sahm", "Sahm Saudi", "Sahm US", "سهم", "سهم كابيتال", "سهم السعودي", "سهم الأمريكي", "سهم الامريكي")),
-    BrokerCatalogItem("Abyan Trading", "Saudi Arabia", "https://www.abyancapital.sa/trade", ("Abyan Capital", "Abyan Trade", "أبيان", "ابيان", "أبيان تداول", "ابيان تداول", "أبيان كابيتال")),
+    BrokerCatalogItem("Abyan Trading", "Saudi Arabia", "https://www.abyancapital.sa/trade", ("Abyan Trade", "أبيان تداول", "ابيان تداول")),
     BrokerCatalogItem("Fidelity Investments", "United States", "https://www.fidelity.com", ("Fidelity",)),
     BrokerCatalogItem("Charles Schwab", "United States", "https://www.schwab.com", ("Schwab",)),
     BrokerCatalogItem("Interactive Brokers (IBKR)", "United States", "https://www.interactivebrokers.com", ("IBKR", "Interactive Broker", "Interactive Brokers"), None, "Official variable per-share pricing; confirm the selected IBKR plan", Decimal("0"), "No VAT charged by the US broker", "Interactive Brokers"),
@@ -66,7 +67,7 @@ def effective_commission_rate(item: BrokerCatalogItem) -> Decimal | None:
         "Alinma Capital", "AlJazira Capital", "ANB Capital", "AlBilad Investment",
         "SAB Invest", "BSF Capital", "Alistithmar Capital", "Jadwa Investment",
         "GIB Capital", "HSBC Saudi Arabia", "Yaqeen Capital", "Awaed Capital",
-        "Sahm Capital", "Abyan Trading",
+        "Sahm Capital",
     }
     return Decimal("0.155") if item.name in local_services else None
 

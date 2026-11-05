@@ -1,4 +1,10 @@
 .portfolio-dashboard {
+  --surface-primary: #fbfcfd;
+  --surface-secondary: #f2f4f7;
+  --surface-tertiary: #eaf0f5;
+  --border-primary: #dce2e8;
+  --border-hover: #cbd5df;
+  --shadow-card: 0 1px 3px rgba(15, 23, 42, .075);
   display: flex;
   flex-direction: column;
   gap: .25rem;
@@ -155,16 +161,16 @@
 .portfolio-dashboard__trend.is-negative .portfolio-dashboard__trend-line { stroke: #c63636; }
 .portfolio-dashboard__trend.is-negative .portfolio-dashboard__trend-point { stroke: #c63636; }
 
-.portfolio-dashboard__trend-metrics { display: grid; grid-template-columns: minmax(92px,1fr) minmax(72px,.8fr); grid-template-areas: "worth return"; gap: .4rem; align-items: start; padding-left: .6rem; border-left: 1px solid var(--border-primary); }
+.portfolio-dashboard__trend-metrics { display: grid; grid-template-columns: minmax(92px,1fr) minmax(72px,.8fr); grid-template-areas: "worth return"; gap: .4rem; align-items: start; padding-inline-start: .7rem; border-inline-start: 1px solid var(--border-primary); }
 .portfolio-dashboard__trend-current { display: grid; grid-template-rows: 1rem 1.35rem .8rem; justify-items: start; align-items: start; gap: .08rem; }
 .portfolio-dashboard__trend-current { grid-area: worth; }
 .portfolio-dashboard__trend-current strong { align-self: center; color: var(--text-primary); font-size: .82rem; line-height: 1.1; }
 .portfolio-dashboard__trend-current > span { color: #0f172a; font-size: var(--dashboard-indicator-label-size); font-weight: 600; line-height: 1.2; }
-.portfolio-dashboard__investment-metric { display: grid; justify-items: start; gap: .12rem; padding-left: .45rem; border-left: 1px solid var(--border-primary); }
+.portfolio-dashboard__investment-metric { display: grid; justify-items: start; gap: .12rem; padding-inline-start: .55rem; border-inline-start: 1px solid var(--border-primary); }
 .portfolio-dashboard__investment-metric { grid-area: investment; }
 .portfolio-dashboard__investment-metric > span { color: #0f172a; font-size: .76rem; font-weight: 600; }
 .portfolio-dashboard__investment-metric > strong { color: var(--text-primary); font-size: .82rem; line-height: 1.1; white-space: nowrap; }
-.portfolio-dashboard__growth-metric { grid-area: return; display: grid; grid-template-rows: 1rem 1.35rem .8rem; justify-items: start; align-content: start; align-items: start; gap: .08rem; padding-left: .45rem; border-left: 1px solid var(--border-primary); }
+.portfolio-dashboard__growth-metric { grid-area: return; display: grid; grid-template-rows: 1rem 1.35rem .8rem; justify-items: start; align-content: start; align-items: start; gap: .12rem; padding-inline-start: .55rem; border-inline-start: 1px solid var(--border-primary); }
 .portfolio-dashboard__growth-metric > span { color: #0f172a; font-size: var(--dashboard-indicator-label-size); font-weight: 600; line-height: 1.2; }
 .portfolio-dashboard__growth-metric > strong { display: flex; align-self: center; align-items: center; color: var(--text-primary); font-size: .82rem; line-height: 1.1; white-space: nowrap; }
 .portfolio-dashboard__growth-metric .portfolio-dashboard__return-sign { margin-right: .1rem; color: inherit; font-size: inherit; line-height: 1; transform: translateY(-.1em); }
@@ -188,12 +194,13 @@
 .portfolio-dashboard__focus > .card,
 .portfolio-dashboard__operations > .card,
 .portfolio-dashboard__activity > .card { height: 100%; }
-.portfolio-dashboard__workspace > div > .card { gap: .72rem; padding: .82rem; }
+.portfolio-dashboard__workspace > div > .card { gap: .72rem; padding: .82rem; background: #e7ebf1; }
 .portfolio-dashboard__focus > .card,
 .portfolio-dashboard__activity > .card { gap: .52rem; padding: .82rem .72rem .62rem; }
 .portfolio-dashboard__focus > .card,
 .portfolio-dashboard__activity > .card,
 .portfolio-dashboard__workspace > .portfolio-dashboard__operations > .card { height: 100%; }
+.portfolio-dashboard__main > .wealth-allocation { background: #e7ebf1; }
 .portfolio-dashboard__workspace > .portfolio-dashboard__operations > .card { padding-bottom: 0; }
 .portfolio-dashboard__workspace > div > .card > .card__header { display: flex; flex: 0 0 32px; height: 32px; align-items: center; padding-bottom: .55rem; border-bottom: 1px solid var(--border-primary); }
 .portfolio-dashboard__workspace > div > .card > .card__header > div:first-child { display: flex; height: 24px; align-items: center; }

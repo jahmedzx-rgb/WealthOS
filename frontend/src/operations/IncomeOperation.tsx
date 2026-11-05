@@ -1,4 +1,6 @@
-/* eslint-disable react-hooks/set-state-in-effect */
+import { incomeLabel } from '../utils/incomeLabels'
+import DateInput from '../components/DateInput'
+
 import { AlertTriangle, Banknote, BriefcaseBusiness, CalendarDays, ChartNoAxesCombined, CheckCircle2, ChevronLeft, ChevronRight, House, Info, Landmark, Link2, Percent, Plus, ReceiptText, RotateCcw, Search, Shapes, Sparkles, WalletCards } from 'lucide-react'
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import type { FormEvent } from 'react'
@@ -14,6 +16,8 @@ import { usePortfolio } from '../hooks/usePortfolio'
 import { postingReference, toLocalDateTime, useImportedOperationDraft } from '../hooks/useImportedOperationDraft'
 import { useLanguage } from '../context/LanguageContext'
 import { useCurrency } from '../context/CurrencyContext'
+import LookupSelect from '../components/LookupSelect'
+import { bankIdentityKey } from '../components/ui/BankIdentity'
 
 type AccountingCategory = 'SALARY' | 'RENTAL' | 'DIVIDEND' | 'INTEREST' | 'BUSINESS' | 'CAPITAL_GAIN' | 'CASHBACK' | 'OTHER'
 type IncomeTypeDefinition = { value: string; label: string; group: string; accountingSource: AccountingCategory; reference?: 'RENTAL' | 'DIVIDEND' | 'INTEREST'; icon: LucideIcon }
@@ -107,7 +111,8 @@ type IncomeDraft = {
 }
 
 export default function IncomeOperation() {
-  const {t}=useLanguage()
+  const {t:translate,language}=useLanguage()
+  const t=(text:string)=>incomeLabel(text,language,translate)
   const {formatMoney}=useCurrency()
   const imported=useImportedOperationDraft()
   const [searchParams]=useSearchParams()
@@ -226,10 +231,17 @@ export default function IncomeOperation() {
   const hasPreviousIncomeTypes = visibleTabStart > 0
   const hasMoreIncomeTypes = visibleTabStart + visibleIncomeTypeCount < activeIncomeTypes.length
   const matchingIncomeTypes = allIncomeTypes.filter((type) =>
-    `${type.label} ${type.group}`.toLowerCase().includes(incomeTypeSearch.trim().toLowerCase()),
+    `${t(type.label)} ${type.group}`.toLowerCase().includes(incomeTypeSearch.trim().toLowerCase()),
   )
   const destinationAccounts=financial.data?.bank_accounts??[]
-  const selectedAccount = destinationAccounts.find((account) => String(account.id) === destinationCode)
+  const destinationCards=financial.data?.credit_cards??[]
+  const selectedAccount = destinationAccounts.find((account) => `bank:${account.id}` === destinationCode || String(account.id) === destinationCode)
+  const selectedCard = destinationCards.find((card) => `card:${card.id}` === destinationCode)
+  const isCashback = selectedType.accountingSource === 'CASHBACK'
+  const bankDestinationOptions={label:t('Bank Accounts'),options:[...destinationAccounts].sort((a,b)=>bankIdentityKey(a.bank_name).localeCompare(bankIdentityKey(b.bank_name))||a.id-b.id).map(account=>{const last4=account.account_identifier.replace(/\D/g,'').slice(-4);return{value:`bank:${account.id}`,label:`${account.bank_name}${last4?` · ••••${last4}`:''}`}})}
+  const cardDestinationOptions={label:t('Credit Cards'),options:[...destinationCards].sort((a,b)=>bankIdentityKey(a.issuer_bank).localeCompare(bankIdentityKey(b.issuer_bank))||a.id-b.id).map(card=>({value:`card:${card.id}`,label:`${card.issuer_bank} · ${card.card_name} · •• ${card.last4}`}))}
+  const destinationOptions=isCashback?[cardDestinationOptions,bankDestinationOptions]:[bankDestinationOptions]
+  const destinationLabel=selectedCard?`${selectedCard.issuer_bank} · ${selectedCard.card_name}`:selectedAccount?.account_name
   const rentalProperties=properties.filter(item=>!item.income_type||propertyIncomeTabs[item.income_type]===incomeSource)
   const incomePositions=(portfolio.data?.positions??[]).filter(item=>selectedType.value==='FUND_DISTRIBUTION'?['ETF','REIT'].includes(item.security_type):!['ETF','REIT'].includes(item.security_type))
   const linkedSources:Record<string,string[]>={
@@ -389,14 +401,15 @@ export default function IncomeOperation() {
     setResult(null)
 
     const entryDescription = description.trim()
-      || `${selectedType.label} income${linkedSource ? ` — ${linkedSource}` : ''}`
+      || `${t(selectedType.label)} income${linkedSource ? ` — ${linkedSource}` : ''}`
 
     try {
       const posted=await recordIncome({
         income_source: selectedType.value,
         accounting_category: selectedType.accountingSource,
-        destination_account_code: 1120,
-        destination_bank_account_id: Number(destinationCode),
+        destination_account_code: selectedCard ? 2110 : 1120,
+        destination_bank_account_id: selectedAccount?.id,
+        destination_credit_card_id: selectedCard?.id,
         amount: numericAmount,
         transaction_date: transactionDate,
         description: entryDescription,
@@ -406,6 +419,7 @@ export default function IncomeOperation() {
         rent_property_name: selectedType.accountingSource==='RENTAL'?properties.find(item=>item.reference===linkedSource)?.name||assetQuery||undefined:undefined,
       })
       await imported.confirm(postingReference(posted,'income'),linkedSource?'ASSET':undefined)
+      await financial.refresh()
       setResult({ tone: 'success', text: `${formattedAmount} recorded successfully in the ledger.` })
       setAmount('')
       setDescription('')
@@ -433,8 +447,7 @@ export default function IncomeOperation() {
       {headerActionsTarget && createPortal(
         <div className={`income-operation__type-manager${incomeTypeMenuOpen ? ' is-open' : ''}`}>
           <button className="income-operation__manage-types" type="button" onClick={() => setIncomeTypeMenuOpen((open) => !open)}>
-            <Plus size={15} /> إضافة مصدر دخل
-          </button>
+            <Plus size={15} /> {t("إضافة مصدر دخل")} </button>
           {incomeTypeMenuOpen && (
             <div className="income-operation__type-overlay" onMouseDown={(event) => {
               if (event.currentTarget !== event.target) return
@@ -442,36 +455,36 @@ export default function IncomeOperation() {
               setIncomeDefinitionsOpen(false)
             }}>
             <div className="income-operation__type-menu">
-              <div className="income-operation__catalog-heading"><div><strong>مصادر الدخل</strong><small>{incomeDefinitionsOpen ? 'دليل موجز لمصادر الدخل في هذا الدليل.' : 'اختر المصادر القياسية أو أنشئ مصدرًا خاصًا.'}</small></div><button className={incomeDefinitionsOpen ? 'is-active' : ''} type="button" title="تعريفات مصادر الدخل" aria-label="تعريفات مصادر الدخل" onClick={() => setIncomeDefinitionsOpen((open) => !open)}><Info size={17} /></button></div>
+              <div className="income-operation__catalog-heading"><div><strong>{t("مصادر الدخل")}</strong><small>{t(incomeDefinitionsOpen ? 'دليل موجز لمصادر الدخل في هذا الدليل.' : 'اختر المصادر القياسية أو أنشئ مصدرًا خاصًا.')}</small></div><button className={incomeDefinitionsOpen ? 'is-active' : ''} type="button" title={t("تعريفات مصادر الدخل")} aria-label={t("تعريفات مصادر الدخل")} onClick={() => setIncomeDefinitionsOpen((open) => !open)}><Info size={17} /></button></div>
               {incomeDefinitionsOpen ? <div className="income-operation__definitions">
                 {[...incomeTypeGroups, ...(customIncomeTypes.length ? ['مخصص'] : [])].map((group) => {
                   const groupTypes = allIncomeTypes.filter((type) => type.group === group)
-                  return <section key={group}><h4>{group}</h4><p>{groupTypes.map((type, index) => <span key={type.value}><strong>{type.label}:</strong> {incomeTypeDefinitions[type.value] ?? 'مصدر دخل مخصص عرّفه المستخدم.'}{index < groupTypes.length - 1 ? ' ' : ''}</span>)}</p></section>
+                  return <section key={t(group)}><h4>{t(group)}</h4><p>{groupTypes.map((type, index) => <span key={type.value}><strong>{t(type.label)}:</strong> {t(incomeTypeDefinitions[type.value] ?? 'مصدر دخل مخصص عرّفه المستخدم.')}{index < groupTypes.length - 1 ? ' ' : ''}</span>)}</p></section>
                 })}
-                <button type="button" onClick={() => setIncomeDefinitionsOpen(false)}>العودة إلى المصادر</button>
+                <button type="button" onClick={() => setIncomeDefinitionsOpen(false)}>{t("العودة إلى المصادر")}</button>
               </div> : <>
-              <label className="income-operation__catalog-search"><Search size={15} /><input autoFocus placeholder="البحث في مصادر الدخل" value={incomeTypeSearch} onChange={(event) => setIncomeTypeSearch(event.target.value)} /></label>
+              <label className="income-operation__catalog-search"><Search size={15} /><input autoFocus placeholder={t("البحث في مصادر الدخل")} value={incomeTypeSearch} onChange={(event) => setIncomeTypeSearch(event.target.value)} /></label>
               <div className="income-operation__catalog-list">
                 {[...incomeTypeGroups, ...(customIncomeTypes.length ? ['مخصص'] : [])].map((group) => {
                   const groupedTypes = matchingIncomeTypes.filter((type) => type.group === group)
                   if (!groupedTypes.length) return null
-                  return <section key={group}><h4>{group}</h4><div>{groupedTypes.map((type) => {
+                  return <section key={t(group)}><h4>{t(group)}</h4><div>{groupedTypes.map((type) => {
                     const TypeIcon = type.icon
                     const active = activeIncomeSources.includes(type.value)
                     return <button type="button" className={active ? 'is-active' : ''} onClick={() => toggleIncomeType(type.value)} key={type.value}>
-                      <span><TypeIcon size={14} />{type.label}</span><em>{active ? 'ظاهر' : 'إضافة'}</em>
+                      <span><TypeIcon size={14} />{t(type.label)}</span><em>{t(active ? 'ظاهر' : 'إضافة')}</em>
                     </button>
                   })}</div></section>
                 })}
-                {!matchingIncomeTypes.length && <p>لم يُعثر على مصادر مطابقة.</p>}
+                {!matchingIncomeTypes.length && <p>{t("لم يُعثر على مصادر مطابقة.")}</p>}
               </div>
               <div className="income-operation__custom-source">
-                <div><strong>مصدر مخصص</strong><small>أنشئ مصدرًا غير مدرج أعلاه.</small></div>
-                <input placeholder="اسم المصدر" value={customIncomeName} onChange={(event) => setCustomIncomeName(event.target.value)} />
+                <div><strong>{t("مصدر مخصص")}</strong><small>{t("أنشئ مصدرًا غير مدرج أعلاه.")}</small></div>
+                <input placeholder={t("اسم المصدر")} value={customIncomeName} onChange={(event) => setCustomIncomeName(event.target.value)} />
                 <select value={customAccountingCategory} onChange={(event) => setCustomAccountingCategory(event.target.value as AccountingCategory)}>
-                  <option value="SALARY">دخل العمل</option><option value="BUSINESS">دخل الأعمال</option><option value="RENTAL">دخل الإيجار</option><option value="DIVIDEND">توزيعات الاستثمار</option><option value="INTEREST">الفوائد والعوائد</option><option value="CAPITAL_GAIN">ربح رأسمالي</option><option value="CASHBACK">استرداد نقدي</option><option value="OTHER">دخل آخر</option>
+                  <option value="SALARY">{t("دخل العمل")}</option><option value="BUSINESS">{t("دخل الأعمال")}</option><option value="RENTAL">{t("دخل الإيجار")}</option><option value="DIVIDEND">{t("توزيعات الاستثمار")}</option><option value="INTEREST">{t("الفوائد والعوائد")}</option><option value="CAPITAL_GAIN">{t("ربح رأسمالي")}</option><option value="CASHBACK">{t("استرداد نقدي")}</option><option value="OTHER">{t("دخل آخر")}</option>
                 </select>
-                <button type="button" disabled={!customIncomeName.trim()} onClick={addCustomIncomeType}><Plus size={14} /> إضافة مصدر مخصص</button>
+                <button type="button" disabled={!customIncomeName.trim()} onClick={addCustomIncomeType}><Plus size={14} /> {t("إضافة مصدر مخصص")}</button>
               </div>
               </>}
             </div>
@@ -482,14 +495,14 @@ export default function IncomeOperation() {
       )}
       <form className="income-operation__form" onSubmit={handleSubmit}>
         <div className="income-operation__section-heading">
-          <div><span>01</span><div><h3>تفاصيل الدخل</h3><p>حدد مصدر هذا المبلغ.</p></div></div>
+          <div><span>01</span><div><h3>{t("تفاصيل الدخل")}</h3><p>{t("حدد مصدر هذا المبلغ.")}</p></div></div>
           <Sparkles size={17} />
         </div>
 
         <fieldset className="income-operation__types">
-          <legend>نوع الدخل</legend>
+          <legend>{t("نوع الدخل")}</legend>
           <div className="income-operation__type-strip" ref={incomeTabStripRef}>
-          {hasPreviousIncomeTypes && <button className="income-operation__tab-navigation is-previous" type="button" title="مصادر الدخل السابقة" onClick={() => {
+          {hasPreviousIncomeTypes && <button className="income-operation__tab-navigation is-previous" type="button" title={t("مصادر الدخل السابقة")} onClick={() => {
             const previousStart = incomeTabHistory.at(-1) ?? Math.max(0, visibleTabStart - visibleIncomeTypeCount)
             setIncomeTabStart(previousStart)
             setIncomeTabHistory((history) => history.slice(0, -1))
@@ -501,38 +514,32 @@ export default function IncomeOperation() {
                 <button
                   className={incomeSource === type.value ? 'is-selected' : ''}
                   type="button"
-                  title={type.label}
+                  title={t(type.label)}
                   onClick={() => changeIncomeSource(type.value)}
                   key={type.value}
                 >
-                  <span><TypeIcon size={15} /></span><strong>{type.label}</strong>
+                  <span><TypeIcon size={15} /></span><strong>{t(type.label)}</strong>
                 </button>
               )
             })}
           </div>
-          {hasMoreIncomeTypes && <button className="income-operation__tab-navigation is-more" type="button" title="المزيد من مصادر الدخل" onClick={() => {
+          {hasMoreIncomeTypes && <button className="income-operation__tab-navigation is-more" type="button" title={t("المزيد من مصادر الدخل")} onClick={() => {
             setIncomeTabHistory((history) => [...history, visibleTabStart])
             setIncomeTabStart(visibleTabStart + visibleIncomeTypeCount)
-          }}><strong>المزيد</strong><ChevronRight size={14} /></button>}
+          }}><strong>{t("المزيد")}</strong><ChevronRight size={14} /></button>}
           </div>
         </fieldset>
 
         <div className="income-operation__fields income-operation__fields--two">
-          <label>
-            <span><WalletCards size={14} /> حساب الوجهة</span>
-            <select value={destinationCode} onChange={(event) => setDestinationCode(event.target.value)}>
-              <option value="">اختر الحساب البنكي</option>
-              {destinationAccounts.map((account) => (
-                <option value={account.id} key={account.id}>{account.account_name} · {account.bank_name}</option>
-              ))}
-            </select>
-            <small>{selectedAccount?`${selectedAccount.account_type} · ${selectedAccount.currency_code}`:'أضف حسابًا بنكيًا أولًا.'}</small>
-          </label>
+          <div className="income-operation__destination-account">
+            <LookupSelect label={<><WalletCards size={14}/> {t("حساب الوجهة")}</>} value={destinationCode} options={destinationOptions} placeholder={t(isCashback?'Select Credit Card or Bank Account':'اختر الحساب البنكي')} searchable={false} menuPlacement="bottom" onChange={setDestinationCode}/>
+            <small>{selectedCard?`${t('Credit Card')} · ${selectedCard.currency_code}`:selectedAccount?`${selectedAccount.account_type} · ${selectedAccount.currency_code}`:t(isCashback?'Select a credit card or bank account.':'أضف حسابًا بنكيًا أولًا.')}</small>
+          </div>
 
           <label>
-            <span>المبلغ</span>
+            <span>{t("المبلغ")}</span>
             <div className="income-operation__amount">
-              <span>ر.س</span>
+              <span>{t("ر.س")}</span>
               <input
                 type="number"
                 min="0.01"
@@ -563,39 +570,38 @@ export default function IncomeOperation() {
 
             {selectedType.accountingSource==='RENTAL'&&<div className="income-operation__rental-schedule">
               <label><span><CalendarDays size={14}/> {t('Rent Frequency')}</span><select value={rentFrequency} onChange={(event)=>setRentFrequency(event.target.value as typeof rentFrequency)} disabled={!linkedSource.startsWith('property:')}><option value="MONTHLY">{t('Monthly')}</option><option value="QUARTERLY">{t('Quarterly')}</option><option value="SEMI_ANNUAL">{t('Semi-annual')}</option><option value="ANNUAL">{t('Annual')}</option></select></label>
-              <label><span><CalendarDays size={14}/> {t('Next Rent Due Date')}</span><input type="date" value={nextRentDueDate} onChange={(event)=>setNextRentDueDate(event.target.value)} required={linkedSource.startsWith('property:')} disabled={!linkedSource.startsWith('property:')}/></label>
+              <label><span><CalendarDays size={14}/> {t('Next Rent Due Date')}</span><DateInput type="date" value={nextRentDueDate} onChange={(event)=>setNextRentDueDate(event.target.value)} required={linkedSource.startsWith('property:')} disabled={!linkedSource.startsWith('property:')}/></label>
             </div>}
 
           </div>
         ) : (
           <div className="income-operation__type-note">
             <CheckCircle2 size={16} />
-            <p><strong>لا يلزم أصل مرتبط</strong>يمكن تسجيل دخل {t(selectedType.label)} مباشرة في الحساب المحدد.</p>
+            <p><strong>{t("لا يلزم أصل مرتبط")}</strong>{t("يمكن تسجيل دخل")} {t(selectedType.label)} {t('مباشرة في الحساب المحدد.')}</p>
           </div>
         )}
         </div>
 
         <div className="income-operation__fields income-operation__fields--two">
           <label>
-            <span><CalendarDays size={14} /> تاريخ المعاملة</span>
-            <input type="datetime-local" value={transactionDate} onChange={(event) => setTransactionDate(event.target.value)} required />
+            <span><CalendarDays size={14} /> {t("تاريخ المعاملة")}</span>
+            <DateInput type="datetime-local" value={transactionDate} onChange={(event) => setTransactionDate(event.target.value)} required />
           </label>
           <label>
-            <span><ReceiptText size={14} /> الوصف <em>اختياري</em></span>
-            <input type="text" maxLength={255} placeholder={`دخل ${t(selectedType.label)}`} value={description} onChange={(event) => setDescription(event.target.value)} />
+            <span><ReceiptText size={14} /> {t("الوصف")} <em>{t("اختياري")}</em></span>
+            <input type="text" maxLength={255} placeholder={`${t('Income')} ${t(selectedType.label)}`} value={description} onChange={(event) => setDescription(event.target.value)} />
           </label>
         </div>
 
         {result && <div className={`income-operation__message is-${result.tone}`}>{result.tone === 'success' ? <CheckCircle2 size={17} /> : <AlertTriangle size={17} />}{result.text}</div>}
 
         <div className="income-operation__actions">
-          <span>يُنشئ قيد يومية متوازنًا تلقائيًا.</span>
+          <span>{t("يُنشئ قيد يومية متوازنًا تلقائيًا.")}</span>
           <div>
             <button className="is-secondary" type="button" disabled={isSubmitting} onClick={clearCurrentFields}>
-              <RotateCcw size={15} /> مسح الحقول
-            </button>
+              <RotateCcw size={15} /> {t("مسح الحقول")} </button>
             <button type="submit" disabled={numericAmount <= 0 || !transactionDate || isSubmitting}>
-              {isSubmitting ? 'جارٍ التسجيل…' : 'تسجيل الدخل'}
+              {t(isSubmitting ? 'جارٍ التسجيل…' : 'تسجيل الدخل')}
             </button>
           </div>
         </div>
@@ -604,43 +610,43 @@ export default function IncomeOperation() {
       <aside className="income-operation__summary">
         <div className="income-operation__summary-header">
           <span><Landmark size={18} /></span>
-          <div><h3>معاينة المعاملة</h3><p>أثر القيد المزدوج</p></div>
+          <div><h3>{t("معاينة المعاملة")}</h3><p>{t("أثر القيد المزدوج")}</p></div>
         </div>
 
         <div className="income-operation__preview-amount">
-          <span>إجمالي مسودات الدخل</span>
+          <span>{t("إجمالي مسودات الدخل")}</span>
           <strong>{formattedPendingTotal}</strong>
-          <small>تم إدخال {pendingDrafts.length} من أنواع الدخل</small>
+          <small>{t("تم إدخال")} {pendingDrafts.length} {t('من أنواع الدخل')}</small>
         </div>
 
         <div className="income-operation__draft-summary">
-          <div><span>تفصيل الدخل</span><strong>{pendingDrafts.length}</strong></div>
+          <div><span>{t("تفصيل الدخل")}</span><strong>{pendingDrafts.length}</strong></div>
           {pendingDrafts.length ? pendingDrafts.map((draft) => (
             <p className={draft.value === incomeSource ? 'is-current' : ''} key={draft.value}>
-              <span>{draft.label}{draft.value === incomeSource ? ' · الحالي' : ''}</span>
+              <span>{t(draft.label)}{draft.value === incomeSource ? t(' · الحالي') : ''}</span>
               <strong>{formatMoney(draft.amount)}</strong>
             </p>
-          )) : <small>لم تُدخل مبالغ بعد.</small>}
-          <small>يسجل زر الدخل التبويب الحالي فقط، وتظل المسودات الأخرى متاحة.</small>
+          )) : <small>{t("لم تُدخل مبالغ بعد.")}</small>}
+          <small>{t("يسجل زر الدخل التبويب الحالي فقط، وتظل المسودات الأخرى متاحة.")}</small>
         </div>
 
         <div className="income-operation__journal">
-          <div className="income-operation__journal-title"><span>قيد اليومية</span><small>متوازن</small></div>
-          <div><span><i className="is-debit">مدين</i>{selectedAccount?.account_name}</span><strong>{formattedAmount}</strong></div>
-          <div><span><i className="is-credit">دائن</i>دخل {t(selectedType.label)}</span><strong>{formattedAmount}</strong></div>
+          <div className="income-operation__journal-title"><span>{t("قيد اليومية")}</span><small>{t("متوازن")}</small></div>
+          <div><span><i className="is-debit">{t("مدين")}</i>{destinationLabel}</span><strong>{formattedAmount}</strong></div>
+          <div><span><i className="is-credit">{t("دائن")}</i>{t("دخل")} {t(selectedType.label)}</span><strong>{formattedAmount}</strong></div>
         </div>
 
         <div className="income-operation__effects">
-          <h4>الأثر المالي</h4>
-          <p><span>قائمة المركز المالي</span><strong className="is-positive">زيادة الأصول</strong></p>
-          <p><span>التدفق النقدي</span><strong className="is-positive">تدفق نقدي داخل</strong></p>
+          <h4>{t("الأثر المالي")}</h4>
+          <p><span>{t("قائمة المركز المالي")}</span><strong className="is-positive">{t(selectedCard?'Liabilities decrease':'زيادة الأصول')}</strong></p>
+          <p><span>{t("التدفق النقدي")}</span><strong className={selectedCard?'':'is-positive'}>{t(selectedCard?'Non-cash':'تدفق نقدي داخل')}</strong></p>
         </div>
 
         <OperationPreflight requiredComplete={numericAmount>0&&Boolean(transactionDate)&&Boolean(destinationCode)} balanced={numericAmount>0&&Boolean(destinationCode)} recorded={result?.tone==='success'}/>
 
         <div className="income-operation__smart-note">
           <Sparkles size={16} />
-          <p><strong>تتبع المرجع</strong>يُحفظ المرجع المرتبط المحدد مع قيد اليومية للمراجعة لاحقًا.</p>
+          <p><strong>{t("تتبع المرجع")}</strong>{t("يُحفظ المرجع المرتبط المحدد مع قيد اليومية للمراجعة لاحقًا.")}</p>
         </div>
       </aside>
     </div>

@@ -79,7 +79,7 @@ class MonthCloseService:
         period_start, period_end = self.period(year, month)
         preview = self.preview(year, month)
         if not preview["ready"]:
-            raise ValueError("لا يمكن حفظ اللقطة الشهرية حتى تنجح جميع الفحوص المحاسبية الإلزامية.")
+            raise ValueError("The monthly snapshot cannot be saved until all mandatory accounting checks pass.")
         snapshot = preview["reports"]
         checksum = self._checksum(snapshot)
         previous = self._latest(period_end)

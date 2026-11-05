@@ -1,6 +1,6 @@
 from datetime import date, timedelta
 from decimal import Decimal
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
 
 from app.core.settings import settings
@@ -10,12 +10,17 @@ from app.investing.application.sell_stock import SellStockUseCase
 from app.investing.enums.trade_type import TradeType
 from app.investing.schemas.buy_stock import BuyStockRequest
 from app.investing.schemas.broker import BrokerCommissionRequest, BrokerRequest
-from app.investing.schemas.security import MarketSecurityRequest, SaudiSecurityRequest
+from app.investing.schemas.investment_platform import InvestmentPlatformRequest
+from app.investing.schemas.security import MarketSecurityRequest, PrivateFundRequest, SaudiSecurityRequest
 from app.investing.models.security import Security
 from app.investing.models.position import Position
 from app.investing.models.portfolio import Portfolio
 from app.investing.models.broker import Broker
+from app.investing.models.investment_platform import InvestmentPlatform
 from app.core.models.entity import Entity
+from app.accounting.models.account import Account
+from app.accounting.models.journal_entry import JournalEntry
+from app.accounting.models.journal_line import JournalLine
 from app.investing.services.market_security_search import MarketSecurityResult, SahmkMarketSecuritySearch, YahooMarketSecuritySearch
 from app.investing.services.broker_service import (
     BrokerService,
@@ -23,9 +28,13 @@ from app.investing.services.broker_service import (
 from app.investing.services.broker_catalog import BROKER_CATALOG, effective_commission_rate, effective_commission_source, effective_vat_rate, effective_vat_source
 from app.investing.services.saudi_security_catalog import search_saudi_catalog
 from app.investing.services.us_security_catalog import search_us_catalog
-from app.investing.services.financial_platform_catalog import platform_catalog
+from app.investing.services.financial_platform_catalog import FINANCIAL_PLATFORMS, platform_catalog
 from app.investing.services.market_price_provider import (
+    FallbackMarketPriceProvider,
+    MarketPriceProviderRouter,
     MarketPriceProviderError,
+    SahmkMarketPriceProvider,
+    YahooMarketPriceProvider,
     create_market_price_provider,
 )
 from app.investing.services.market_price_updater import (
@@ -38,7 +47,10 @@ from app.api.v1.account import current_user
 from app.core.models.user import User
 from app.investing.services.portfolio_service import PortfolioService
 from app.investing.services.distribution_provider import MultiSourceDistributionProvider, SahmkDistributionProvider, VerifiedSaudiExchangeDistributionProvider, YahooDistributionProvider
+from app.investing.services.distribution_tracking_service import DistributionTrackingService
 from app.investing.services.commission_calculator import calculate_trade_commission
+from app.investing.services.market_price_service import MarketPriceService
+from app.investing.services.analyst_consensus_provider import SahmkAnalystConsensusProvider, SouqDataAnalystConsensusProvider, YahooAnalystConsensusProvider
 
 router = APIRouter(
     prefix="/investing",
@@ -66,8 +78,89 @@ def next_security_distribution(security_id: int, db: Session = Depends(get_db)):
             "frequency": event.frequency, "sources_checked": checked}
 
 
+@router.get("/securities/{security_id}/dividend-yield")
+def security_dividend_yield(security_id: int, db: Session = Depends(get_db), user: User = Depends(current_user)):
+    security = db.query(Security).filter(Security.id == security_id, Security.is_active.is_(True)).first()
+    if security is None:
+        raise HTTPException(status_code=404, detail="Security not found.")
+    if security.security_type == "MUTUAL_FUND":
+        position = (db.query(Position).join(Portfolio, Position.portfolio_id == Portfolio.id)
+                    .join(Entity, Portfolio.entity_id == Entity.id)
+                    .filter(Entity.user_id == user.id, Position.security_id == security.id, Position.quantity > 0)
+                    .first())
+        latest_distribution = (db.query(JournalLine, JournalEntry)
+                               .join(JournalEntry, JournalLine.journal_entry_id == JournalEntry.id)
+                               .join(Account, JournalLine.account_id == Account.id)
+                               .filter(JournalEntry.user_id == user.id, Account.code == 4300,
+                                       JournalEntry.related_reference.startswith(f"{security.symbol} ·"))
+                               .order_by(JournalEntry.transaction_date.desc(), JournalEntry.id.desc()).first())
+        if position is None or latest_distribution is None:
+            return {"available": False, "source": "Recorded Al Rajhi fund distributions"}
+        line, entry = latest_distribution
+        latest_amount = (line.credit or Decimal("0")) - (line.debit or Decimal("0"))
+        latest_price = MarketPriceService(db).get_latest(security.id).price
+        market_value = position.quantity * latest_price
+        if latest_amount <= 0 or market_value <= 0:
+            return {"available": False, "source": "Recorded Al Rajhi fund distributions"}
+        annualized_amount = latest_amount * Decimal("12")
+        return {"available": True,
+                "dividend_yield": annualized_amount / market_value * Decimal("100"),
+                "trailing_distribution_per_unit": annualized_amount / position.quantity,
+                "price": latest_price, "distribution_frequency": "MONTHLY",
+                "latest_distribution_amount": latest_amount,
+                "latest_distribution_date": entry.transaction_date.date(),
+                "source": "Al Rajhi recorded monthly distributions · latest payment annualized"}
+    source = "Yahoo Finance trailing 12 months"
+    try:
+        trailing_total, distribution_frequency = YahooDistributionProvider(
+            settings.MARKET_PRICE_REQUEST_TIMEOUT_SECONDS
+        ).get_trailing_year_summary(security.market_symbol or security.symbol)
+    except Exception:
+        trailing_total = None
+        distribution_frequency = None
+    if trailing_total is None:
+        return {"available": False, "source": source}
+    latest = MarketPriceService(db).get_latest(security.id)
+    if latest.price <= 0:
+        return {"available": False, "source": source}
+    return {"available": True, "dividend_yield": trailing_total / latest.price * 100,
+            "trailing_distribution_per_unit": trailing_total, "price": latest.price,
+            "distribution_frequency": distribution_frequency, "source": source}
+
+
+@router.get("/securities/{security_id}/analyst-fair-value")
+def security_analyst_fair_value(security_id: int, db: Session = Depends(get_db)):
+    security = db.query(Security).filter(Security.id == security_id, Security.is_active.is_(True)).first()
+    if security is None:
+        raise HTTPException(status_code=404, detail="Security not found.")
+    consensus = None
+    if settings.SAHMK_API_KEY and security.currency_code == "SAR":
+        consensus = SahmkAnalystConsensusProvider(
+            settings.SAHMK_API_KEY, settings.MARKET_PRICE_REQUEST_TIMEOUT_SECONDS
+        ).get_mean_target(security.symbol)
+    if consensus is None and security.currency_code == "SAR":
+        consensus = SouqDataAnalystConsensusProvider(
+            settings.MARKET_PRICE_REQUEST_TIMEOUT_SECONDS
+        ).get_mean_target(security.symbol)
+    if consensus is None:
+        consensus = YahooAnalystConsensusProvider(settings.MARKET_PRICE_REQUEST_TIMEOUT_SECONDS).get_mean_target(
+            security.market_symbol or security.symbol
+        )
+    if consensus is None:
+        return {"available": False, "source": "SAHMK + SouqData + Yahoo Finance analyst consensus"}
+    return {"available": True, "fair_value": consensus.value, "target_median": consensus.median,
+            "target_high": consensus.high, "target_low": consensus.low,
+            "recommendation": consensus.recommendation, "analyst_count": consensus.analyst_count,
+            "source": consensus.source}
+
+
 @router.get("/distribution-reminders")
 def distribution_reminders(days: int = 7, include_overdue: bool = False, db: Session = Depends(get_db), user: User = Depends(current_user)):
+    announcements = DistributionTrackingService(db, user.id).list(days=days, include_received=False)
+    if announcements:
+        earliest = date.today() - timedelta(days=365) if include_overdue else date.today()
+        horizon = date.today() + timedelta(days=max(0, min(days, 730)))
+        return [item for item in announcements if earliest <= item["payment_date"] <= horizon]
     horizon = date.today() + timedelta(days=max(0, min(days, 730)))
     rows = (db.query(Position, Security, Portfolio, Broker)
             .join(Security, Security.id == Position.security_id)
@@ -90,6 +183,16 @@ def distribution_reminders(days: int = 7, include_overdue: bool = False, db: Ses
              "currency_code": security.currency_code,
              "days_until": (position.next_distribution_date - date.today()).days}
             for position, security, portfolio, broker in rows]
+
+
+@router.post("/distribution-announcements/sync")
+def sync_distribution_announcements(symbol: str | None = None, db: Session = Depends(get_db), user: User = Depends(current_user)):
+    return DistributionTrackingService(db, user.id).sync(symbol)
+
+
+@router.get("/distribution-announcements")
+def distribution_announcements(db: Session = Depends(get_db), user: User = Depends(current_user)):
+    return DistributionTrackingService(db, user.id).list()
 
 
 @router.get("/brokers")
@@ -137,6 +240,7 @@ def list_securities(
             "exchange": security.exchange,
             "currency_code": security.currency_code,
             "market_symbol": security.market_symbol,
+            "security_type": security.security_type,
         }
         for security in securities
     ]
@@ -250,14 +354,69 @@ def create_saudi_security(
     }
 
 
+@router.post("/securities/private-fund", status_code=201)
+def create_private_fund(request: PrivateFundRequest, db: Session = Depends(get_db)):
+    existing = db.query(Security).filter(Security.symbol == request.symbol).first()
+    if existing is not None:
+        if existing.security_type != "MUTUAL_FUND":
+            raise HTTPException(status_code=409, detail="This symbol is already used by another investment.")
+        return security_dict(existing)
+    security = Security(
+        symbol=request.symbol,
+        market_symbol=None,
+        name=request.name,
+        security_type="MUTUAL_FUND",
+        exchange="PRIVATE_FUND",
+        currency_code=request.currency_code,
+    )
+    db.add(security)
+    db.commit()
+    db.refresh(security)
+    return security_dict(security)
+
+
 def security_dict(security: Security):
     catalog_item = next((item for item in search_saudi_catalog(security.symbol) if item.symbol == security.symbol), None) if security.exchange == "SAUDI_EXCHANGE" or str(security.market_symbol or "").endswith(".SR") else None
     return {"id": security.id, "symbol": security.symbol, "name": security.name, "name_ar": catalog_item.name_ar if catalog_item else None, "name_en": catalog_item.name_en if catalog_item else security.name, "exchange": security.exchange, "currency_code": security.currency_code, "market_symbol": security.market_symbol, "security_type": security.security_type}
 
 
-@router.get("/financial-platforms")
-def financial_platforms():
+@router.get("/financial-platforms/catalog")
+def financial_platform_catalog():
     return platform_catalog()
+
+
+def _platform_dict(item: InvestmentPlatform):
+    return {"id": item.id, "code": item.code, "name": item.name, "name_ar": item.name_ar,
+            "country": item.country, "website": item.website, "services": item.services}
+
+
+@router.get("/financial-platforms")
+def financial_platforms(db: Session = Depends(get_db), user: User = Depends(current_user)):
+    rows = (db.query(InvestmentPlatform)
+            .filter(InvestmentPlatform.user_id == user.id, InvestmentPlatform.is_active.is_(True))
+            .order_by(InvestmentPlatform.id).all())
+    return [_platform_dict(item) for item in rows]
+
+
+@router.post("/financial-platforms", status_code=201)
+def register_financial_platform(request: InvestmentPlatformRequest, db: Session = Depends(get_db), user: User = Depends(current_user)):
+    catalog_item = next((item for item in FINANCIAL_PLATFORMS if item.code == request.code), None)
+    if catalog_item is None:
+        raise HTTPException(status_code=404, detail="The selected platform was not found in the directory.")
+    existing = (db.query(InvestmentPlatform)
+                .filter(InvestmentPlatform.user_id == user.id, InvestmentPlatform.code == catalog_item.code)
+                .first())
+    if existing is not None:
+        if existing.is_active:
+            raise HTTPException(status_code=409, detail="This platform has already been added.")
+        existing.is_active = True
+        db.commit(); db.refresh(existing)
+        return _platform_dict(existing)
+    item = InvestmentPlatform(user_id=user.id, code=catalog_item.code, name=catalog_item.name,
+                              name_ar=catalog_item.name_ar, country=catalog_item.country,
+                              website=catalog_item.website or None, services=list(catalog_item.services), is_active=True)
+    db.add(item); db.commit(); db.refresh(item)
+    return _platform_dict(item)
 
 
 @router.get("/securities/search")
@@ -327,6 +486,19 @@ def register_market_security(request: MarketSecurityRequest, db: Session = Depen
     existing = db.query(Security).filter((Security.market_symbol == request.market_symbol) | (Security.symbol == request.symbol)).first()
     if existing is not None:
         return security_dict(existing)
+    if request.security_type == "OPTION":
+        security = Security(
+            symbol=request.symbol,
+            market_symbol=request.market_symbol,
+            name=request.name,
+            security_type="OPTION",
+            exchange=request.exchange,
+            currency_code=request.currency_code,
+        )
+        db.add(security)
+        db.commit()
+        db.refresh(security)
+        return security_dict(security)
     verified = None
     if request.market_symbol.upper().endswith(".SR"):
         catalog_item = next((item for item in search_saudi_catalog(request.symbol) if item.market_symbol == request.market_symbol.upper()), None)
@@ -361,6 +533,7 @@ def register_market_security(request: MarketSecurityRequest, db: Session = Depen
 @router.post("/market-prices/update")
 def update_market_prices(
     security_id: int | None = None,
+    security_ids: list[int] | None = Query(default=None),
     db: Session = Depends(get_db),
 ):
     try:
@@ -377,6 +550,17 @@ def update_market_prices(
                 settings.MARKET_PRICE_REQUEST_INTERVAL_SECONDS
             ),
         )
+        if settings.SAHMK_API_KEY:
+            provider = MarketPriceProviderRouter(
+                default=provider,
+                saudi=FallbackMarketPriceProvider(
+                    SahmkMarketPriceProvider(
+                        settings.SAHMK_API_KEY,
+                        settings.MARKET_PRICE_REQUEST_TIMEOUT_SECONDS,
+                    ),
+                    YahooMarketPriceProvider(settings.MARKET_PRICE_REQUEST_TIMEOUT_SECONDS),
+                ),
+            )
     except ValueError as error:
         raise HTTPException(
             status_code=503,
@@ -386,7 +570,10 @@ def update_market_prices(
     updater = MarketPriceUpdater(db, provider)
 
     try:
-        if security_id is None:
+        failed_security_ids: list[int] = []
+        if security_ids is not None:
+            market_prices, failed_security_ids = updater.update_securities(security_ids)
+        elif security_id is None:
             market_prices = updater.update_all()
         else:
             market_prices = [
@@ -400,6 +587,16 @@ def update_market_prices(
 
     return {
         "updated_count": len(market_prices),
+        "failed_count": len(failed_security_ids),
+        "failed_security_ids": failed_security_ids,
+        "failed_quotes": [
+            {
+                "security_id": security_id,
+                "symbol": security.symbol if (security := db.query(Security).filter(Security.id == security_id).first()) else str(security_id),
+                "message": updater.last_failure_messages.get(security_id, "Market price update failed."),
+            }
+            for security_id in failed_security_ids
+        ],
         "market_prices": [
             {
                 "security_id": market_price.security_id,

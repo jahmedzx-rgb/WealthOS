@@ -43,12 +43,26 @@ class WealthProductService:
         return item
 
     def create_alternative(self, request: AlternativeInvestmentRequest) -> AlternativeInvestment:
-        bank = self._bank(request.funding_bank_account_id, request.principal_amount, request.currency_code.upper())
-        data = request.model_dump(exclude={"transaction_date"})
+        opening = request.recording_method == "OPENING"
+        bank = None if opening else self._bank(request.funding_bank_account_id, request.principal_amount, request.currency_code.upper())
+        data = request.model_dump(exclude={"transaction_date", "recording_method", "current_value"})
         data["currency_code"] = request.currency_code.upper()
-        item = AlternativeInvestment(user_id=self.user_id, **data, current_value=request.principal_amount)
+        opening_value = request.current_value or request.principal_amount
+        item = AlternativeInvestment(user_id=self.user_id, **data, current_value=opening_value)
         self.db.add(item); self.db.flush()
-        asset_code = 1380 if request.investment_type in {"DEBT_CROWDFUNDING", "EQUITY_CROWDFUNDING", "REAL_ESTATE_CROWDFUNDING", "P2P_LENDING"} else 1390
-        self._post(bank, asset_code, request.principal_amount, f"Alternative Investment · {item.investment_name} · {item.platform_name}", request.transaction_date, f"alternative-investment:{item.id}")
+        asset_code = 1380 if request.investment_type in {"DEBT_CROWDFUNDING", "PRIVATE_FUND", "EQUITY_CROWDFUNDING", "REAL_ESTATE_CROWDFUNDING", "P2P_LENDING"} else 1390
+        if opening:
+            asset = self.db.query(Account).filter(Account.code == asset_code).one()
+            equity = self.db.query(Account).filter(Account.code == 3150).one_or_none()
+            if equity is None:
+                raise ValueError("Opening balance equity is not configured.")
+            entry = JournalEntry(user_id=self.user_id, description=f"Opening alternative investment · {item.investment_name} · {item.platform_name}", transaction_date=request.transaction_date, related_reference=f"alternative-investment:{item.id}")
+            self.db.add(entry); self.db.flush()
+            self.db.add_all([
+                JournalLine(journal_entry_id=entry.id, account_id=asset.id, debit=opening_value, credit=0),
+                JournalLine(journal_entry_id=entry.id, account_id=equity.id, debit=0, credit=opening_value),
+            ])
+        else:
+            self._post(bank, asset_code, request.principal_amount, f"Alternative Investment · {item.investment_name} · {item.platform_name}", request.transaction_date, f"alternative-investment:{item.id}")
         self.db.commit(); self.db.refresh(item)
         return item

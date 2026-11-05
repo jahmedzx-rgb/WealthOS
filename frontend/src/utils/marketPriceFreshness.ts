@@ -9,12 +9,51 @@ function parseMarketTimestamp(value: string) {
   return new Date(includesZone ? value : `${value}Z`)
 }
 
-export function marketPriceFreshness(value: string, now = new Date()): MarketPriceFreshness {
-  const timestamp = parseMarketTimestamp(value)
+function isSaudiExchange(exchange?: string) {
+  return ['SAUDI_EXCHANGE', 'TADAWUL'].includes(exchange?.toUpperCase() ?? '')
+}
+
+function zonedMarketParts(now: Date, timeZone: string) {
+  const parts = new Intl.DateTimeFormat('en-US', {
+    timeZone, weekday: 'short', hour: '2-digit', minute: '2-digit', hourCycle: 'h23',
+  }).formatToParts(now)
+  const part = (type: Intl.DateTimeFormatPartTypes) => parts.find(item => item.type === type)?.value ?? ''
+  return { weekday:part('weekday'), minutes:Number(part('hour')) * 60 + Number(part('minute')) }
+}
+
+function isTrackedMarketOpen(now: Date, exchange?: string) {
+  const normalized = exchange?.toUpperCase() ?? ''
+  if (isSaudiExchange(normalized)) {
+    const {weekday,minutes}=zonedMarketParts(now,'Asia/Riyadh')
+    return !['Fri','Sat'].includes(weekday)&&minutes>=10*60&&minutes<15*60
+  }
+  if (['NASDAQ','NYSE','AMEX'].includes(normalized)) {
+    const {weekday,minutes}=zonedMarketParts(now,'America/New_York')
+    return !['Sat','Sun'].includes(weekday)&&minutes>=9*60+30&&minutes<16*60
+  }
+  return null
+}
+
+function normalizedExchangeTimestamp(timestamp: Date, exchange?: string) {
+  if (!isSaudiExchange(exchange)) return timestamp
+  const weekday = new Intl.DateTimeFormat('en-US', { timeZone: 'Asia/Riyadh', weekday: 'short' }).format(timestamp)
+  const daysBack = weekday === 'Fri' ? 1 : weekday === 'Sat' ? 2 : 0
+  if (!daysBack) return timestamp
+  const corrected = new Date(timestamp)
+  corrected.setUTCDate(corrected.getUTCDate() - daysBack)
+  corrected.setUTCHours(12, 0, 0, 0)
+  return corrected
+}
+
+export function marketPriceFreshness(value: string, now = new Date(), exchange?: string): MarketPriceFreshness {
+  const timestamp = normalizedExchangeTimestamp(parseMarketTimestamp(value), exchange)
   if (Number.isNaN(timestamp.getTime())) return { status: 'Price Time Unavailable', asOf: 'Unknown', ageMinutes: 0 }
   const ageMinutes = Math.max(0, Math.floor((now.getTime() - timestamp.getTime()) / 60000))
   const sameLocalDay = timestamp.toLocaleDateString('en-CA') === now.toLocaleDateString('en-CA')
-  const status = ageMinutes <= 1
+  const marketOpen=isTrackedMarketOpen(now,exchange)
+  const status = marketOpen === false
+    ? 'Market Closed'
+    : ageMinutes <= 1
     ? 'Live'
     : ageMinutes < 60
       ? `Delayed · ${ageMinutes} Min`
@@ -44,8 +83,19 @@ export function marketPriceCoverageLabel(positions:MarketPricedPosition[]){
   const exchanges=[...new Set(positions.map(item=>marketName(item.exchange)))]
   if(exchanges.length===1){
     const oldest=oldestMarketPriceTimestamp(positions.map(item=>item.market_price_date))
-    const freshness=oldest?marketPriceFreshness(oldest):null
+    const freshness=oldest?marketPriceFreshness(oldest,undefined,positions[0].exchange):null
     return freshness?`${exchanges[0]} · ${freshness.status} · As Of ${freshness.asOf}`:`${exchanges[0]} · Price Time Unavailable`
   }
   return `${exchanges.length} Markets · Latest Available By Exchange · ${exchanges.join(' + ')}`
+}
+
+export function marketPriceCoverageLabels(positions:MarketPricedPosition[]){
+  if(!positions.length)return['No Market Prices Yet']
+  const grouped=new Map<string,MarketPricedPosition[]>()
+  positions.forEach(position=>{const name=marketName(position.exchange);grouped.set(name,[...(grouped.get(name)??[]),position])})
+  return [...grouped.entries()].map(([name,items])=>{
+    const oldest=oldestMarketPriceTimestamp(items.map(item=>item.market_price_date))
+    const freshness=oldest?marketPriceFreshness(oldest,undefined,items[0].exchange):null
+    return freshness?`${name} · ${freshness.status} · As Of ${freshness.asOf}`:`${name} · Price Time Unavailable`
+  })
 }

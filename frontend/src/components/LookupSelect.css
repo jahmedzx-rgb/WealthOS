@@ -5,3 +5,4 @@
   font-size: var(--operation-label-font-size, .8rem);
   font-weight: 650;
 }
+.lookup-select__option-label{display:flex;align-items:center;gap:.55rem;min-width:0}.lookup-select__option-label img{width:20px;height:20px;flex:0 0 20px;object-fit:contain;border-radius:5px}.lookup-select__option-label span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}

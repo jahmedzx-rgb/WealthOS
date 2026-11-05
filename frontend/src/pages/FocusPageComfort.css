@@ -1,0 +1,56 @@
+.focus-page__toolbar{
+  position:relative;
+  padding:1rem 1.15rem;
+  border-bottom:1px solid rgba(183,149,66,.38);
+  background:linear-gradient(105deg,#fff 0%,#fbfcff 58%,rgba(183,149,66,.1) 100%);
+}
+.focus-page__toolbar::after{
+  content:"";
+  position:absolute;
+  inset-inline-start:1.15rem;
+  bottom:-1px;
+  width:72px;
+  height:2px;
+  border-radius:999px;
+  background:linear-gradient(90deg,#b79542,#e3c675);
+}
+.focus-page__toolbar h2{color:#102f59;font-size:1rem;font-weight:800;letter-spacing:.005em}
+.focus-page__toolbar p{margin-top:.22rem;color:#60738c;font-size:.73rem;line-height:1.45}
+.focus-page__toolbar button{font-size:.73rem;font-weight:650}
+.focus-page__list article{padding:.8rem 1rem}
+.focus-page__list article>div>strong{font-size:.9rem;line-height:1.3}
+.focus-page__list small{margin-top:.2rem;font-size:.82rem;line-height:1.35}
+.focus-page__list small .focus-page__count{color:#a87308;font-size:1em;font-weight:800}
+.focus-page__bank-icon{display:inline-flex;align-items:center;flex:0 0 auto}
+.focus-page__bank-icon .bank-identity{gap:0}
+.focus-page__bank-icon .bank-identity__icon{box-sizing:border-box;flex-basis:19px;width:19px;height:19px;border-radius:5px}
+.focus-page__bank-icon .bank-identity__icon img{width:14px;height:14px}
+.focus-page__bank-icon .bank-identity__icon svg{width:13px;height:13px}
+.focus-page__bank-icon .bank-identity__name{display:none}
+.focus-page__list em{font-size:.67rem;font-weight:650}
+.focus-page__list b{font-size:.86rem;font-variant-numeric:tabular-nums}
+.focus-page__list article>button{font-size:.7rem;font-weight:650}
+.focus-page__metrics span,.focus-page__metrics small{font-size:.73rem}
+.focus-page__metrics strong{font-size:1.22rem}
+.focus-page__list-head{
+  display:grid;
+  grid-template-columns:38px minmax(0,1fr) 75px 120px 105px;
+  align-items:center;
+  gap:.75rem;
+  padding:.62rem 1rem;
+  border-bottom:1px solid var(--border-primary);
+  background:#fbfcfe;
+  color:#29466b;
+  font-size:.82rem;
+  font-weight:750;
+}
+.focus-page__list-head>span:nth-child(3){justify-self:start}
+.focus-page__list-head>span:nth-child(4){justify-self:center;text-align:center;transform:translateX(-10px)}
+.focus-page__list-head>span:last-child{text-align:center}
+.focus-page__list article>b{justify-self:center;text-align:center;transform:translateX(-10px)}
+.focus-page__actions{display:flex;align-items:center;justify-content:flex-end;gap:.35rem}
+.focus-page__actions button{display:inline-flex;align-items:center;justify-content:center;gap:.25rem;min-height:31px;padding:.38rem .48rem;border:1px solid var(--border-primary);border-radius:7px;background:#fff;color:#29466b;cursor:pointer;font-size:.67rem;font-weight:650;white-space:nowrap}
+.focus-page__actions button:last-child{border-color:rgba(183,149,66,.42);background:#fffaf0;color:#8a650d}
+.focus-page__actions button:hover{border-color:#b79542;background:#fbf5e7}
+@media(min-width:761px){.focus-page__list-head,.focus-page__list article{grid-template-columns:38px minmax(0,1fr) 75px 120px 205px}}
+@media(max-width:760px){.focus-page__list-head{display:none}}

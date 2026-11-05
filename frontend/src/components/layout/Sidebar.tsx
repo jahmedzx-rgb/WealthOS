@@ -11,6 +11,7 @@ import {
   FileText,
   Landmark,
   LayoutDashboard,
+  ChartNoAxesCombined,
   Settings,
   ListChecks,
   RefreshCcw,
@@ -37,6 +38,7 @@ import wealthosIcon from '../../../../assets/branding/wealthos-app-icon.svg'
 import './Sidebar.css'
 import './SidebarAccounting.css'
 import './SidebarReviewQueue.css'
+import './SidebarFiori.css'
 
 type Props = {
   collapsed: boolean
@@ -47,6 +49,16 @@ const navigationItems = [
     label: 'Home',
     icon: LayoutDashboard,
     path: '/',
+  },
+  {
+    label: 'Analytics',
+    icon: ChartNoAxesCombined,
+    path: '/analytics',
+  },
+  {
+    label: 'Accounting',
+    icon: FileText,
+    path: '/accounting',
   },
   {
     label: 'Investing',
@@ -69,9 +81,9 @@ const navigationItems = [
     path: '/properties',
   },
   {
-    label: 'Accounting',
-    icon: FileText,
-    path: '/accounting',
+    label: 'Savings & Deposits',
+    icon: CircleDollarSign,
+    path: '/savings',
   },
   {
     label: 'Reporting',
@@ -96,10 +108,10 @@ const navigationItems = [
 ]
 
 const navigationSections = [
-  { label: 'Workspace', items: navigationItems.slice(0, 1) },
-  { label: 'Wealth', items: navigationItems.slice(1, 5) },
-  { label: 'Intelligence', items: navigationItems.slice(5, 8) },
-  { label: 'System', items: navigationItems.slice(8) },
+  { label: 'Workspace', items: navigationItems.slice(0, 2) },
+  { label: 'Wealth', items: navigationItems.slice(2, 8) },
+  { label: 'Intelligence', items: navigationItems.slice(8, 10) },
+  { label: 'System', items: navigationItems.slice(10) },
 ]
 
 export default function Sidebar({
@@ -107,12 +119,16 @@ export default function Sidebar({
 }: Props) {
   const location = useLocation()
   const { language, t } = useLanguage()
-  const investingOpen = location.pathname.startsWith('/investing') || location.pathname.startsWith('/portfolios/')
+  const investingOpen = (location.pathname.startsWith('/investing') && !location.pathname.startsWith('/investing/deposits') && !location.pathname.startsWith('/investing/saving-circles')) || location.pathname.startsWith('/portfolios/')
+  const savingsOpen = location.pathname.startsWith('/savings') || location.pathname.startsWith('/investing/deposits') || location.pathname.startsWith('/investing/saving-circles')
   const accountingOpen = location.pathname.startsWith('/accounting')
   const propertiesOpen = location.pathname.startsWith('/properties')
+  const bankingOpen = location.pathname.startsWith('/bank-accounts') || location.pathname.startsWith('/e-wallets') || location.pathname.startsWith('/credit-cards')
   const [investingExpanded, setInvestingExpanded] = useState(investingOpen)
+  const [savingsExpanded, setSavingsExpanded] = useState(savingsOpen)
   const [accountingExpanded, setAccountingExpanded] = useState(accountingOpen)
   const [propertiesExpanded, setPropertiesExpanded] = useState(propertiesOpen)
+  const [bankingExpanded, setBankingExpanded] = useState(bankingOpen)
   const investingMenuOpen = investingExpanded
   const [currentTime, setCurrentTime] = useState(() => new Date())
   const [profile, setProfile] = useState(loadUserProfile)
@@ -164,20 +180,37 @@ export default function Sidebar({
           <div>{section.items.map((item) => {
           const Icon = item.icon
 
-          if (item.label === 'Investing') return <div className="sidebar__group" key={item.label}>
+          if (item.label === 'Investing') return <div className={`sidebar__group${investingOpen?' is-active':''}`} key={item.label}>
             <button className={`sidebar__group-toggle${investingOpen?' active':''}`} type="button" onClick={()=>setInvestingExpanded((expanded)=>!expanded)} aria-expanded={investingMenuOpen}><Icon size={18}/>{!collapsed&&<><span>{t('Investing')}</span><ChevronDown className={`sidebar__chevron ${investingMenuOpen?'is-open':''}`} size={14}/></>}</button>
-            {investingMenuOpen&&!collapsed&&<div className="sidebar__submenu"><NavLink to="/investing" end>{t('Executive Summary')}</NavLink><NavLink to="/investing/positions"><ChartCandlestick size={14}/>{t('Stocks')}</NavLink><NavLink to="/investing/deposits"><Sprout size={14}/>{t('Deposits')}</NavLink><NavLink to="/investing/cash-flows"><Coins size={14}/>{t('Investment Cash Flows')}</NavLink><NavLink to="/investing/alternative-investments"><Layers3 size={14}/>{t('Alternative Investments')}</NavLink><NavLink to="/investing/saving-circles"><CircleDollarSign size={14}/>{t('Saving Circles')}</NavLink><NavLink to="/investing/cash"><WalletCards size={14}/>{t('Cash')}</NavLink><NavLink to="/properties"><Building2 size={14}/>{t('Properties')}</NavLink><NavLink to="/investing/brokers"><Building2 size={14}/>{t('Brokers')}</NavLink><NavLink to="/investing/platforms"><Building2 size={14}/>{t('Financial Platforms')}</NavLink></div>}
+            {investingMenuOpen&&!collapsed&&<span className="sidebar__group-line" aria-hidden="true"/>}
+            {investingMenuOpen&&!collapsed&&<div className="sidebar__submenu"><NavLink to="/investing" end>{t('Executive Summary')}</NavLink><NavLink to="/investing/positions"><ChartCandlestick size={14}/>{t('Stocks')}</NavLink><NavLink to="/investing/cash-flows"><Coins size={14}/>{t('Investment Cash Flows')}</NavLink><NavLink to="/investing/alternative-investments"><Layers3 size={14}/>{t('Alternative Investments')}</NavLink><NavLink to="/investing/cash"><WalletCards size={14}/>{t('Cash')}</NavLink><NavLink to="/properties"><Building2 size={14}/>{t('Properties')}</NavLink><NavLink to="/investing/brokers"><Building2 size={14}/>{t('Brokers')}</NavLink><NavLink to="/investing/platforms"><Building2 size={14}/>{t('Alt. Investment Platforms')}</NavLink></div>}
           </div>
 
-          if (item.label === 'Accounting') return <div className="sidebar__group" key={item.label}>
+          if (item.label === 'Savings & Deposits') return <div className={`sidebar__group${savingsOpen?' is-active':''}`} key={item.label}>
+            <button className={`sidebar__group-toggle${savingsOpen?' active':''}`} type="button" onClick={()=>setSavingsExpanded(expanded=>!expanded)} aria-expanded={savingsExpanded}><Icon size={18}/>{!collapsed&&<><span>{t('Savings & Deposits')}</span><ChevronDown className={`sidebar__chevron ${savingsExpanded?'is-open':''}`} size={14}/></>}</button>
+            {savingsExpanded&&!collapsed&&<span className="sidebar__group-line" aria-hidden="true"/>}
+            {savingsExpanded&&!collapsed&&<div className="sidebar__submenu"><NavLink to="/savings" end className={({isActive})=>isActive||location.pathname==='/investing/saving-circles'?'active':''}><CircleDollarSign size={14}/>{t('Savings')}</NavLink><NavLink to="/savings/deposits" end className={({isActive})=>isActive||location.pathname==='/investing/deposits'?'active':''}><Sprout size={14}/>{t('Deposits')}</NavLink></div>}
+          </div>
+
+          if (item.label === 'Accounting') return <div className={`sidebar__group${accountingOpen?' is-active':''}`} key={item.label}>
             <button className={`sidebar__group-toggle${accountingOpen?' active':''}`} type="button" onClick={()=>setAccountingExpanded((expanded)=>!expanded)} aria-expanded={accountingExpanded}><Icon size={18}/>{!collapsed&&<><span>{t('Accounting')}</span><ChevronDown className={`sidebar__chevron ${accountingExpanded?'is-open':''}`} size={14}/></>}</button>
+            {accountingExpanded&&!collapsed&&<span className="sidebar__group-line" aria-hidden="true"/>}
             {accountingExpanded&&!collapsed&&<div className="sidebar__submenu"><NavLink to="/accounting" end>{t('Executive Summary')}</NavLink><NavLink to="/accounting/review-queue"><Inbox size={14}/>{t('Review Queue')} {pendingReviewCount>0&&<em>{pendingReviewCount}</em>}</NavLink><NavLink to="/accounting/ledger"><BookOpen size={14}/>{t('General Ledger')}</NavLink><NavLink to="/accounting/journals"><ListChecks size={14}/>{t('Journal Entries')}</NavLink><NavLink to="/accounting/reconciliation"><RefreshCcw size={14}/>{t('Reconciliation')}</NavLink><NavLink to="/accounting/month-close"><CalendarCheck2 size={14}/>{t('Monthly Snapshots')}</NavLink></div>}
           </div>
 
-          if (item.label === 'Properties') return <div className="sidebar__group" key={item.label}>
+          if (item.label === 'Properties') return <div className={`sidebar__group${propertiesOpen?' is-active':''}`} key={item.label}>
             <button className={`sidebar__group-toggle${propertiesOpen?' active':''}`} type="button" onClick={()=>setPropertiesExpanded((expanded)=>!expanded)} aria-expanded={propertiesExpanded}><Icon size={18}/>{!collapsed&&<><span>{t('Properties')}</span><ChevronDown className={`sidebar__chevron ${propertiesExpanded?'is-open':''}`} size={14}/></>}</button>
+            {propertiesExpanded&&!collapsed&&<span className="sidebar__group-line" aria-hidden="true"/>}
             {propertiesExpanded&&!collapsed&&<div className="sidebar__submenu"><NavLink to="/properties" end>{t('Executive Summary')}</NavLink><NavLink to="/properties/income"><ChartColumn size={14}/>{t('Property Income')}</NavLink><NavLink to="/properties/expenses"><ReceiptText size={14}/>{t('Property Expenses')}</NavLink></div>}
           </div>
+
+          if (item.label === 'Bank Accounts') return <div className={`sidebar__group${bankingOpen?' is-active':''}`} key={item.label}>
+            <button className={`sidebar__group-toggle${bankingOpen?' active':''}`} type="button" onClick={()=>setBankingExpanded(expanded=>!expanded)} aria-expanded={bankingExpanded}><Icon size={18}/>{!collapsed&&<><span>{t('Banking')}</span><ChevronDown className={`sidebar__chevron ${bankingExpanded?'is-open':''}`} size={14}/></>}</button>
+            {bankingExpanded&&!collapsed&&<span className="sidebar__group-line" aria-hidden="true"/>}
+            {bankingExpanded&&!collapsed&&<div className="sidebar__submenu"><NavLink to="/bank-accounts" end><Landmark size={14}/>{t('Bank Accounts')}</NavLink><NavLink to="/e-wallets"><WalletCards size={14}/>{t('E-Wallets')}</NavLink><NavLink to="/credit-cards"><CreditCard size={14}/>{t('Credit Cards')}</NavLink></div>}
+          </div>
+
+          if (item.label === 'Credit Cards') return null
 
           return (
             <NavLink

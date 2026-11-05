@@ -1,9 +1,10 @@
-/* eslint-disable react-hooks/set-state-in-effect */
+
 import { Check, Globe2, LoaderCircle, Search, TrendingUp } from 'lucide-react'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import type { SecurityLookup, MarketSecurityResult } from '../services/securityService'
 import { registerMarketSecurity, searchMarketSecurities } from '../services/securityService'
 import { useLanguage } from '../context/LanguageContext'
+import { securityDisplayName } from '../utils/securityName'
 import './MarketSecurityLookup.css'
 
 type Props={value:string;securities:SecurityLookup[];disabled?:boolean;allowedCurrency?:string;onChange:(value:string)=>void;onRegistered:()=>Promise<void>}
@@ -11,7 +12,7 @@ type Props={value:string;securities:SecurityLookup[];disabled?:boolean;allowedCu
 export default function MarketSecurityLookup({value,securities,disabled,allowedCurrency,onChange,onRegistered}:Props){
   const{language}=useLanguage()
   const selected=useMemo(()=>securities.find(item=>String(item.id)===value),[securities,value]);const[query,setQuery]=useState('');const[results,setResults]=useState<MarketSecurityResult[]>([]);const[open,setOpen]=useState(false);const[loading,setLoading]=useState(false);const[message,setMessage]=useState('');const blurTimer=useRef<number|undefined>(undefined)
-  const displayName=(item:Pick<SecurityLookup,'name'|'name_ar'|'name_en'>)=>language==='ar'?(item.name_ar||item.name):(item.name_en||item.name)
+  const displayName=(item:Pick<SecurityLookup,'symbol'|'name'|'name_ar'|'name_en'>)=>securityDisplayName(item,language)
   useEffect(()=>{if(query.trim().length<2){setResults([]);setLoading(false);return}let active=true;setLoading(true);const timer=window.setTimeout(()=>{searchMarketSecurities(query).then(items=>{if(active)setResults(allowedCurrency?items.filter(item=>item.currency_code===allowedCurrency):items)}).catch(reason=>{if(active)setMessage(reason instanceof Error?reason.message:'Search is unavailable.')}).finally(()=>{if(active)setLoading(false)})},280);return()=>{active=false;window.clearTimeout(timer)}},[query,allowedCurrency])
   useEffect(()=>{if(value&&selected&&allowedCurrency&&selected.currency_code!==allowedCurrency)onChange('')},[allowedCurrency,onChange,selected,value])
   async function choose(item:MarketSecurityResult){setMessage('');try{let id=item.id;if(!id){const registered=await registerMarketSecurity({symbol:item.symbol,market_symbol:item.market_symbol,name:displayName(item),name_ar:item.name_ar,name_en:item.name_en,security_type:item.security_type,exchange:item.exchange??'GLOBAL',currency_code:item.currency_code});id=registered.id;await onRegistered()}onChange(String(id));setQuery('');setOpen(false)}catch(reason){setMessage(reason instanceof Error?reason.message:'Unable to select this security.')}}

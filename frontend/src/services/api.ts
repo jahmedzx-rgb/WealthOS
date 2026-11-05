@@ -26,38 +26,61 @@ async function request<T>(
   options?: RequestInit,
 ): Promise<T> {
   const csrf = document.cookie.split('; ').find(value => value.startsWith('__Host-wealthos-csrf='))?.split('=')[1]
-  const response = await fetch(
-    `${API_BASE_URL}${endpoint}`,
-    {
-      headers: {
-        'Content-Type': 'application/json',
-        ...(csrf ? { 'X-CSRF-Token': decodeURIComponent(csrf) } : {}),
+  const method = options?.method?.toUpperCase() ?? 'GET'
+  const timeoutMs = endpoint.startsWith('/investing/market-prices/update') ? 45_000 : method === 'GET' ? 15_000 : 30_000
+  const controller = new AbortController()
+  const callerSignal = options?.signal
+  let timedOut = false
+  const timeout = window.setTimeout(() => {
+    timedOut = true
+    controller.abort()
+  }, timeoutMs)
+  const abortFromCaller = () => controller.abort(callerSignal?.reason)
+  if (callerSignal?.aborted) abortFromCaller()
+  else callerSignal?.addEventListener('abort', abortFromCaller, { once: true })
+
+  try {
+    const response = await fetch(
+      `${API_BASE_URL}${endpoint}`,
+      {
+        ...options,
+        headers: {
+          'Content-Type': 'application/json',
+          ...(csrf ? { 'X-CSRF-Token': decodeURIComponent(csrf) } : {}),
+          ...options?.headers,
+        },
+        credentials: 'same-origin',
+        signal: controller.signal,
       },
-      credentials: 'same-origin',
-      ...options,
-    },
-  )
+    )
 
-  if (!response.ok) {
-    let message = `Request failed with status ${response.status}`
+    if (!response.ok) {
+      let message = `Request failed with status ${response.status}`
 
-    try {
-      const error = await response.json()
+      try {
+        const error = await response.json()
+        const readable = readableErrorDetail(error.detail)
+        if (readable) message = readable
+      } catch {
+        // Ignore invalid JSON responses
+      }
 
-      const readable = readableErrorDetail(error.detail)
-      if (readable) message = readable
-    } catch {
-      // Ignore invalid JSON responses
+      throw new Error(message)
     }
 
-    throw new Error(message)
+    if (response.status === 204) return undefined as T
+    return (await response.json()) as T
+  } catch (error) {
+    if (timedOut) {
+      throw new Error(method === 'GET'
+        ? 'The service took too long to respond. The page is still available; try again shortly.'
+        : 'The request timed out. Check the result before submitting it again.', { cause: error })
+    }
+    throw error
+  } finally {
+    window.clearTimeout(timeout)
+    callerSignal?.removeEventListener('abort', abortFromCaller)
   }
-
-  if (response.status === 204) {
-    return undefined as T
-  }
-
-  return (await response.json()) as T
 }
 
 export function apiGet<T>(

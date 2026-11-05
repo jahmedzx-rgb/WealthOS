@@ -1,26 +1,29 @@
-import type { ReactNode } from 'react'
+import { lazy, type ReactNode } from 'react'
 
-import TradeOperation from './TradeOperation'
-import TransferOperation from './TransferOperation'
-import IncomeOperation from './IncomeOperation'
-import AddCashOperation from './AddCashOperation'
-import WithdrawCashOperation from './WithdrawCashOperation'
-import LoanOperation from './LoanOperation'
-import AddBrokerOperation from './AddBrokerOperation'
-import CardPaymentOperation from './CardPaymentOperation'
-import JournalOperation from './JournalOperation'
-import PropertyPurchaseOperation from './PropertyPurchaseOperation'
-import ExpenseOperation from './ExpenseOperation'
-import CreditCardAccountOperation from './CreditCardAccountOperation'
-import BankAccountOperation from './BankAccountOperation'
-import DepositOperation from './DepositOperation'
-import BuyOtherAssetOperation from './BuyOtherAssetOperation'
-import OpeningCashOperation from './OpeningCashOperation'
-import AssetDispositionOperation from './AssetDispositionOperation'
-import InheritanceOperation from './InheritanceOperation'
-import BankCardOperation from './BankCardOperation'
-import PropertyValuationOperation from './PropertyValuationOperation'
-import BankOpeningBalanceOperation from './BankOpeningBalanceOperation'
+const TradeOperation=lazy(()=>import('./TradeOperation'))
+const TransferOperation=lazy(()=>import('./TransferOperation'))
+const IncomeOperation=lazy(()=>import('./IncomeOperation'))
+const AddCashOperation=lazy(()=>import('./AddCashOperation'))
+const WithdrawCashOperation=lazy(()=>import('./WithdrawCashOperation'))
+const LoanOperation=lazy(()=>import('./LoanOperation'))
+const AddBrokerOperation=lazy(()=>import('./AddBrokerOperation'))
+const AddInvestmentPlatformOperation=lazy(()=>import('./AddInvestmentPlatformOperation'))
+const CardPaymentOperation=lazy(()=>import('./CardPaymentOperation'))
+const JournalOperation=lazy(()=>import('./JournalOperation'))
+const PropertyPurchaseOperation=lazy(()=>import('./PropertyPurchaseOperation'))
+const ExpenseOperation=lazy(()=>import('./ExpenseOperation'))
+const CreditCardAccountOperation=lazy(()=>import('./CreditCardAccountOperation'))
+const BankAccountOperation=lazy(()=>import('./BankAccountOperation'))
+const DepositOperation=lazy(()=>import('./DepositOperation'))
+const BuyOtherAssetOperation=lazy(()=>import('./BuyOtherAssetOperation'))
+const OpeningCashOperation=lazy(()=>import('./OpeningCashOperation'))
+const AssetDispositionOperation=lazy(()=>import('./AssetDispositionOperation'))
+const InheritanceOperation=lazy(()=>import('./InheritanceOperation'))
+const BankCardOperation=lazy(()=>import('./BankCardOperation'))
+const PropertyValuationOperation=lazy(()=>import('./PropertyValuationOperation'))
+const BankOpeningBalanceOperation=lazy(()=>import('./BankOpeningBalanceOperation'))
+const OpeningPropertyOperation=lazy(()=>import('./OpeningPropertyOperation'))
+const OpeningPortfolioOperation=lazy(()=>import('./OpeningPortfolioOperation'))
 
 type OperationRenderer = (
   operationId: string,
@@ -34,6 +37,9 @@ export const operationRenderer: OperationRenderer =
 
       case 'add-broker':
         return <AddBrokerOperation />
+
+      case 'add-investment-platform':
+        return <AddInvestmentPlatformOperation />
 
       case 'deposit':
         return <DepositOperation />
@@ -88,6 +94,12 @@ export const operationRenderer: OperationRenderer =
 
       case 'property':
         return <PropertyPurchaseOperation />
+
+      case 'opening-property':
+        return <OpeningPropertyOperation />
+
+      case 'opening-portfolio':
+        return <OpeningPortfolioOperation />
 
       case 'property-valuation':
         return <PropertyValuationOperation />

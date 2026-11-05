@@ -227,7 +227,9 @@ def test_frontend_route_gate_blocks_dashboard_until_backend_setup_complete():
     gate = (root / "frontend/src/components/SetupGate.tsx").read_text(encoding="utf-8")
     wizard = (root / "frontend/src/components/SetupWizard.tsx").read_text(encoding="utf-8")
     wizard_select = (root / "frontend/src/components/WizardSelect.tsx").read_text(encoding="utf-8")
-    assert "<SetupGate>" in router
+    bootstrap = (root / "frontend/src/components/BootstrapGate.tsx").read_text(encoding="utf-8")
+    assert "<BootstrapGate>" in router
+    assert "<SetupGate>{children}</SetupGate>" in bootstrap
     assert "if(!status.completed)return <SetupWizard" in gate
     assert "RESUME_EXISTING" in wizard and "REVIEW_MIGRATION" in wizard
     assert "Search currencies" in wizard and "Search countries" in wizard

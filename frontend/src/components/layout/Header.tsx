@@ -1,5 +1,6 @@
 import {
   useEffect,
+  useMemo,
   useRef,
   useState,
 } from 'react'
@@ -14,9 +15,9 @@ import {
   X,
   FileWarning,
   CheckCircle2,
+  CreditCard,
   History,
   Trash2,
-  LockKeyhole,
 } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 
@@ -29,7 +30,7 @@ import FormattedMoney from '../ui/FormattedMoney'
 import { formatDate } from '../../utils/dateFormat'
 import { addRecentSearch, clearRecentSearches, getRecentSearches } from '../../utils/searchHistory'
 import { getFinancialSummary, type FinancialActivity } from '../../services/accountingService'
-import { lockLocalAccount } from '../../services/accountService'
+import { useLiveFocusItems } from '../../hooks/useLiveFocusItems'
 
 import './Header.css'
 import './CurrencyMenu.css'
@@ -40,7 +41,9 @@ type Props = {
 }
 
 const notificationStorageKey='wealthos-read-event-notifications'
-const readNotificationIds=()=>new Set<string>(JSON.parse(localStorage.getItem(notificationStorageKey)??'[]') as string[])
+const announcedNotificationStorageKey='wealthos-announced-event-notifications-v10'
+const storedIds=(key:string)=>{try{return new Set<string>(JSON.parse(localStorage.getItem(key)??'[]') as string[])}catch{return new Set<string>()}}
+const readNotificationIds=()=>storedIds(notificationStorageKey)
 
 export default function Header({
   onToggleSidebar,
@@ -48,6 +51,15 @@ export default function Header({
   const { currency, enabledCurrencies, selectCurrency, formatMoney } = useCurrency()
   const { language, toggleLanguage, t } = useLanguage()
   const navigate = useNavigate()
+  const { items: focusItems } = useLiveFocusItems()
+  const attentionNotifications = useMemo(
+    ()=>focusItems.filter((item) => item.id.startsWith('card-') || item.id.startsWith('distribution-')),
+    [focusItems],
+  )
+  const [readIds,setReadIds]=useState<Set<string>>(readNotificationIds)
+  const unreadAttentionNotifications=useMemo(()=>attentionNotifications.filter(item=>!readIds.has(item.id)),[attentionNotifications,readIds])
+  const unreadCardNotifications=useMemo(()=>unreadAttentionNotifications.filter(item=>item.id.startsWith('card-')),[unreadAttentionNotifications])
+  const unreadDistributionNotifications=useMemo(()=>unreadAttentionNotifications.filter(item=>item.id.startsWith('distribution-')),[unreadAttentionNotifications])
   const [currencyOpen, setCurrencyOpen] = useState(false)
   const [notificationsOpen, setNotificationsOpen] = useState(false)
   const [pendingReviewCount, setPendingReviewCount] = useState(0)
@@ -71,6 +83,7 @@ export default function Header({
     useRef<HTMLDivElement>(null)
   const currencyRef = useRef<HTMLDivElement>(null)
   const notificationsRef = useRef<HTMLDivElement>(null)
+  const audioUnlockedRef=useRef(false)
 
   useEffect(() => {
     getPendingImportBatches().then((batches) => {
@@ -80,8 +93,44 @@ export default function Header({
     getFinancialSummary().then(summary=>{const read=readNotificationIds();setPaymentEvents(summary.recent_activity.filter(item=>item.related_reference?.startsWith('credit-card-payment:')&&!read.has(String(item.id))))}).catch(()=>setPaymentEvents([]))
   }, [notificationsOpen])
 
-  const notificationCount=pendingReviewCount+paymentEvents.length
+  const notificationCount=pendingReviewCount+paymentEvents.length+unreadAttentionNotifications.length
+  const markCardNotificationRead=(id:string)=>{setReadIds(current=>{const next=new Set(current);next.add(id);localStorage.setItem(notificationStorageKey,JSON.stringify([...next].slice(-200)));return next})}
   const openPaymentEvent=(item:FinancialActivity)=>{const read=readNotificationIds();read.add(String(item.id));localStorage.setItem(notificationStorageKey,JSON.stringify([...read].slice(-100)));setPaymentEvents(current=>current.filter(event=>event.id!==item.id));setNotificationsOpen(false);navigate('/activity')}
+
+  useEffect(()=>{
+    const syncReadNotifications=()=>setReadIds(readNotificationIds())
+    window.addEventListener('wealthos-notifications-read',syncReadNotifications)
+    return()=>window.removeEventListener('wealthos-notifications-read',syncReadNotifications)
+  },[])
+
+  useEffect(()=>{
+    const announced=storedIds(announcedNotificationStorageKey)
+    const fresh=unreadAttentionNotifications.filter(item=>!announced.has(item.id))
+    if(!fresh.length)return
+    const AudioContextClass=window.AudioContext||(window as typeof window&{webkitAudioContext:typeof AudioContext}).webkitAudioContext
+    let played=false
+    const play=async()=>{
+      if(played)return
+      try{
+        audioUnlockedRef.current=true
+        const context=new AudioContextClass()
+        await context.resume()
+        if(context.state!=='running')return
+        const gain=context.createGain(),first=context.createOscillator(),second=context.createOscillator()
+        first.connect(gain);second.connect(gain);gain.connect(context.destination)
+        first.frequency.value=784;second.frequency.value=1046.5
+        const now=context.currentTime
+        gain.gain.setValueAtTime(.22,now);gain.gain.exponentialRampToValueAtTime(.001,now+.75)
+        first.start(now);second.start(now+.08);first.stop(now+.68);second.stop(now+.75);played=true
+        second.onended=()=>void context.close()
+        fresh.forEach(item=>announced.add(item.id));localStorage.setItem(announcedNotificationStorageKey,JSON.stringify([...announced].slice(-200)))
+        window.removeEventListener('pointerdown',play);window.removeEventListener('keydown',play)
+      }catch{return}
+    }
+    if(audioUnlockedRef.current)void play()
+    window.addEventListener('pointerdown',play,{once:true});window.addEventListener('keydown',play,{once:true})
+    return()=>{window.removeEventListener('pointerdown',play);window.removeEventListener('keydown',play)}
+  },[unreadAttentionNotifications])
 
   useEffect(() => {
     function handleMouseDown(
@@ -140,16 +189,6 @@ export default function Header({
       <div className="header__top">
         <div className="header__leading">
           <button
-            className="header__action-button"
-            type="button"
-            title={t('Lock WealthOS')}
-            aria-label={t('Lock WealthOS')}
-            onClick={()=>lockLocalAccount().finally(()=>window.location.reload())}
-          >
-            <LockKeyhole size={18}/>
-          </button>
-
-          <button
             aria-label={t('Toggle navigation')}
             className="header__module-button"
             type="button"
@@ -190,6 +229,8 @@ export default function Header({
             {notificationsOpen && <section className="notification-menu" dir={language === 'ar' ? 'rtl' : 'ltr'}>
               <header><div className="notification-menu__heading"><i><Bell size={17}/></i><div><strong>{t('Notifications')}</strong><span>{notificationCount} {t('Need Attention')}</span></div></div><button type="button" aria-label={t('Close')} title={t('Close')} onClick={()=>setNotificationsOpen(false)}><X size={16}/></button></header>
               {paymentEvents.length>0&&<div className="notification-menu__group"><p>{t('Completed activity')}</p>{paymentEvents.map(item=><button type="button" key={item.id} onClick={()=>openPaymentEvent(item)}><i className="is-success"><CheckCircle2 size={16}/></i><span><strong>{t('Credit card payment recorded successfully')}</strong><small>{formatDate(item.transaction_date)} · <FormattedMoney value={formatMoney(Math.abs(item.cash_change))}/></small></span><em>{t('View')}</em></button>)}</div>}
+              {unreadDistributionNotifications.length>0&&<div className="notification-menu__group"><p>{language==='ar'?'توزيعات الاستثمارات':'Investment distributions'}</p>{unreadDistributionNotifications.map(item=><div className="notification-menu__item" key={item.id}><button type="button" onClick={()=>{setNotificationsOpen(false);markCardNotificationRead(item.id);navigate(item.route)}}><i className={item.priority==='high'?'is-warning':''}>{item.icon}</i><span><strong>{item.title}</strong><small>{item.subtitle}{item.amount!=null?` · ${formatMoney(item.amount,item.amountCurrency)}`:''}</small></span></button><button className="notification-menu__read" type="button" onClick={()=>markCardNotificationRead(item.id)}>{t('Mark as read')}</button></div>)}</div>}
+              {unreadCardNotifications.length>0&&<div className="notification-menu__group"><p>{t('Credit card reminders')}</p>{unreadCardNotifications.map(item=><div className="notification-menu__item" key={item.id}><button type="button" onClick={()=>{setNotificationsOpen(false);navigate(item.route)}}><i className={item.priority==='high'?'is-warning':''}><CreditCard size={16}/></i><span><strong>{item.title}</strong><small>{item.subtitle}{item.paymentStatus?` · ${t(item.paymentStatus==='paid'?'Paid':'Unpaid')}`:''}</small></span></button><button className="notification-menu__read" type="button" onClick={()=>markCardNotificationRead(item.id)}>{t('Mark as read')}</button></div>)}</div>}
               {pendingReviewCount>0&&<div className="notification-menu__group"><p>{t(dueReminderCount>0?'Reminder due':'Needs attention')}</p><button type="button" onClick={() => { setNotificationsOpen(false); navigate('/accounting/review-queue') }}><i className="is-warning"><FileWarning size={16}/></i><span><strong>{pendingReviewCount} {t('imported operations need review')}</strong><small>{dueReminderCount>0?`${dueReminderCount} ${t('review reminders due')}`:t('Saved safely for later review')}</small></span><em>{t('Review')}</em></button></div>}
               {notificationCount===0&&<div className="notification-menu__empty"><i><CheckCircle2 size={21}/></i><div><strong>{t('All Clear')}</strong><span>{t('No pending notifications.')}</span></div></div>}
             </section>}

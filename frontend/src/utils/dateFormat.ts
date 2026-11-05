@@ -43,16 +43,17 @@ export function parseDayMonth(value:string){
 export function formatDate(value:string|Date){
   if(typeof value==='string'){
     const parts=dateOnlyParts(value)
-    if(parts&&!value.includes('T'))return new Intl.DateTimeFormat(displayLocale(),{day:'2-digit',month:'2-digit',year:'numeric',timeZone:'UTC'}).format(new Date(`${parts.year}-${parts.month}-${parts.day}T00:00:00Z`))
+    if(parts&&!value.includes('T'))return dateDigits(`${parts.day}/${parts.month}/${parts.year}`)
   }
   const date=value instanceof Date?value:new Date(value)
   if(Number.isNaN(date.getTime()))return'—'
-  return new Intl.DateTimeFormat(displayLocale(),{day:'2-digit',month:'2-digit',year:'numeric'}).format(date)
+  return dateDigits(`${twoDigits(date.getDate())}/${twoDigits(date.getMonth()+1)}/${date.getFullYear()}`)
 }
 
 export function formatDateTime(value:string|Date){
   const date=value instanceof Date?value:new Date(value)
   if(Number.isNaN(date.getTime()))return'—'
-  return new Intl.DateTimeFormat(displayLocale(),{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit',hour12:false}).format(date)
+  return `${formatDate(date)} ${dateDigits(`${twoDigits(date.getHours())}:${twoDigits(date.getMinutes())}`)}`
 }
+function dateDigits(value:string){return displayLocale().startsWith('ar')?value.replace(/\d/g,d=>'٠١٢٣٤٥٦٧٨٩'[Number(d)]):value}
 import { displayLocale } from './localeFormat'

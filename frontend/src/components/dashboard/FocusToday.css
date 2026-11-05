@@ -6,11 +6,10 @@
   min-height: 0;
 }
 
-.focus-today__columns { display:grid; grid-template-columns:minmax(0,1fr) 76px 44px; align-items:center; gap:7px; padding:0 8px; color:var(--text-muted); font-size:.68rem; font-weight:650; }
+.focus-today__columns { display:grid; grid-template-columns:minmax(0,1fr) 90px max-content; align-items:center; gap:7px; padding:0 8px 0 4px; color:var(--text-muted); font-size:.68rem; font-weight:650; }
 .focus-today__columns>span:first-child { grid-column:1; }
-.focus-today__columns>span:nth-child(2) { grid-column:2; text-align:right; transform:translateX(-10px); }
-.focus-today__columns.is-hide-active>span:nth-child(2) { transform:translateX(-21px); }
-.focus-today__columns label { grid-column:3; display:flex; width:max-content; align-items:center; justify-content:flex-end; justify-self:end; gap:.3rem; white-space:nowrap; cursor:pointer; transform:translateX(8px); }
+.focus-today__columns>span:nth-child(2) { grid-column:2; text-align:end; transform:translateX(4px); }
+.focus-today__columns label { grid-column:3; display:flex; width:max-content; align-items:center; justify-content:flex-end; justify-self:end; gap:.3rem; white-space:nowrap; cursor:pointer; transform:translateX(4px); }
 .focus-today__columns input { appearance:none; width:13px; height:13px; margin:0; border:1px solid #9babc0; border-radius:4px; background:#fff; cursor:pointer; transition:border-color .16s ease,background-color .16s ease,box-shadow .16s ease; }
 .focus-today__columns input:hover { border-color:#b79542; box-shadow:0 0 0 3px rgba(183,149,66,.1); }
 .focus-today__columns input:checked { border-color:#193a63; background-color:#193a63; background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M2.2 6.2 4.7 8.5 9.8 3.4' fill='none' stroke='white' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"); background-position:center; background-repeat:no-repeat; }
@@ -19,12 +18,12 @@
 
 .focus-today__item {
   display: grid;
-  grid-template-columns:12px minmax(0,1fr) 76px 44px;
+  grid-template-columns:9px minmax(0,1fr) 90px 30px;
   align-items: center;
-  gap: 7px;
+  gap: 5px;
   height: 100%;
   min-height: 51px;
-  padding: 4px 8px;
+  padding: 4px 8px 4px 4px;
   border: 1px solid var(--border);
   border-radius: 14px;
   transition:
@@ -35,13 +34,14 @@
 
 .focus-today__item:hover {
   border-color: #d6d6d6;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, .05);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, .09);
   transform: translateY(-1px);
 }
 
 .focus-today__icon {
   width: 9px;
   height: 9px;
+  transform: translateX(-2px);
   border-radius: 50%;
 
   display: flex;
@@ -76,13 +76,17 @@
 }
 
 .focus-today__title {
-  overflow: hidden;
+  display:flex;
+  align-items:center;
+  gap:5px;
+  min-width:0;
   font-size: 12.5px;
   font-weight: 600;
   color: var(--text-h);
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+.focus-today__title>span { min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
 
 .focus-today__subtitle {
   margin-top: 2px;
@@ -98,9 +102,14 @@
   white-space: nowrap;
 }
 .focus-today__subtitle svg { flex:0 0 auto; }
+.focus-today__subtitle>span { min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.focus-today__payment-status { flex:0 0 auto; padding:1px 5px; border-radius:999px; font-size:9px; font-style:normal; font-weight:700; line-height:1.35; }
+.focus-today__payment-status.is-paid { background:#e7f6ed; color:#16814a; }
+.focus-today__payment-status.is-unpaid { background:#fff0e7; color:#b74c20; }
 
 .focus-today__amount {
   margin: 0;
+  transform: translateX(2px);
 
   font-size: 13px;
   font-weight: 700;
@@ -116,7 +125,7 @@
   background: transparent;
   cursor: pointer;
 
-  width: 30px;
+  width: 26px;
   height: 30px;
 
   border-radius: 10px;
@@ -127,6 +136,7 @@
 
   color: #16a34a;
   justify-self: end;
+  transform: translateX(2px);
 
   transition:
     background .2s ease,
@@ -135,7 +145,7 @@
 
 .focus-today__complete:hover {
   background: #f3f4f6;
-  transform: scale(1.05);
+  transform: translateX(2px) scale(1.05);
 }
 
 .focus-today__view-all {

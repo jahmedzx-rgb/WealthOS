@@ -23,6 +23,8 @@ export type FocusItem = {
   amount?: number
   amountCurrency?: Currency
   priority: 'high' | 'medium' | 'low'
+  paymentStatus?: 'paid' | 'unpaid'
+  bankName?: string
   icon: React.ReactNode
   route: string
 }
@@ -31,16 +33,17 @@ export default function FocusToday() {
   const { formatMoney } = useCurrency()
   const { t } = useLanguage()
   const navigate=useNavigate()
-  const {items:focusItems}=useLiveFocusItems()
+  const {items:focusItems,error}=useLiveFocusItems()
+  const priorityItems=focusItems.filter(item=>!item.id.startsWith('distribution-'))
   const pageSize=4
   const[page,setPage]=useState(1)
   const[completed,setCompleted]=useState<string[]>([])
-  const activeItems=focusItems.slice(0,8).filter(item=>!completed.includes(item.id))
+  const activeItems=priorityItems.slice(0,8).filter(item=>!completed.includes(item.id))
   const totalPages=Math.max(1,Math.ceil(activeItems.length/pageSize))
   const currentPage=Math.min(page,totalPages)
   const pageItems=activeItems.slice((currentPage-1)*pageSize,currentPage*pageSize)
   function handleOpen(item:FocusItem){navigate(item.route)}
-  function toggleHiddenItems(){setCompleted(activeItems.length===0?[]:focusItems.slice(0,8).map((item)=>item.id));setPage(1)}
+  function toggleHiddenItems(){setCompleted(activeItems.length===0?[]:priorityItems.slice(0,8).map((item)=>item.id));setPage(1)}
   return (
     <Card
       icon={CalendarClock}
@@ -53,7 +56,7 @@ export default function FocusToday() {
         <div className={`focus-today__columns${activeItems.length===0?' is-hide-active':''}`}>
           <span>{t('Operation')}</span>
           <span>{t('Amount')}</span>
-          <label title={t(activeItems.length===0?'Restore Hidden Priorities':'Hide All Priorities')}><input type="checkbox" aria-label={t(activeItems.length===0?'Restore Hidden Priorities':'Hide All Priorities')} checked={activeItems.length===0} onChange={toggleHiddenItems}/><span>{t(activeItems.length===0?'Restore All':'Hide All')}</span></label>
+          <label title={t(activeItems.length===0?'Restore Hidden Priorities':'Hide All Priorities')}><input type="checkbox" aria-label={t(activeItems.length===0?'Restore Hidden Priorities':'Hide All Priorities')} checked={activeItems.length===0} onChange={toggleHiddenItems}/><span>{t(activeItems.length===0?'Restore':'Hide')}</span></label>
         </div>
         {pageItems.map((item) => (
           <div
@@ -68,12 +71,13 @@ export default function FocusToday() {
 
             <div className="focus-today__content">
               <div className="focus-today__title">
-                {item.title}
+                <span>{item.title}</span>
+                {item.paymentStatus&&<em className={`focus-today__payment-status is-${item.paymentStatus}`}>{t(item.paymentStatus==='paid'?'Paid':'Unpaid')}</em>}
               </div>
 
               <div className="focus-today__subtitle">
-                <CalendarClock size={14} />
-                {item.subtitle}
+                {!item.id.startsWith('card-')&&<CalendarClock size={14} />}
+                <span>{item.subtitle}</span>
               </div>
 
             </div>
@@ -94,7 +98,7 @@ export default function FocusToday() {
           </div>
         ))}
         <footer className="focus-today__footer">
-          <div className={`focus-today__end ${currentPage===totalPages?'':'is-placeholder'}`}><span/><small>{t(activeItems.length?'That’s everything for now':'You’re all caught up')}</small><span/></div>
+          {!error && <div className={`focus-today__end ${currentPage===totalPages?'':'is-placeholder'}`}><span/><small>{t(activeItems.length?'That’s everything for now':'You’re all caught up')}</small><span/></div>}
         </footer>
       </div>
     </Card>

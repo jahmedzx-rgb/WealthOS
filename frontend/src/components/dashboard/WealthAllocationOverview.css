@@ -1,5 +1,7 @@
-.wealth-allocation { border-top: 2px solid #b68a26; }
+.wealth-allocation { gap: .4rem; padding: .48rem 1rem .38rem; border-top: 2px solid #b68a26; }
 .wealth-allocation:hover { border-top-color: #d8b45c; }
+.wealth-allocation .card__header { align-items: center; min-height: 1.3rem; }
+.wealth-allocation .card__content { gap: .4rem; }
 .wealth-allocation__link { border: 0; background: transparent; color: var(--text-muted); cursor: pointer; text-decoration: none; font: inherit; font-size: .76rem; font-weight: 600; }
 .wealth-allocation__status { display: flex; align-items: center; gap: .4rem; margin: -.2rem 0 .7rem; color: var(--text-muted); font-size: .66rem; }
 .wealth-allocation__status i { width: 7px; height: 7px; border-radius: 50%; background: var(--success); box-shadow: 0 0 0 3px rgba(25,135,84,.09); }
@@ -17,9 +19,13 @@
 .wealth-allocation__legend { display: grid; grid-template-columns: minmax(0, 1fr); gap: .7rem; }
 .wealth-allocation__legend > div { display: flex; align-items: center; justify-content: space-between; gap: .6rem; font-size: .75rem; }
 .wealth-allocation__legend span { display: flex; align-items: center; gap: .45rem; color: var(--text-secondary); }
+.wealth-allocation__category-link { display: flex; align-items: center; gap: .45rem; color: var(--text-secondary); font-weight: 500; text-decoration: none; cursor: pointer; }
+.wealth-allocation__category-label { display: flex; align-items: center; gap: .45rem; color: var(--text-secondary); font-weight: 500; }
+.wealth-allocation__category-link:hover { color: var(--accent-primary); text-decoration: underline; text-underline-offset: 3px; }
+.wealth-allocation__category-link--table { color: var(--text-primary); font-weight: 700; }
 .wealth-allocation__legend i { width: 8px; height: 8px; border-radius: 3px; }
 .wealth-allocation__classes { display: grid; }
-.wealth-allocation__classes > div { display: grid; grid-template-columns: 1.2fr 1fr .65fr .5fr; align-items: center; gap: .75rem; min-height: 2.45rem; padding: .48rem .5rem; border-top: 1px solid var(--border-primary); font-size: .8rem; line-height: 1; text-align: right; }
+.wealth-allocation__classes > div { display: grid; grid-template-columns: 1.2fr 1fr .65fr .5fr; align-items: center; gap: .75rem; min-height: 2.15rem; padding: .34rem .5rem; border-top: 1px solid #cbd4df; font-size: .8rem; line-height: 1; text-align: right; }
 .wealth-allocation__classes > div > :first-child { text-align: left; }
 .wealth-allocation__classes .wealth-allocation__table-head { min-height: auto; border-top: 0; padding-top: 0; color: #193a63; font-size: .8rem; font-weight: 700; line-height: 1.2; }
 .wealth-allocation__classes .wealth-allocation__table-head span { color: #193a63; font-size: .8rem; font-weight: 700; }
@@ -28,11 +34,12 @@
 .wealth-allocation__classes strong small { display: block; }
 .wealth-allocation__classes strong b { font-size: .75rem; }
 .wealth-allocation__classes strong small { margin-top: .12rem; overflow: hidden; color: var(--text-muted); font-size: .61rem; font-weight: 450; text-overflow: ellipsis; white-space: nowrap; }
-.wealth-allocation__classes span { display: flex; align-items: center; justify-content: flex-end; color: var(--text-secondary); font-size: .84rem; white-space: nowrap; }
+.wealth-allocation__classes span { display: flex; align-items: center; justify-content: flex-end; color: var(--text-secondary); font-size: .9rem; white-space: nowrap; }
 .wealth-allocation__classes .wealth-allocation__table-head span:first-child { justify-content: flex-start; }
 .wealth-allocation__classes .wealth-allocation__table-head span:nth-child(2) { justify-content: center; }
 .wealth-allocation__classes > div:not(.wealth-allocation__table-head) > span:nth-child(2) { justify-content: center; }
 .wealth-allocation__classes > div:not(.wealth-allocation__table-head) > span { transform: translateY(-.07rem); }
+.wealth-allocation__classes > div:not(.wealth-allocation__table-head) > span:nth-child(2) .formatted-money { gap: .32em; }
 .wealth-allocation__classes .is-positive { color: var(--success); font-weight: 600; }
 .wealth-allocation__classes .is-negative { color: var(--danger); font-weight: 600; }
 

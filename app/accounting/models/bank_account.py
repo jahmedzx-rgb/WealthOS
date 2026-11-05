@@ -22,6 +22,15 @@ class BankAccount(Base):
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=lambda: datetime.now(UTC), nullable=False)
 
 
+class BankCustomer(Base):
+    __tablename__ = 'bank_customers'
+    __table_args__ = (UniqueConstraint('user_id', 'bank_key', name='uq_bank_customer_user_bank'),)
+    id: Mapped[int] = mapped_column(primary_key=True)
+    user_id: Mapped[int] = mapped_column(ForeignKey('users.id', ondelete='CASCADE'), nullable=False)
+    bank_key: Mapped[str] = mapped_column(String(120), nullable=False)
+    customer_number: Mapped[str] = mapped_column(String(64), nullable=False)
+
+
 class BankAccountIdentifierAudit(Base):
     __tablename__ = "bank_account_identifier_audits"
 

@@ -1,3 +1,4 @@
+import DateInput from '../components/DateInput'
 import { useState, type FormEvent } from 'react'
 import OperationForm from './OperationForm'
 import { recordInheritance, type InheritanceRequest, type PropertyIncomeType } from '../services/accountingService'
@@ -23,7 +24,7 @@ export default function InheritanceOperation(){
       {assetType==='PROPERTY'&&<label><span>{t('Property Usage')}</span><select value={propertyUsage} onChange={event=>{const usage=event.target.value as typeof propertyUsage;setPropertyUsage(usage);if(usage!=='INVESTMENT_PROPERTY')setIncomeType('')}}><option value="">{t('Select Property Usage')}</option><option value="PRIMARY_RESIDENCE">{t('Primary Residence')}</option><option value="INVESTMENT_PROPERTY">{t('Investment Property')}</option><option value="VACATION_HOME">{t('Vacation Home')}</option><option value="OTHER">{t('Other')}</option></select></label>}
       {assetType==='PROPERTY'&&propertyUsage==='INVESTMENT_PROPERTY'&&<label><span>{t('Property Income Type')}</span><select value={incomeType} onChange={event=>setIncomeType(event.target.value as PropertyIncomeType)}><option value="">{t('Select Income Type')}</option><option value="RESIDENTIAL_RENT">{t('Residential Rent')}</option><option value="COMMERCIAL_RENT">{t('Commercial Rent')}</option><option value="SHORT_TERM_RENT">{t('Short-term Rent')}</option></select></label>}
       <label><span>{t('Fair Value at Recognition')}</span><input inputMode="decimal" value={displayAmount(amount)} onChange={event=>setAmount(cleanAmount(event.target.value))} placeholder="0.00"/></label>
-      <label><span>{t(timing==='BEFORE_WEALTHOS'?'Opening Balance Date':'Receipt Date')}</span><input type="datetime-local" value={date} onChange={event=>setDate(event.target.value)}/></label>
+      <label><span>{t(timing==='BEFORE_WEALTHOS'?'Opening Balance Date':'Receipt Date')}</span><DateInput type="datetime-local" value={date} onChange={event=>setDate(event.target.value)}/></label>
       <label><span>{t('Description / Estate Reference')}</span><input value={description} onChange={event=>setDescription(event.target.value)} placeholder={t('Add a clear supporting reference')} maxLength={255}/></label>
     </div>
     <div className="income-operation__smart-note"><p><strong>{t(timing==='BEFORE_WEALTHOS'?'Opening Wealth — Not Current Income':'Inherited Wealth — Non-operating')}</strong>{t(timing==='BEFORE_WEALTHOS'?'The asset is added against opening balance equity and does not affect current-period income or cash flow.':'The received asset increases wealth through inherited wealth equity and is not salary, recurring income, or operating revenue.')}</p></div>

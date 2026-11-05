@@ -22,6 +22,7 @@ def make_db():
         Account(code=1170, name="Saving Circles", account_type="ASSET", normal_balance="DEBIT"),
         Account(code=1380, name="Crowdfunding Investments", account_type="ASSET", normal_balance="DEBIT"),
         Account(code=1390, name="Other Investments", account_type="ASSET", normal_balance="DEBIT"),
+        Account(code=3150, name="Opening Balance Equity", account_type="EQUITY", normal_balance="CREDIT"),
     ])
     db.add(BankAccount(id=1, user_id=1, bank_name="Bank", account_type="CURRENT", account_name="Primary", account_identifier="SA001", current_balance=Decimal("10000"), currency_code="SAR"))
     opening = JournalEntry(user_id=1, description="Opening bank", transaction_date=datetime(2026, 1, 1, tzinfo=UTC), related_reference="bank-account:1")
@@ -48,3 +49,14 @@ def test_alternative_investment_posts_to_crowdfunding_ledger():
     assert item.current_value == Decimal("2500")
     assert db.get(BankAccount, 1).current_balance == Decimal("7500")
     assert sum(line.debit for line in lines) == Decimal("2500")
+
+
+def test_opening_alternative_investment_does_not_change_bank_balance():
+    db = make_db()
+    item = WealthProductService(db, 1).create_alternative(AlternativeInvestmentRequest(recording_method="OPENING", platform_name="Dain", investment_name="Existing Financing Opportunity", investment_type="DEBT_CROWDFUNDING", funding_bank_account_id=None, principal_amount=Decimal("4000"), expected_annual_return=Decimal("10"), investment_date=date(2025, 1, 1), maturity_date=date(2027, 1, 1), distribution_frequency="AT_MATURITY", currency_code="SAR", transaction_date=datetime(2026, 2, 1, tzinfo=UTC)))
+    entry = db.query(JournalEntry).filter(JournalEntry.related_reference == f"alternative-investment:{item.id}").one()
+    lines = db.query(JournalLine).filter(JournalLine.journal_entry_id == entry.id).all()
+    codes = {db.get(Account, line.account_id).code for line in lines}
+    assert item.funding_bank_account_id is None
+    assert db.get(BankAccount, 1).current_balance == Decimal("10000")
+    assert codes == {1380, 3150}

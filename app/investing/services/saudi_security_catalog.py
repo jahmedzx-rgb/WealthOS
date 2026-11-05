@@ -89,6 +89,12 @@ def _load_offline_catalog() -> tuple[SaudiSecurityCatalogItem, ...]:
         "1010": "Riyad Bank", "1020": "Bank AlJazira", "1030": "Saudi Investment Bank",
         "1050": "Banque Saudi Fransi", "1060": "Saudi Awwal Bank", "1080": "Arab National Bank",
         "1120": "Al Rajhi Bank", "1140": "Bank Albilad", "1150": "Alinma Bank", "1180": "Saudi National Bank",
+        "2083": "Power and Water Utility Company for Jubail and Yanbu (Marafiq)",
+        "3030": "Saudi Cement Company", "4002": "Mouwasat Medical Services Company",
+        "4348": "Alkhabeer REIT Fund", "4703": "SEDCO Capital Multi Asset Traded Fund",
+        "7010": "Saudi Telecom Company (stc)", "9403": "Albilad Saudi Sovereign Sukuk ETF",
+        "4336": "Mulkia Gulf Real Estate REIT Fund",
+        "4700": "Alkhabeer Diversified Income Traded Fund",
     }
     full_arabic_names = {
         "1010": "بنك الرياض", "1020": "بنك الجزيرة", "1030": "البنك السعودي للاستثمار",
@@ -112,7 +118,7 @@ def _load_offline_catalog() -> tuple[SaudiSecurityCatalogItem, ...]:
         if symbol in curated:
             item = curated[symbol]
             index = items.index(item)
-            items[index] = SaudiSecurityCatalogItem(item.symbol, name_ar or item.name, item.security_type, tuple(dict.fromkeys((*item.aliases, item.name, raw_name_ar, name_ar, raw_name_en, name_en))), name_ar or None, name_en or item.name)
+            items[index] = SaudiSecurityCatalogItem(item.symbol, name_ar or item.name, item.security_type, tuple(dict.fromkeys((*item.aliases, item.name, raw_name_ar, name_ar, raw_name_en, name_en))), name_ar or None, item.name)
         else:
             items.append(SaudiSecurityCatalogItem(symbol, name_ar or name_en, security_type, tuple(value for value in (raw_name_ar, name_ar, raw_name_en, name_en) if value), name_ar or None, name_en or None))
     return tuple(items)

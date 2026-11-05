@@ -13,10 +13,11 @@ import { useCurrency } from '../context/CurrencyContext'
 import { marketPriceFreshness } from '../utils/marketPriceFreshness'
 import PageHeader from '../components/ui/PageHeader'
 import { useLanguage } from '../context/LanguageContext'
+import { securityDisplayName } from '../utils/securityName'
 
 export default function PositionDetailsPage() {
   const { formatMoney } = useCurrency()
-  const { t } = useLanguage()
+  const { t, language } = useLanguage()
   const {
     portfolioId,
     securityId,
@@ -73,7 +74,7 @@ export default function PositionDetailsPage() {
 
   return (
     <section className="position-details">
-      <PageHeader eyebrow={t('Portfolio Management')} title={`${data.symbol} · ${data.name}`} subtitle={t('Review this investment position, valuation, performance, and trade history.')} icon={ChartCandlestick}/>
+      <PageHeader eyebrow={t('Portfolio Management')} title={`${data.symbol} · ${securityDisplayName(data,language)}`} subtitle={t('Review this investment position, valuation, performance, and trade history.')} icon={ChartCandlestick}/>
 
       <dl className="position-details__metrics">
         <div className="position-details__metric">
@@ -99,7 +100,7 @@ export default function PositionDetailsPage() {
           <dt>{t('Market Price')}</dt>
           <dd>
             <FormattedMoney value={formatMoney(data.market_price, positionCurrency)}/>
-            <small>{t(marketPriceFreshness(data.market_price_date).status)} · {t('Price As Of')} {marketPriceFreshness(data.market_price_date).asOf}</small>
+            <small>{t(marketPriceFreshness(data.market_price_date,undefined,data.exchange).status)} · {t('Price As Of')} {marketPriceFreshness(data.market_price_date,undefined,data.exchange).asOf}</small>
           </dd>
         </div>
 

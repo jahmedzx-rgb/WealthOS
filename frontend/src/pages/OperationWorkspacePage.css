@@ -101,12 +101,33 @@
   .operation-workspace__identity p { display: none; }
 }
 
-.operation-workspace .deposit-operation__grid { grid-template-columns: repeat(3,minmax(0,1fr)); gap: .55rem; }
+.operation-workspace .deposit-operation__grid { grid-template-columns: repeat(3,minmax(0,1fr)); column-gap:.8rem; row-gap:.7rem; }
+.operation-workspace .deposit-operation__method{grid-column:1/-1;max-width:360px}
+.operation-workspace .deposit-operation .income-operation__section-heading h3,.operation-workspace .deposit-operation .income-operation__summary-header h3{font-weight:600}
+.operation-workspace .deposit-settlement-operation .income-operation__section-heading h3,.operation-workspace .deposit-settlement-operation .income-operation__summary-header h3{font-size:1rem;font-weight:600;letter-spacing:0}
+.operation-workspace .deposit-settlement-operation .standard-operation__grid>label{min-width:0;gap:.34rem;font-weight:500}
+.operation-workspace .deposit-settlement-operation .standard-operation__grid>label>span{font-size:var(--operation-label-font-size);font-weight:500;line-height:1.35}
+.operation-workspace .deposit-settlement-operation .standard-operation__grid>label>input,.operation-workspace .deposit-settlement-operation .standard-operation__grid>label>select{box-sizing:border-box;width:100%;height:42px;min-height:42px;font-size:var(--operation-control-font-size);font-weight:400;letter-spacing:0}
+.operation-workspace .deposit-settlement-operation .standard-operation__grid input::placeholder{font-weight:400}
+.operation-workspace .deposit-settlement-operation .income-operation__actions>span{font-size:var(--operation-helper-font-size);font-weight:400;line-height:1.45}
+.operation-workspace .deposit-settlement-operation .income-operation__actions>button{font-weight:600}
+.operation-workspace .deposit-operation__grid>label{min-width:0;gap:.32rem;font-weight:500}
+.operation-workspace .deposit-operation__grid>label>span{font-weight:500}
+.operation-workspace .deposit-operation__grid>label>input,.operation-workspace .deposit-operation__grid>label>select{box-sizing:border-box;width:100%;height:42px;min-height:42px;font-weight:400}
+.operation-workspace .deposit-operation__grid input::placeholder{font-weight:400}
+.operation-workspace .deposit-operation__cards{display:grid!important;grid-column:1/-1;grid-template-columns:1fr 1fr;gap:.8rem}
+.operation-workspace .deposit-operation__schedule{display:grid!important;grid-column:1/-1;gap:.55rem;padding:.7rem;border:1px solid var(--border-primary);border-radius:10px;background:var(--surface-secondary)}
+.deposit-operation__schedule>header,.deposit-operation__schedule>header>div{display:flex;align-items:center;justify-content:space-between;gap:.7rem}.deposit-operation__schedule>header small{color:var(--text-muted);font-weight:400}.deposit-operation__schedule>header button{display:flex;align-items:center;gap:.3rem;padding:.4rem .55rem;border:1px solid var(--border-primary);border-radius:7px;background:var(--surface-primary);color:var(--text-secondary);cursor:pointer}.deposit-operation__schedule>div{display:grid;grid-template-columns:1fr 1fr 34px;align-items:end;gap:.55rem}.deposit-operation__schedule>div>label{display:grid;gap:.3rem;min-width:0}.deposit-operation__schedule>div>button{display:grid;width:34px;height:42px;place-items:center;border:0;border-radius:7px;background:#fff0ef;color:var(--danger);cursor:pointer}
+.deposit-operation__schedule.is-preview>header{padding-bottom:.45rem;border-bottom:1px solid var(--border-primary)}
+.deposit-operation__schedule.is-preview>.deposit-operation__schedule-head,.deposit-operation__schedule.is-preview>article{display:grid;grid-template-columns:1fr 1fr;gap:1rem;padding:.25rem .4rem}
+.deposit-operation__schedule.is-preview>.deposit-operation__schedule-head{color:var(--text-muted);font-size:var(--operation-helper-font-size)}
+.deposit-operation__schedule.is-preview>article{padding-block:.4rem;border-radius:7px;background:var(--surface-primary);color:var(--text-secondary);font-size:var(--operation-control-font-size)}
+.deposit-operation__schedule.is-preview>article strong{text-align:end;font-weight:500}
 .deposit-operation__renew,.deposit-operation__return { display:flex; min-height:54px; align-items:center; gap:.55rem; padding:.55rem .65rem; border:1px solid var(--border-primary); border-radius:9px; background:var(--surface-primary); color:var(--text-secondary); text-align:left; }
 .deposit-operation__renew { cursor:pointer; }
 .deposit-operation__renew:hover,.deposit-operation__renew.is-selected { border-color:rgba(183,149,66,.55); background:#fffaf0; color:#122440; }
 .deposit-operation__renew span,.deposit-operation__return span { display:grid; flex:1; gap:.08rem; }
-.deposit-operation__renew strong,.deposit-operation__return strong { font-size:var(--operation-control-font-size); }
+.deposit-operation__renew strong,.deposit-operation__return strong { font-size:var(--operation-control-font-size);font-weight:500; }
 .deposit-operation__renew small,.deposit-operation__return small { color:var(--text-muted); font-size:var(--operation-helper-font-size); }
 .deposit-operation__renew i { display:grid; width:18px; height:18px; place-items:center; border:1px solid var(--border-primary); border-radius:5px; color:#fff; font-size:.7rem; font-style:normal; }
 .deposit-operation__renew.is-selected i { border-color:#198754; background:#198754; }
@@ -115,4 +136,4 @@
 .deposit-operation__balance-tools .credit-card-operation__adjust { min-height:38px; }
 .deposit-operation__notice { display:flex!important; align-items:center; gap:.45rem; padding:.55rem .65rem; border-radius:8px; background:#fff5e8; color:#9a5c09; font-size:var(--operation-helper-font-size); }
 @media(max-width:850px){.operation-workspace .deposit-operation__grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
-@media(max-width:600px){.operation-workspace .deposit-operation__grid{grid-template-columns:1fr}}
+@media(max-width:600px){.operation-workspace .deposit-operation__grid,.operation-workspace .deposit-operation__cards{grid-template-columns:1fr}}

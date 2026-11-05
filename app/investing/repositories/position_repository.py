@@ -29,7 +29,7 @@ class PositionRepository:
             self.db.query(Position)
             .filter(
                 Position.portfolio_id == portfolio_id,
-                Position.quantity > 0,
+                Position.quantity != 0,
             )
             .order_by(Position.security_id)
             .all()

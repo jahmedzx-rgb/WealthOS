@@ -1,20 +1,24 @@
 import Select, {
+  type GroupBase,
   type StylesConfig,
 } from 'react-select'
+import type { ReactNode } from 'react'
 import './LookupSelect.css'
 
 export type LookupOption = {
   value: string
   label: string
+  iconUrl?: string
 }
 
 type LookupSelectProps = {
-  label: string
+  label: ReactNode
   value: string
-  options: LookupOption[]
+  options: Array<LookupOption | GroupBase<LookupOption>>
   placeholder?: string
   disabled?: boolean
   searchable?: boolean
+  menuPlacement?: 'auto' | 'bottom' | 'top'
   onChange: (value: string) => void
 }
 
@@ -104,10 +108,12 @@ export default function LookupSelect({
   placeholder = 'Select...',
   disabled = false,
   searchable = true,
+  menuPlacement = 'auto',
   onChange,
 }: LookupSelectProps) {
+  const flatOptions=options.flatMap(option=>'options' in option?option.options:[option])
   const selected =
-    options.find(
+    flatOptions.find(
       (option) => option.value === value,
     ) ?? null
 
@@ -115,13 +121,16 @@ export default function LookupSelect({
     <div className="lookup-select">
       <label>{label}</label>
 
-      <Select<LookupOption, false>
+      <Select<LookupOption, false, GroupBase<LookupOption>>
+        classNamePrefix="lookup-select"
         options={options}
         value={selected}
         placeholder={placeholder}
         isDisabled={disabled}
         isSearchable={searchable}
+        menuPlacement={menuPlacement}
         styles={styles}
+        formatOptionLabel={(option)=><span className="lookup-select__option-label">{option.iconUrl?<img src={option.iconUrl} alt=""/>:null}<span>{option.label}</span></span>}
         onChange={(option) =>
           onChange(option?.value ?? '')
         }

@@ -17,7 +17,8 @@ class InvestmentAccountResolver:
         if (
             security.security_type in {"STOCK", "REIT"}
             and security.exchange
-            and security.exchange.upper() == "NASDAQ"
+            and security.exchange.upper()
+            in {"NASDAQ", "NYSE", "NYSE_ARCA", "NYSE_AMERICAN", "AMEX", "US"}
         ):
             return self.account_resolver.get_us_stocks_account()
 

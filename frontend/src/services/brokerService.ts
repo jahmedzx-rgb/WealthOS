@@ -45,8 +45,8 @@ export function createBroker(input: {
   name: string
   country?: string
   website?: string
-  commission_rate?: number
-  commission_tax_rate?: number
+  commission_rate?: number | null
+  commission_tax_rate?: number | null
   dividend_withholding_tax_rate?: number|null
 }) {
   return apiPost<BrokerLookup>(

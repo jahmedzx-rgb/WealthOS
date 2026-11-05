@@ -1,0 +1,16 @@
+.accounting-page__period-picker button {
+  display: grid;
+  width: 29px;
+  height: 29px;
+  place-items: center;
+  border: 1px solid var(--border-primary);
+  border-radius: 7px;
+  background: var(--surface-secondary);
+  color: #223d61;
+  cursor: pointer;
+}
+
+.accounting-page__period-picker button:disabled {
+  opacity: .35;
+  cursor: default;
+}

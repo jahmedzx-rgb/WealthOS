@@ -1,0 +1,39 @@
+.loan-list__view {
+  display: flex;
+  align-items: center;
+  gap: .25rem;
+  padding: .4rem .5rem;
+  border: 1px solid var(--border-primary);
+  border-radius: 7px;
+  background: var(--surface-primary);
+  color: var(--text-secondary);
+  font-size: .62rem;
+  text-decoration: none;
+}
+
+.loan-list__view:hover {
+  border-color: #caaa65;
+}
+
+@media (min-width: 851px) {
+  .loan-list > article {
+    grid-template-columns: minmax(210px, 1.2fr) minmax(180px, .8fr) auto;
+    gap: .5rem;
+  }
+
+  .loan-list nav {
+    grid-column: 1 / -1;
+    flex-wrap: nowrap;
+    white-space: nowrap;
+    justify-content: flex-end;
+  }
+
+  .loan-list nav > * {
+    flex: 0 0 auto;
+  }
+
+  .loan-list em {
+    width: max-content;
+    justify-self: start;
+  }
+}

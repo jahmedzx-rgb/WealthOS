@@ -34,16 +34,17 @@ class ReportingService:
         rows: list[dict] = []
         source_entry_ids: set[int] = set()
 
-        income_detail_codes = {
-            "property_income": (4200, "Total Property Income"),
-            "deposit_income": (4400, "Total Deposit & Interest Income"),
-            "distribution_income": (4300, "Total Investment Distributions"),
+        income_detail_accounts = {
+            "property_income": ({"rental income", "property income"}, 4200, "Total Property Income", {"dividend income", "interest income"}),
+            "deposit_income": ({"interest income", "deposit & interest income"}, 4400, "Total Deposit & Interest Income", {"dividend income", "rental income"}),
+            "distribution_income": ({"dividend income", "investment distributions", "distribution income"}, 4300, "Total Investment Distributions", {"interest income", "rental income"}),
         }
-        if report_type in income_detail_codes:
-            account_code, total_label = income_detail_codes[report_type]
+        if report_type in income_detail_accounts:
+            account_names, legacy_code, total_label, conflicting_names = income_detail_accounts[report_type]
             total = Decimal("0")
             for line, account, entry in sorted(period_rows, key=lambda item: (item[2].transaction_date, item[2].id)):
-                if account.code != account_code:
+                account_name = account.name.strip().casefold()
+                if account_name not in account_names and (account.code != legacy_code or account_name in conflicting_names):
                     continue
                 value = (line.credit or 0) - (line.debit or 0)
                 if value == 0:

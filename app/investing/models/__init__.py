@@ -11,6 +11,8 @@ from app.investing.models.position import Position
 from app.investing.models.security import Security
 from app.investing.models.trade import Trade
 from app.investing.models.portfolio_valuation_snapshot import PortfolioValuationSnapshot
+from app.investing.models.investment_platform import InvestmentPlatform
+from app.investing.models.distribution_announcement import DistributionAnnouncement
 
 __all__ = [
     "Broker",
@@ -22,4 +24,6 @@ __all__ = [
     "Security",
     "Trade",
     "PortfolioValuationSnapshot",
+    "InvestmentPlatform",
+    "DistributionAnnouncement",
 ]

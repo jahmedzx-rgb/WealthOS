@@ -1,3 +1,4 @@
+import DateInput from '../components/DateInput'
 import { BarChart3, CalendarDays, Check, ChevronDown, Download, FileBarChart, Play, RefreshCw, RotateCcw, Save } from 'lucide-react'
 import { useState } from 'react'
 import { supportedCurrencies, useCurrency } from '../context/CurrencyContext'
@@ -77,7 +78,7 @@ export default function ReportingPage() {
         <div className="report-builder__title"><span><FileBarChart size={18}/></span><div><h2>{t('Build your report')}</h2><p>{t('Choose what you want to analyze.')}</p></div></div>
         <section><label>{t('Report type')}</label><div className="report-builder__native-select"><select value={reportType} onChange={(event)=>setReportType(event.target.value)}>{reportTypes.map((type)=><option key={type} value={type}>{t(type)}</option>)}</select><ChevronDown size={14}/></div></section>
         <section><label>{t('Period')}</label><div className="report-builder__periods">{['This month','Quarter','YTD','Custom'].map((item)=><button className={period===item?'is-active':''} type="button" onClick={()=>setPeriod(item)} key={item}>{t(item)}</button>)}</div></section>
-        <section><label><CalendarDays size={13}/> {t('Date range')}</label><div className="report-builder__dates"><input type="date" defaultValue="2026-08-01"/><span>{t('to')}</span><input type="date" defaultValue="2026-08-31"/></div></section>
+        <section><label><CalendarDays size={13}/> {t('Date range')}</label><div className="report-builder__dates"><DateInput type="date" defaultValue="2026-08-01"/><span>{t('to')}</span><DateInput type="date" defaultValue="2026-08-31"/></div></section>
         <section><label>{t('Income sources')}</label><div className="report-builder__checks">{sources.map((source)=><button type="button" onClick={()=>toggleSource(source)} className={selectedSources.includes(source)?'is-selected':''} key={source}><i>{selectedSources.includes(source)&&<Check size={11}/>}</i>{t(source)}</button>)}</div></section>
         {(reportType === 'Custom report' || reportType === 'Income & reinvestment') && <section><label>{t('Metrics to include')}</label><div className="report-builder__metric-grid">{metrics.map((metric)=><button type="button" onClick={()=>toggleMetric(metric)} className={selectedMetrics.includes(metric)?'is-selected':''} key={metric}>{selectedMetrics.includes(metric)&&<Check size={10}/>} {t(metric)}</button>)}</div></section>}
         <section><label>{t('Scope')}</label><button className="report-builder__select">{t('All portfolios & assets')} <ChevronDown size={14}/></button></section>

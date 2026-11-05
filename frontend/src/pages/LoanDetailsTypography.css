@@ -1,0 +1,53 @@
+.loan-details-card h2 { font-size: .98rem; }
+.loan-details-card header p { font-size: .7rem; }
+.loan-details-card dt { font-size: .74rem; }
+.loan-details-card dd { font-size: .8rem; }
+.loan-details-schedule__head { font-size: .66rem; }
+.loan-details-schedule__rows > div { font-size: .74rem; }
+.loan-details-schedule__rows em { font-size: .66rem; }
+
+.loan-details-page {
+  width: min(1180px, calc(100% - 2.5rem));
+  margin-inline: auto;
+  padding-bottom: 1.5rem;
+}
+
+.loan-details-page__hero {
+  gap: .9rem;
+}
+
+.loan-details-page__hero article {
+  min-height: 104px;
+  justify-content: center;
+  padding: 1.05rem 1.15rem;
+  border-radius: 13px;
+  box-shadow: 0 7px 22px rgba(16, 41, 71, .045);
+}
+
+.loan-details-page__hero article strong {
+  margin-block: .08rem;
+  font-size: 1.2rem;
+}
+
+.loan-details-page__layout {
+  gap: 1.1rem;
+}
+
+.loan-details-card {
+  border-radius: 13px;
+  box-shadow: 0 8px 24px rgba(16, 41, 71, .045);
+}
+
+.loan-details-card > header {
+  padding: 1rem 1.1rem;
+}
+
+.loan-details-card dl {
+  padding-inline: 1.1rem;
+}
+
+@media (max-width: 700px) {
+  .loan-details-page {
+    width: min(100% - 1rem, 1180px);
+  }
+}

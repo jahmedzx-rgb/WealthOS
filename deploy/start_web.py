@@ -1,14 +1,14 @@
-"""Apply the guarded release migration, then replace this process with Uvicorn."""
+"""Start the web process; migrations run once in Railway's pre-deploy step."""
 
 from __future__ import annotations
 
 import os
 
-from deploy.run_migrations import main as run_migrations
+from deploy.validate_env import validate_environment
 
 
 def main() -> None:
-    run_migrations()
+    validate_environment()
     port = os.environ.get("PORT", "10000")
     os.execvp(
         "uvicorn",

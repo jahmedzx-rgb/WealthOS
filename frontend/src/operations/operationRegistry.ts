@@ -16,6 +16,7 @@ import {
   Wallet,
   Sprout,
   Gift,
+  Layers3,
 } from 'lucide-react'
 
 export type OperationCategory =
@@ -137,6 +138,30 @@ export const operationRegistry: Record<
     category: 'investing',
     quickAction: false,
     order: 10,
+    status: 'active',
+  },
+
+  'add-investment-platform': {
+    id: 'add-investment-platform',
+    title: 'Add Alternative Investment Platform',
+    description: 'Register a platform before recording alternative investments.',
+    icon: Layers3,
+    route: '/operations/add-investment-platform',
+    category: 'investing',
+    quickAction: false,
+    order: 10.25,
+    status: 'active',
+  },
+
+  'opening-portfolio': {
+    id: 'opening-portfolio',
+    title: 'Opening Portfolio Balance',
+    description: 'Record historical positions and brokerage cash without a current cash flow.',
+    icon: PackagePlus,
+    route: '/operations/opening-portfolio',
+    category: 'investing',
+    quickAction: false,
+    order: 10.5,
     status: 'active',
   },
 
@@ -306,6 +331,7 @@ export const operationRegistry: Record<
   'credit-card-account': { id:'credit-card-account', title:'Add Credit Card', description:'Define a credit card detected in an imported operation.', icon:CreditCard, route:'/operations/credit-card-account', category:'liabilities', quickAction:false, order:111, status:'active' },
   'bank-card': { id:'bank-card', title:'Add Bank Debit Card', description:'Link a debit card to its bank account.', icon:CreditCard, route:'/operations/bank-card', category:'accounting', quickAction:false, order:112, status:'active' },
   'property': { id:'property', title:'Buy Property', description:'Purchase and post a property to the real estate ledger.', icon:Landmark, route:'/operations/property', category:'assets', quickAction:false, order:113, status:'active' },
+  'opening-property': { id:'opening-property', title:'Previously Owned Property', description:'Record a property owned before WealthOS without reducing cash or recording income.', icon:Landmark, route:'/operations/opening-property', category:'assets', quickAction:false, order:113.5, status:'active' },
   'property-valuation': { id:'property-valuation', title:'Add Property Valuation', description:'Update the current market value of a property.', icon:Landmark, route:'/operations/property-valuation', category:'assets', quickAction:false, order:114, status:'active' },
   'new-loan': { id:'new-loan', title:'New Loan', description:'Record financing, received funds, fees, and repayment terms.', icon:HandCoins, route:'/operations/new-loan', category:'liabilities', quickAction:false, order:115, status:'active' },
   'manage-loans': { id:'manage-loans', title:'Manage Loans', description:'Edit, settle, refinance, or reverse an existing loan.', icon:HandCoins, route:'/accounting?tab=loans', category:'liabilities', quickAction:false, order:116, status:'active' },

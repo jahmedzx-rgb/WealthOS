@@ -1,0 +1,9 @@
+.bank-identity { display: inline-flex; align-items: center; gap: 9px; min-width: 0; vertical-align: middle; }
+.bank-identity__icon { display: inline-flex; flex: 0 0 34px; width: 34px; height: 34px; align-items: center; justify-content: center; border: 1px solid var(--border-primary); border-radius: 9px; background: #fff; color: #526b88; }
+.bank-identity__icon img { width: 24px; height: 24px; object-fit: contain; }
+.bank-identity__icon--jazira { background: #000; border-color: #000; }
+.bank-identity__icon--jazira img { filter: brightness(0) invert(1); }
+.bank-identity__icon--neo { border-color: var(--border-primary); background: #fff; }
+.bank-identity__icon--neo img { width: 24px; height: 24px; border-radius: 6px; image-rendering: auto; }
+.bank-identity__icon img[src="/banks/enbd.png"] { filter: grayscale(1) invert(1); }
+.bank-identity__name { min-width: 0; overflow-wrap: anywhere; }

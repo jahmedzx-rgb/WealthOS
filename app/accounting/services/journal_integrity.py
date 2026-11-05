@@ -4,6 +4,8 @@ from decimal import Decimal
 from sqlalchemy import event
 from sqlalchemy.orm import Session
 
+from app.accounting.services.period_lock import prevent_changes_to_closed_periods
+
 
 TOUCHED_ENTRIES_KEY = "accounting_touched_journal_entries"
 TOUCHED_LINES_KEY = "accounting_touched_journal_lines"
@@ -34,6 +36,9 @@ def validate_lines(lines) -> None:
 
 class AccountingSession(Session):
     """Application session that validates every touched journal at commit."""
+
+
+event.listen(AccountingSession, "before_flush", prevent_changes_to_closed_periods)
 
 
 @event.listens_for(AccountingSession, "before_flush")

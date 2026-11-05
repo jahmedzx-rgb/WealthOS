@@ -1,4 +1,5 @@
-/* eslint-disable react-hooks/set-state-in-effect */
+import DateInput from '../components/DateInput'
+
 import {
   useEffect,
   useState,
@@ -337,7 +338,7 @@ export default function TradeOperation() {
         <label className="trade-operation__included-toggle"><input type="checkbox" checked={priceIncludesFees} onChange={event=>setPriceIncludesFees(event.target.checked)} disabled={isSubmitting}/><span>{t('Entered Price Includes Commission + VAT')}</span></label>
       </div>
       <div className="trade-operation__distribution">
-        <div><label>{t('Next Distribution Date')}</label><input type="date" min={new Date().toISOString().slice(0,10)} value={distributionDate} disabled={isSubmitting} onChange={event=>{setDistributionDate(event.target.value);setDistributionAuto(false)}}/></div>
+        <div><label>{t('Next Distribution Date')}</label><DateInput type="date" min={new Date().toISOString().slice(0,10)} value={distributionDate} disabled={isSubmitting} onChange={event=>{setDistributionDate(event.target.value);setDistributionAuto(false)}}/></div>
         <div><label>{t('Expected Distribution Amount')}</label><input type="number" min="0" step="0.01" value={expectedDistribution} disabled={isSubmitting||!distributionDate} onChange={event=>{setExpectedDistribution(event.target.value);setDistributionAuto(false)}}/></div>
         <div><label>{t('Distribution Frequency')}</label><input className="trade-operation__frequency" readOnly value={t(distributionLoading?'Checking…':distributionPreview?.frequency?distributionPreview.frequency==='SEMI_ANNUAL'?'Semi-Annual':distributionPreview.frequency==='IRREGULAR'?'Irregular / Unconfirmed':distributionPreview.frequency.charAt(0)+distributionPreview.frequency.slice(1).toLowerCase():'Not Available')}/></div>
         <p className="trade-operation__distribution-status">{distributionLoading?'Checking declared distributions…':distributionPreview?.available?distributionPreview.date_kind==='payment'?`Auto-filled from ${distributionPreview.source}.`:`${distributionPreview.source} found an eligibility date; enter the confirmed payment date manually.`:'No confirmed upcoming distribution was found. You can enter it manually.'}</p>
@@ -359,7 +360,7 @@ export default function TradeOperation() {
         <div>
           <label>{t('Trade Date')}</label>
 
-          <input
+          <DateInput
             type="datetime-local"
             value={tradeDate}
             disabled={isSubmitting}

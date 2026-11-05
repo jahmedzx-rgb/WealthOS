@@ -15,7 +15,7 @@ class AlternativeInvestment(Base):
     platform_name: Mapped[str] = mapped_column(String(120), nullable=False)
     investment_name: Mapped[str] = mapped_column(String(160), nullable=False)
     investment_type: Mapped[str] = mapped_column(String(40), nullable=False)
-    funding_bank_account_id: Mapped[int] = mapped_column(ForeignKey("bank_accounts.id"), nullable=False)
+    funding_bank_account_id: Mapped[int | None] = mapped_column(ForeignKey("bank_accounts.id"), nullable=True)
     principal_amount: Mapped[Decimal] = mapped_column(Numeric(18, 2), nullable=False)
     current_value: Mapped[Decimal] = mapped_column(Numeric(18, 2), nullable=False)
     expected_annual_return: Mapped[Decimal] = mapped_column(Numeric(8, 4), nullable=False, default=0)
@@ -28,4 +28,3 @@ class AlternativeInvestment(Base):
     status: Mapped[str] = mapped_column(String(24), nullable=False, default="ACTIVE")
     notes: Mapped[str | None] = mapped_column(Text, nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=lambda: datetime.now(UTC), nullable=False)
-

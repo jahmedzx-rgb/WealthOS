@@ -5,6 +5,7 @@ from app.investing.services.distribution_provider import (
     DistributionEvent,
     MultiSourceDistributionProvider,
     VerifiedSaudiExchangeDistributionProvider,
+    VerifiedFundDistributionProvider,
     infer_distribution_frequency,
 )
 
@@ -43,7 +44,61 @@ def test_verified_alkhabeer_distribution_matches_official_announcement():
     assert event.frequency == "QUARTERLY"
 
 
+def test_verified_mulkia_reit_distribution_tracks_end_of_announced_payment_window():
+    event = VerifiedSaudiExchangeDistributionProvider().get_upcoming("4336.SR")
+    assert event is not None
+    assert event.eligibility_date == date(2026, 11, 2)
+    assert event.distribution_date == date(2026, 12, 17)
+    assert event.amount_per_unit == Decimal("0.08")
+    assert "35 business days" in event.source
+    assert event.frequency == "QUARTERLY"
+
+
+def test_verified_stc_distribution_matches_official_announcement():
+    event = VerifiedSaudiExchangeDistributionProvider().get_upcoming("7010.SR")
+    assert event is not None
+    assert event.eligibility_date == date(2026, 11, 2)
+    assert event.distribution_date == date(2026, 11, 19)
+    assert event.amount_per_unit == Decimal("0.55")
+    assert event.source == "Saudi Exchange official announcement"
+    assert event.frequency == "QUARTERLY"
+
+
+def test_verified_gpty_weekly_distribution_matches_official_schedule():
+    event = VerifiedFundDistributionProvider().get_upcoming("GPTY")
+    assert event is not None
+    assert event.eligibility_date == date(2026, 10, 28)
+    assert event.distribution_date == date(2026, 10, 29)
+    assert event.amount_per_unit == Decimal("0.2620")
+    assert event.source == "YieldMax official distribution schedule"
+    assert event.frequency == "WEEKLY"
+
+
+def test_verified_fepi_weekly_distribution_matches_official_schedule():
+    event = VerifiedFundDistributionProvider().get_upcoming("FEPI")
+    assert event is not None
+    assert event.eligibility_date == date(2026, 10, 28)
+    assert event.distribution_date == date(2026, 10, 29)
+    assert event.amount_per_unit == Decimal("0.1964")
+    assert event.source == "REX Shares official distribution schedule"
+    assert event.frequency == "WEEKLY"
+
+
 def test_distribution_frequency_is_inferred_from_actual_intervals():
     assert infer_distribution_frequency([date(2026, 1, 1), date(2026, 4, 2), date(2026, 7, 2)]) == "QUARTERLY"
     assert infer_distribution_frequency([date(2026, 1, 1), date(2026, 2, 1)]) == "MONTHLY"
     assert infer_distribution_frequency([date(2026, 1, 1)]) == "IRREGULAR"
+
+
+def test_trailing_summary_returns_total_and_inferred_frequency(monkeypatch):
+    from app.investing.services import distribution_provider
+
+    today = date.today()
+    events = {
+        str(index): {"date": int(__import__("datetime").datetime.combine(event_date, __import__("datetime").time(), tzinfo=__import__("datetime").timezone.utc).timestamp()), "amount": 0.25}
+        for index, event_date in enumerate([today - timedelta(days=270), today - timedelta(days=180), today - timedelta(days=90)])
+    }
+    monkeypatch.setattr(distribution_provider, "_load_json", lambda *args, **kwargs: {"chart": {"result": [{"events": {"dividends": events}}]}})
+    total, frequency = distribution_provider.YahooDistributionProvider().get_trailing_year_summary("TEST")
+    assert total == Decimal("0.75")
+    assert frequency == "QUARTERLY"

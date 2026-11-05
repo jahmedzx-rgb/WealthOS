@@ -4,6 +4,7 @@ from pydantic import BaseModel, Field
 
 
 class BankAccountRequest(BaseModel):
+    customer_number: str | None = Field(default=None, max_length=64)
     bank_name: str = Field(min_length=1, max_length=120)
     account_type: str = Field(min_length=1, max_length=40)
     account_name: str | None = Field(default=None, max_length=120)
@@ -22,6 +23,7 @@ class BankOpeningBalanceRequest(BaseModel):
 
 
 class BankAccountUpdateRequest(BaseModel):
+    customer_number: str | None = Field(default=None, max_length=64)
     bank_name: str = Field(min_length=1, max_length=120)
     account_type: str = Field(min_length=1, max_length=40)
     account_name: str | None = Field(default=None, max_length=120)

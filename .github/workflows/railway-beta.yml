@@ -1,0 +1,61 @@
+name: Railway beta image
+
+on:
+  push:
+    branches: [muthra/railway-beta]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify-image:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_USER: codex_beta_test
+          POSTGRES_PASSWORD: disposable-ci-only
+          POSTGRES_DB: codex_railway_beta_test
+        ports: ["55440:5432"]
+        options: >-
+          --health-cmd "pg_isready -U codex_beta_test -d codex_railway_beta_test"
+          --health-interval 5s --health-timeout 5s --health-retries 12
+    env:
+      DATABASE_URL: postgresql://codex_beta_test:disposable-ci-only@127.0.0.1:55440/codex_railway_beta_test
+      WEB_MODE: "true"
+      DEBUG: "false"
+      COOKIE_SECURE: "true"
+      APP_VERSION: ci-test
+      MIGRATION_HEAD: c7e5b0d32a41
+      TRUSTED_HOSTS: 127.0.0.1,healthcheck.railway.app
+      PORT: "10000"
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Build the actual Railway image
+        run: docker build -f Dockerfile.web -t wealthos-web-beta:ci .
+      - name: Migrate disposable PostgreSQL twice
+        run: |
+          for attempt in 1 2; do
+            docker run --rm --network host \
+              -e DATABASE_URL -e WEB_MODE -e DEBUG -e COOKIE_SECURE \
+              -e APP_VERSION -e MIGRATION_HEAD -e TRUSTED_HOSTS \
+              wealthos-web-beta:ci python -m deploy.run_migrations
+          done
+      - name: Verify runtime and schema readiness
+        run: |
+          docker run -d --name beta-smoke --network host \
+            -e DATABASE_URL -e WEB_MODE -e DEBUG -e COOKIE_SECURE \
+            -e APP_VERSION -e MIGRATION_HEAD -e TRUSTED_HOSTS -e PORT \
+            wealthos-web-beta:ci
+          curl --fail --retry 15 --retry-delay 2 --retry-connrefused http://127.0.0.1:10000/ready
+          curl --fail http://127.0.0.1:10000/ | grep -q '<!doctype html>'
+      - name: Show logs and stop test container
+        if: always()
+        run: |
+          docker logs beta-smoke 2>/dev/null || true
+          docker rm -f beta-smoke 2>/dev/null || true

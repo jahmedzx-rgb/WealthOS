@@ -5,6 +5,7 @@ from app.investing.models.portfolio_strategy import PortfolioStrategy
 from app.investing.models.portfolio_objective import PortfolioObjective
 from app.core.models.entity import Entity
 from app.core.models.currency import Currency
+from app.core.models.user import User
 from uuid import uuid4
 
 
@@ -39,7 +40,26 @@ class PortfolioService:
             raise ValueError("Portfolio name must contain at least 2 characters.")
         entity = self.db.query(Entity).filter(Entity.user_id == user_id, Entity.is_active.is_(True)).order_by(Entity.id).first()
         if entity is None:
-            raise ValueError("Complete your profile before creating a portfolio.")
+            user = self.db.query(User).filter(User.id == user_id, User.is_active.is_(True)).first()
+            if user is None:
+                raise ValueError("Unable to identify the portfolio owner.")
+            preferred_currency = (currency_code or user.base_currency_code or "SAR").upper()
+            entity_currency = self.db.query(Currency).filter(
+                Currency.code == preferred_currency,
+                Currency.is_active.is_(True),
+            ).first()
+            if entity_currency is None:
+                raise ValueError("Select a supported portfolio currency.")
+            entity = Entity(
+                user_id=user.id,
+                code=f"PERSONAL-{user.id}",
+                name=user.full_name or user.username or "Personal",
+                entity_type="PERSONAL",
+                base_currency_id=entity_currency.id,
+                is_active=True,
+            )
+            self.db.add(entity)
+            self.db.flush()
         from app.investing.models.broker import Broker
         broker = self.db.query(Broker).filter(Broker.id == broker_id, Broker.user_id == user_id, Broker.is_active.is_(True)).first()
         if broker is None:

@@ -1,3 +1,4 @@
+import DateInput from '../components/DateInput'
 import { useEffect, useState } from 'react'
 import type { FormEvent } from 'react'
 
@@ -19,6 +20,10 @@ export default function AddCashOperation() {
   const{formatMoney}=useCurrency()
   const{t,language}=useLanguage()
   const {portfolios,loading,error}=usePortfolios()
+  const brokerKey=(name:string|null,id:number)=>(name?.trim().toLowerCase()||`portfolio:${id}`)
+  const firstPortfolioByBroker=new Map<string,number>()
+  portfolios.forEach(portfolio=>{const key=brokerKey(portfolio.broker_name,portfolio.id);firstPortfolioByBroker.set(key,Math.min(firstPortfolioByBroker.get(key)??portfolio.id,portfolio.id))})
+  const orderedPortfolios=[...portfolios].sort((a,b)=>(firstPortfolioByBroker.get(brokerKey(a.broker_name,a.id))??a.id)-(firstPortfolioByBroker.get(brokerKey(b.broker_name,b.id))??b.id)||a.id-b.id)
   const [portfolioId, setPortfolioId] = useState(()=>searchParams.get('portfolio')??'')
   const[sourceBankAccountId,setSourceBankAccountId]=useState('')
   const [amount, setAmount] = useState('')
@@ -65,7 +70,7 @@ export default function AddCashOperation() {
           onChange={(event) =>
             setPortfolioId(event.target.value)
           }
-        ><option value="">{t('Select Portfolio')}</option>{portfolios.map(portfolio=><option value={portfolio.id} key={portfolio.id}>{portfolio.name} · {t('Cash')} {portfolio.cash_balance.toLocaleString(language==='ar'?'ar-SA':'en-US',{minimumFractionDigits:2})}</option>)}</select>
+        ><option value="">{t('Select Portfolio')}</option>{orderedPortfolios.map(portfolio=><option value={portfolio.id} key={portfolio.id}>{portfolio.broker_name?`${portfolio.broker_name} · `:''}{portfolio.name} · {t('Cash')} {portfolio.cash_balance.toLocaleString(language==='ar'?'ar-SA':'en-US',{minimumFractionDigits:2})}</option>)}</select>
       </div>
 
       <div className="add-cash-operation__funding-row">
@@ -95,7 +100,7 @@ export default function AddCashOperation() {
       <div className="add-cash-operation__details-row">
         <div>
           <label>{t('Transaction Date')}</label>
-          <input
+          <DateInput
             type="datetime-local"
             value={transactionDate}
             onChange={(event) =>
@@ -121,7 +126,7 @@ export default function AddCashOperation() {
         {t('Fund Brokerage Cash')}
       </button>
 
-      {message && <p>{message}</p>}
+      {message && <p className={`add-cash-operation__message ${message===t('Cash added successfully.')?'is-success':'is-error'}`}>{message}</p>}
     </OperationForm>
   )
 }

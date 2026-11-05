@@ -17,9 +17,9 @@
 .financial-health h2 { margin: 0; color: #122440; font-size: 1.02rem; line-height: 1.12; white-space: nowrap; }
 .financial-health__heading span:last-child { display: block; color: var(--text-muted); font-size: .65rem; line-height: 1.15; }
 
-.financial-health__indicators { display: grid; grid-template-columns: 88px minmax(112px,1.2fr) minmax(112px,1.15fr) 72px 92px; align-items: start; min-width: 0; }
-.financial-health__indicators > div { display: grid; grid-template-rows: 1rem 1.35rem .8rem; align-content: start; align-items: start; gap: .08rem; min-width: 0; padding: 0 .45rem; border-left: 1px solid var(--border-primary); }
-.financial-health__indicators > div:first-child { padding-left: .1rem; border-left: 0; }
+.financial-health__indicators { display: grid; grid-template-columns: 88px minmax(104px,1fr) minmax(138px,1.35fr) 72px 106px; align-items: start; min-width: 0; }
+.financial-health__indicators > div { display: grid; grid-template-rows: 1rem 1.35rem .8rem; align-content: start; align-items: start; gap: .12rem; min-width: 0; padding-inline: .55rem; border-inline-start: 1px solid var(--border-primary); }
+.financial-health__indicators > div:first-child { padding-inline-start: .1rem; border-inline-start: 0; }
 .financial-health__indicators small,
 .financial-health__indicators span { color: var(--text-muted); font-size: .62rem; white-space: nowrap; }
 .financial-health__indicators strong { align-self: center; color: var(--text-primary); font-size: .82rem; line-height: 1.1; white-space: nowrap; }
@@ -36,6 +36,10 @@
 .financial-health__cash small,
 .financial-health__investments small,
 .financial-health__metric > .financial-health__status { color: #198754; }
+.financial-health__investments>strong{transform:translateX(-.18rem)}
+.financial-health__investments>.financial-health__indicator-label{transform:translateX(.18rem)}
+.financial-health__investments>.financial-health__substatus{transform:translateX(.18rem)}
+.financial-health__cash>.financial-health__substatus{transform:translateX(.18rem)}
 .financial-health__indicators .financial-health__substatus {
   align-self: start;
   color: #198754;
@@ -56,7 +60,7 @@
 .financial-health__info:hover [role='tooltip'],
 .financial-health__info:focus-visible [role='tooltip'] { opacity: 1; transform: translateY(0); }
 
-.financial-health__risk { display: grid !important; grid-template-columns: auto auto; grid-template-rows: 1rem 1.35rem .8rem; justify-content: start; align-content: start; align-items: start; column-gap: .35rem !important; row-gap: .08rem !important; padding: 0 0 0 .45rem !important; }
+.financial-health__risk { display: grid !important; grid-template-columns: auto auto; grid-template-rows: 1rem 1.35rem .8rem; justify-content: start; align-content: start; align-items: start; column-gap: .35rem !important; row-gap: .12rem !important; padding-inline: .55rem 0 !important; }
 .financial-health__risk-dot { position: relative; grid-column: 1; grid-row: 1; align-self: center; flex: 0 0 8px; width: 8px; height: 8px; border: 0; border-radius: 50%; background: #d89b24; box-shadow: 0 0 5px rgba(216,155,36,.72); }
 .financial-health__risk-dot::after { content: ''; position: absolute; inset: -1px; border: 1px solid rgba(216,155,36,.72); border-radius: 50%; animation: risk-radar 1.8s ease-out infinite; }
 .financial-health__risk > span:not(.financial-health__risk-dot) { grid-column: 2; grid-row: 1; }

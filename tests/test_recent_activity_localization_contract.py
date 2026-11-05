@@ -83,3 +83,16 @@ def test_recent_activity_empty_states_are_localized_system_copy():
         assert ">No Posted Activity" not in source
         assert ">Completed operations will appear here.<" not in source
         assert "t('Completed operations will appear here.')" in source
+
+
+def test_daily_deposit_closure_is_a_neutral_transfer_not_income():
+    """Returning deposit principal to a bank must not be styled or counted as income."""
+    assert "reference.startsWith('deposit-withdrawal:')" in ACTIVITY_PAGE
+    assert "reference.endsWith(':principal-return')||depositWithdrawal" in ACTIVITY_PAGE
+    assert "reference.startsWith('deposit-withdrawal:')" in RECENT_ACTIVITY
+
+
+def test_deposit_returns_switch_from_accrued_to_income_after_closure():
+    assert "item.return_status==='REALIZED'" in ACTIVITY_PAGE
+    assert "depositReturn&&!realizedReturn" in ACTIVITY_PAGE
+    assert "Deposit Income Realized" in ACTIVITY_LABELS
