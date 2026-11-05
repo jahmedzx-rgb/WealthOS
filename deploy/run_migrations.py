@@ -4,8 +4,11 @@ from __future__ import annotations
 
 import hashlib
 import os
+import json
+from pathlib import Path
 
 import psycopg2
+from psycopg2 import sql
 from alembic import command
 from alembic.config import Config
 from alembic.script import ScriptDirectory
@@ -13,6 +16,23 @@ from deploy.validate_env import validate_environment
 
 
 MIGRATION_LOCK_ID = 905_710_042
+
+
+def _bootstrap_reference_data(connection) -> None:
+    """Add missing public catalogs only; never create personal financial rows."""
+    catalogs = json.loads(Path(__file__).with_name("reference_data.json").read_text(encoding="utf-8"))
+    allowed = {"accounts", "currencies", "portfolio_strategies", "portfolio_objectives"}
+    if set(catalogs) != allowed:
+        raise RuntimeError("Unexpected reference-data tables.")
+    with connection.cursor() as cursor:
+        for table, rows in catalogs.items():
+            for row in rows:
+                columns = list(row)
+                statement = sql.SQL("INSERT INTO {} ({}) VALUES ({}) ON CONFLICT (code) DO NOTHING").format(
+                    sql.Identifier(table), sql.SQL(",").join(map(sql.Identifier, columns)),
+                    sql.SQL(",").join(sql.Placeholder() for _ in columns),
+                )
+                cursor.execute(statement, [row[column] for column in columns])
 
 
 def _invite_hashes_from_env() -> list[str]:
@@ -57,7 +77,18 @@ def main() -> None:
         if not acquired:
             raise RuntimeError("Another WealthOS migration job holds the release lock.")
         command.upgrade(alembic_config, expected_head)
-        _provision_invites(connection)
+        # Catalog initialization and invite provisioning are atomic; reruns keep
+        # existing rows, including user changes and consumed invitation codes.
+        connection.autocommit = False
+        try:
+            _bootstrap_reference_data(connection)
+            _provision_invites(connection)
+            connection.commit()
+        except Exception:
+            connection.rollback()
+            raise
+        finally:
+            connection.autocommit = True
     finally:
         try:
             with connection.cursor() as cursor:

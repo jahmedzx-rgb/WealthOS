@@ -1,0 +1,1021 @@
+{
+  "accounts": [
+    {
+      "code": 1000,
+      "name": "Assets",
+      "account_type": "ASSET",
+      "normal_balance": "DEBIT",
+      "is_header": true,
+      "allow_posting": false,
+      "is_active": true
+    },
+    {
+      "code": 1100,
+      "name": "Cash & Cash Equivalents",
+      "account_type": "ASSET",
+      "normal_balance": "DEBIT",
+      "is_header": true,
+      "allow_posting": false,
+      "is_active": true
+    },
+    {
+      "code": 1110,
+      "name": "Cash on Hand",
+      "account_type": "ASSET",
+      "normal_balance": "DEBIT",
+      "is_header": false,
+      "allow_posting": true,
+      "is_active": true
+    },
+    {
+      "code": 1120,
+      "name": "Bank Accounts",
+      "account_type": "ASSET",
+      "normal_balance": "DEBIT",
+      "is_header": false,
+      "allow_posting": true,
+      "is_active": true
+    },
+    {
+      "code": 1130,
+      "name": "Brokerage Cash",
+      "account_type": "ASSET",
+      "normal_balance": "DEBIT",
+      "is_header": false,
+      "allow_posting": true,
+      "is_active": true
+    },
+    {
+      "code": 1175,
+      "name": "Digital Wallets",
+      "account_type": "ASSET",
+      "normal_balance": "DEBIT",
+      "is_header": false,
+      "allow_posting": true,
+      "is_active": true
+    },
+    {
+      "code": 1150,
+      "name": "Foreign Currency Cash",
+      "account_type": "ASSET",
+      "normal_balance": "DEBIT",
+      "is_header": false,
+      "allow_posting": true,
+      "is_active": true
+    },
+    {
+      "code": 1160,
+      "name": "Time Deposits",
+      "account_type": "ASSET",
+      "normal_balance": "DEBIT",
+      "is_header": false,
+      "allow_posting": true,
+      "is_active": true
+    },
+    {
+      "code": 1170,
+      "name": "Saving Circles",
+      "account_type": "ASSET",
+      "normal_balance": "DEBIT",
+      "is_header": false,
+      "allow_posting": true,
+      "is_active": true
+    },
+    {
+      "code": 1180,
+      "name": "Accounts Receivable",
+      "account_type": "ASSET",
+      "normal_balance": "DEBIT",
+      "is_header": false,
+      "allow_posting": true,
+      "is_active": true
+    },
+    {
+      "code": 1190,
+      "name": "Other Current Assets",
+      "account_type": "ASSET",
+      "normal_balance": "DEBIT",
+      "is_header": false,
+      "allow_posting": true,
+      "is_active": true
+    },
+    {
+      "code": 1200,
+      "name": "Fixed Assets",
+      "account_type": "ASSET",
+      "normal_balance": "DEBIT",
+      "is_header": true,
+      "allow_posting": false,
+      "is_active": true
+    },
+    {
+      "code": 1210,
+      "name": "Real Estate",
+      "account_type": "ASSET",
+      "normal_balance": "DEBIT",
+      "is_header": false,
+      "allow_posting": true,
+      "is_active": true
+    },
+    {
+      "code": 1220,
+      "name": "Vehicles",
+      "account_type": "ASSET",
+      "normal_balance": "DEBIT",
+      "is_header": false,
+      "allow_posting": true,
+      "is_active": true
+    },
+    {
+      "code": 1230,
+      "name": "Equipment",
+      "account_type": "ASSET",
+      "normal_balance": "DEBIT",
+      "is_header": false,
+      "allow_posting": true,
+      "is_active": true
+    },
+    {
+      "code": 1290,
+      "name": "Other Fixed Assets",
+      "account_type": "ASSET",
+      "normal_balance": "DEBIT",
+      "is_header": false,
+      "allow_posting": true,
+      "is_active": true
+    },
+    {
+      "code": 1300,
+      "name": "Investment Assets",
+      "account_type": "ASSET",
+      "normal_balance": "DEBIT",
+      "is_header": true,
+      "allow_posting": false,
+      "is_active": true
+    },
+    {
+      "code": 1310,
+      "name": "US Stocks",
+      "account_type": "ASSET",
+      "normal_balance": "DEBIT",
+      "is_header": false,
+      "allow_posting": true,
+      "is_active": true
+    },
+    {
+      "code": 1320,
+      "name": "Saudi Stocks",
+      "account_type": "ASSET",
+      "normal_balance": "DEBIT",
+      "is_header": false,
+      "allow_posting": true,
+      "is_active": true
+    },
+    {
+      "code": 1330,
+      "name": "ETFs",
+      "account_type": "ASSET",
+      "normal_balance": "DEBIT",
+      "is_header": false,
+      "allow_posting": true,
+      "is_active": true
+    },
+    {
+      "code": 1340,
+      "name": "Options",
+      "account_type": "ASSET",
+      "normal_balance": "DEBIT",
+      "is_header": false,
+      "allow_posting": true,
+      "is_active": true
+    },
+    {
+      "code": 1350,
+      "name": "Bonds",
+      "account_type": "ASSET",
+      "normal_balance": "DEBIT",
+      "is_header": false,
+      "allow_posting": true,
+      "is_active": true
+    },
+    {
+      "code": 1360,
+      "name": "Mutual Funds",
+      "account_type": "ASSET",
+      "normal_balance": "DEBIT",
+      "is_header": false,
+      "allow_posting": true,
+      "is_active": true
+    },
+    {
+      "code": 1370,
+      "name": "Crypto",
+      "account_type": "ASSET",
+      "normal_balance": "DEBIT",
+      "is_header": false,
+      "allow_posting": true,
+      "is_active": true
+    },
+    {
+      "code": 1380,
+      "name": "Crowdfunding Investments",
+      "account_type": "ASSET",
+      "normal_balance": "DEBIT",
+      "is_header": false,
+      "allow_posting": true,
+      "is_active": true
+    },
+    {
+      "code": 1390,
+      "name": "Other Investments",
+      "account_type": "ASSET",
+      "normal_balance": "DEBIT",
+      "is_header": false,
+      "allow_posting": true,
+      "is_active": true
+    },
+    {
+      "code": 2000,
+      "name": "Liabilities",
+      "account_type": "LIABILITY",
+      "normal_balance": "CREDIT",
+      "is_header": true,
+      "allow_posting": false,
+      "is_active": true
+    },
+    {
+      "code": 2100,
+      "name": "Current Liabilities",
+      "account_type": "LIABILITY",
+      "normal_balance": "CREDIT",
+      "is_header": true,
+      "allow_posting": false,
+      "is_active": true
+    },
+    {
+      "code": 2110,
+      "name": "Credit Cards",
+      "account_type": "LIABILITY",
+      "normal_balance": "CREDIT",
+      "is_header": false,
+      "allow_posting": true,
+      "is_active": true
+    },
+    {
+      "code": 2120,
+      "name": "Accounts Payable",
+      "account_type": "LIABILITY",
+      "normal_balance": "CREDIT",
+      "is_header": false,
+      "allow_posting": true,
+      "is_active": true
+    },
+    {
+      "code": 2130,
+      "name": "Accrued Expenses",
+      "account_type": "LIABILITY",
+      "normal_balance": "CREDIT",
+      "is_header": false,
+      "allow_posting": true,
+      "is_active": true
+    },
+    {
+      "code": 2140,
+      "name": "Short-Term Loans",
+      "account_type": "LIABILITY",
+      "normal_balance": "CREDIT",
+      "is_header": false,
+      "allow_posting": true,
+      "is_active": true
+    },
+    {
+      "code": 2190,
+      "name": "Other Current Liabilities",
+      "account_type": "LIABILITY",
+      "normal_balance": "CREDIT",
+      "is_header": false,
+      "allow_posting": true,
+      "is_active": true
+    },
+    {
+      "code": 2200,
+      "name": "Long-Term Liabilities",
+      "account_type": "LIABILITY",
+      "normal_balance": "CREDIT",
+      "is_header": true,
+      "allow_posting": false,
+      "is_active": true
+    },
+    {
+      "code": 2210,
+      "name": "Mortgage",
+      "account_type": "LIABILITY",
+      "normal_balance": "CREDIT",
+      "is_header": false,
+      "allow_posting": true,
+      "is_active": true
+    },
+    {
+      "code": 2220,
+      "name": "Long-Term Loans",
+      "account_type": "LIABILITY",
+      "normal_balance": "CREDIT",
+      "is_header": false,
+      "allow_posting": true,
+      "is_active": true
+    },
+    {
+      "code": 2290,
+      "name": "Other Long-Term Liabilities",
+      "account_type": "LIABILITY",
+      "normal_balance": "CREDIT",
+      "is_header": false,
+      "allow_posting": true,
+      "is_active": true
+    },
+    {
+      "code": 3000,
+      "name": "Equity",
+      "account_type": "EQUITY",
+      "normal_balance": "CREDIT",
+      "is_header": true,
+      "allow_posting": false,
+      "is_active": true
+    },
+    {
+      "code": 3100,
+      "name": "Owner's Equity",
+      "account_type": "EQUITY",
+      "normal_balance": "CREDIT",
+      "is_header": false,
+      "allow_posting": true,
+      "is_active": true
+    },
+    {
+      "code": 3200,
+      "name": "Retained Earnings",
+      "account_type": "EQUITY",
+      "normal_balance": "CREDIT",
+      "is_header": false,
+      "allow_posting": true,
+      "is_active": true
+    },
+    {
+      "code": 3260,
+      "name": "Inherited Wealth",
+      "account_type": "EQUITY",
+      "normal_balance": "CREDIT",
+      "is_header": false,
+      "allow_posting": true,
+      "is_active": true
+    },
+    {
+      "code": 3300,
+      "name": "Current Year Earnings",
+      "account_type": "EQUITY",
+      "normal_balance": "CREDIT",
+      "is_header": false,
+      "allow_posting": true,
+      "is_active": true
+    },
+    {
+      "code": 3400,
+      "name": "Capital Contributions",
+      "account_type": "EQUITY",
+      "normal_balance": "CREDIT",
+      "is_header": true,
+      "allow_posting": false,
+      "is_active": true
+    },
+    {
+      "code": 3410,
+      "name": "Personal Capital",
+      "account_type": "EQUITY",
+      "normal_balance": "CREDIT",
+      "is_header": false,
+      "allow_posting": true,
+      "is_active": true
+    },
+    {
+      "code": 3420,
+      "name": "Capital Injection",
+      "account_type": "EQUITY",
+      "normal_balance": "CREDIT",
+      "is_header": false,
+      "allow_posting": true,
+      "is_active": true
+    },
+    {
+      "code": 3500,
+      "name": "Owner Drawings",
+      "account_type": "EQUITY",
+      "normal_balance": "DEBIT",
+      "is_header": false,
+      "allow_posting": true,
+      "is_active": true
+    },
+    {
+      "code": 4000,
+      "name": "Revenue",
+      "account_type": "REVENUE",
+      "normal_balance": "CREDIT",
+      "is_header": true,
+      "allow_posting": false,
+      "is_active": true
+    },
+    {
+      "code": 4100,
+      "name": "Salary Income",
+      "account_type": "REVENUE",
+      "normal_balance": "CREDIT",
+      "is_header": false,
+      "allow_posting": true,
+      "is_active": true
+    },
+    {
+      "code": 4200,
+      "name": "Rental Income",
+      "account_type": "REVENUE",
+      "normal_balance": "CREDIT",
+      "is_header": false,
+      "allow_posting": true,
+      "is_active": true
+    },
+    {
+      "code": 4300,
+      "name": "Dividend Income",
+      "account_type": "REVENUE",
+      "normal_balance": "CREDIT",
+      "is_header": false,
+      "allow_posting": true,
+      "is_active": true
+    },
+    {
+      "code": 4400,
+      "name": "Interest Income",
+      "account_type": "REVENUE",
+      "normal_balance": "CREDIT",
+      "is_header": false,
+      "allow_posting": true,
+      "is_active": true
+    },
+    {
+      "code": 4500,
+      "name": "Business Income",
+      "account_type": "REVENUE",
+      "normal_balance": "CREDIT",
+      "is_header": false,
+      "allow_posting": true,
+      "is_active": true
+    },
+    {
+      "code": 4600,
+      "name": "Capital Gains",
+      "account_type": "REVENUE",
+      "normal_balance": "CREDIT",
+      "is_header": false,
+      "allow_posting": true,
+      "is_active": true
+    },
+    {
+      "code": 4700,
+      "name": "Cashback & Rewards",
+      "account_type": "REVENUE",
+      "normal_balance": "CREDIT",
+      "is_header": false,
+      "allow_posting": true,
+      "is_active": true
+    },
+    {
+      "code": 4900,
+      "name": "Other Income",
+      "account_type": "REVENUE",
+      "normal_balance": "CREDIT",
+      "is_header": false,
+      "allow_posting": true,
+      "is_active": true
+    },
+    {
+      "code": 5000,
+      "name": "Expenses",
+      "account_type": "EXPENSE",
+      "normal_balance": "DEBIT",
+      "is_header": true,
+      "allow_posting": false,
+      "is_active": true
+    },
+    {
+      "code": 5100,
+      "name": "Living Expenses",
+      "account_type": "EXPENSE",
+      "normal_balance": "DEBIT",
+      "is_header": true,
+      "allow_posting": false,
+      "is_active": true
+    },
+    {
+      "code": 5110,
+      "name": "Food & Groceries",
+      "account_type": "EXPENSE",
+      "normal_balance": "DEBIT",
+      "is_header": false,
+      "allow_posting": true,
+      "is_active": true
+    },
+    {
+      "code": 5120,
+      "name": "Shopping",
+      "account_type": "EXPENSE",
+      "normal_balance": "DEBIT",
+      "is_header": false,
+      "allow_posting": true,
+      "is_active": true
+    },
+    {
+      "code": 5130,
+      "name": "Entertainment",
+      "account_type": "EXPENSE",
+      "normal_balance": "DEBIT",
+      "is_header": false,
+      "allow_posting": true,
+      "is_active": true
+    },
+    {
+      "code": 5140,
+      "name": "Personal Care",
+      "account_type": "EXPENSE",
+      "normal_balance": "DEBIT",
+      "is_header": false,
+      "allow_posting": true,
+      "is_active": true
+    },
+    {
+      "code": 5190,
+      "name": "Other Living Expenses",
+      "account_type": "EXPENSE",
+      "normal_balance": "DEBIT",
+      "is_header": false,
+      "allow_posting": true,
+      "is_active": true
+    },
+    {
+      "code": 5200,
+      "name": "Housing Expenses",
+      "account_type": "EXPENSE",
+      "normal_balance": "DEBIT",
+      "is_header": true,
+      "allow_posting": false,
+      "is_active": true
+    },
+    {
+      "code": 5210,
+      "name": "Rent",
+      "account_type": "EXPENSE",
+      "normal_balance": "DEBIT",
+      "is_header": false,
+      "allow_posting": true,
+      "is_active": true
+    },
+    {
+      "code": 5220,
+      "name": "Home Maintenance",
+      "account_type": "EXPENSE",
+      "normal_balance": "DEBIT",
+      "is_header": false,
+      "allow_posting": true,
+      "is_active": true
+    },
+    {
+      "code": 5230,
+      "name": "Utilities",
+      "account_type": "EXPENSE",
+      "normal_balance": "DEBIT",
+      "is_header": false,
+      "allow_posting": true,
+      "is_active": true
+    },
+    {
+      "code": 5240,
+      "name": "Home Services",
+      "account_type": "EXPENSE",
+      "normal_balance": "DEBIT",
+      "is_header": false,
+      "allow_posting": true,
+      "is_active": true
+    },
+    {
+      "code": 5290,
+      "name": "Other Housing Expenses",
+      "account_type": "EXPENSE",
+      "normal_balance": "DEBIT",
+      "is_header": false,
+      "allow_posting": true,
+      "is_active": true
+    },
+    {
+      "code": 5300,
+      "name": "Transportation Expenses",
+      "account_type": "EXPENSE",
+      "normal_balance": "DEBIT",
+      "is_header": true,
+      "allow_posting": false,
+      "is_active": true
+    },
+    {
+      "code": 5310,
+      "name": "Fuel",
+      "account_type": "EXPENSE",
+      "normal_balance": "DEBIT",
+      "is_header": false,
+      "allow_posting": true,
+      "is_active": true
+    },
+    {
+      "code": 5320,
+      "name": "Vehicle Insurance",
+      "account_type": "EXPENSE",
+      "normal_balance": "DEBIT",
+      "is_header": false,
+      "allow_posting": true,
+      "is_active": true
+    },
+    {
+      "code": 5330,
+      "name": "Parking & Tolls",
+      "account_type": "EXPENSE",
+      "normal_balance": "DEBIT",
+      "is_header": false,
+      "allow_posting": true,
+      "is_active": true
+    },
+    {
+      "code": 5340,
+      "name": "Vehicle Maintenance",
+      "account_type": "EXPENSE",
+      "normal_balance": "DEBIT",
+      "is_header": false,
+      "allow_posting": true,
+      "is_active": true
+    },
+    {
+      "code": 5350,
+      "name": "Public Transportation",
+      "account_type": "EXPENSE",
+      "normal_balance": "DEBIT",
+      "is_header": false,
+      "allow_posting": true,
+      "is_active": true
+    },
+    {
+      "code": 5390,
+      "name": "Other Transportation Expenses",
+      "account_type": "EXPENSE",
+      "normal_balance": "DEBIT",
+      "is_header": false,
+      "allow_posting": true,
+      "is_active": true
+    },
+    {
+      "code": 5400,
+      "name": "Healthcare Expenses",
+      "account_type": "EXPENSE",
+      "normal_balance": "DEBIT",
+      "is_header": true,
+      "allow_posting": false,
+      "is_active": true
+    },
+    {
+      "code": 5410,
+      "name": "Medical",
+      "account_type": "EXPENSE",
+      "normal_balance": "DEBIT",
+      "is_header": false,
+      "allow_posting": true,
+      "is_active": true
+    },
+    {
+      "code": 5420,
+      "name": "Pharmacy",
+      "account_type": "EXPENSE",
+      "normal_balance": "DEBIT",
+      "is_header": false,
+      "allow_posting": true,
+      "is_active": true
+    },
+    {
+      "code": 5430,
+      "name": "Health Insurance",
+      "account_type": "EXPENSE",
+      "normal_balance": "DEBIT",
+      "is_header": false,
+      "allow_posting": true,
+      "is_active": true
+    },
+    {
+      "code": 5490,
+      "name": "Other Healthcare Expenses",
+      "account_type": "EXPENSE",
+      "normal_balance": "DEBIT",
+      "is_header": false,
+      "allow_posting": true,
+      "is_active": true
+    },
+    {
+      "code": 5500,
+      "name": "Education Expenses",
+      "account_type": "EXPENSE",
+      "normal_balance": "DEBIT",
+      "is_header": true,
+      "allow_posting": false,
+      "is_active": true
+    },
+    {
+      "code": 5510,
+      "name": "Tuition & Schooling",
+      "account_type": "EXPENSE",
+      "normal_balance": "DEBIT",
+      "is_header": false,
+      "allow_posting": true,
+      "is_active": true
+    },
+    {
+      "code": 5520,
+      "name": "Books & Supplies",
+      "account_type": "EXPENSE",
+      "normal_balance": "DEBIT",
+      "is_header": false,
+      "allow_posting": true,
+      "is_active": true
+    },
+    {
+      "code": 5590,
+      "name": "Other Education Expenses",
+      "account_type": "EXPENSE",
+      "normal_balance": "DEBIT",
+      "is_header": false,
+      "allow_posting": true,
+      "is_active": true
+    },
+    {
+      "code": 5600,
+      "name": "Investment Expenses",
+      "account_type": "EXPENSE",
+      "normal_balance": "DEBIT",
+      "is_header": true,
+      "allow_posting": false,
+      "is_active": true
+    },
+    {
+      "code": 5610,
+      "name": "Brokerage Fees",
+      "account_type": "EXPENSE",
+      "normal_balance": "DEBIT",
+      "is_header": false,
+      "allow_posting": true,
+      "is_active": true
+    },
+    {
+      "code": 5620,
+      "name": "Advisory Fees",
+      "account_type": "EXPENSE",
+      "normal_balance": "DEBIT",
+      "is_header": false,
+      "allow_posting": true,
+      "is_active": true
+    },
+    {
+      "code": 5630,
+      "name": "Market Data & Subscriptions",
+      "account_type": "EXPENSE",
+      "normal_balance": "DEBIT",
+      "is_header": false,
+      "allow_posting": true,
+      "is_active": true
+    },
+    {
+      "code": 5690,
+      "name": "Other Investment Expenses",
+      "account_type": "EXPENSE",
+      "normal_balance": "DEBIT",
+      "is_header": false,
+      "allow_posting": true,
+      "is_active": true
+    },
+    {
+      "code": 5700,
+      "name": "Finance Costs",
+      "account_type": "EXPENSE",
+      "normal_balance": "DEBIT",
+      "is_header": true,
+      "allow_posting": false,
+      "is_active": true
+    },
+    {
+      "code": 5710,
+      "name": "Loan Interest",
+      "account_type": "EXPENSE",
+      "normal_balance": "DEBIT",
+      "is_header": false,
+      "allow_posting": true,
+      "is_active": true
+    },
+    {
+      "code": 5720,
+      "name": "Credit Card Fees",
+      "account_type": "EXPENSE",
+      "normal_balance": "DEBIT",
+      "is_header": false,
+      "allow_posting": true,
+      "is_active": true
+    },
+    {
+      "code": 5730,
+      "name": "Bank Fees",
+      "account_type": "EXPENSE",
+      "normal_balance": "DEBIT",
+      "is_header": false,
+      "allow_posting": true,
+      "is_active": true
+    },
+    {
+      "code": 5790,
+      "name": "Other Finance Costs",
+      "account_type": "EXPENSE",
+      "normal_balance": "DEBIT",
+      "is_header": false,
+      "allow_posting": true,
+      "is_active": true
+    },
+    {
+      "code": 5800,
+      "name": "Taxes",
+      "account_type": "EXPENSE",
+      "normal_balance": "DEBIT",
+      "is_header": true,
+      "allow_posting": false,
+      "is_active": true
+    },
+    {
+      "code": 5810,
+      "name": "Income Taxes",
+      "account_type": "EXPENSE",
+      "normal_balance": "DEBIT",
+      "is_header": false,
+      "allow_posting": true,
+      "is_active": true
+    },
+    {
+      "code": 5820,
+      "name": "Property Taxes",
+      "account_type": "EXPENSE",
+      "normal_balance": "DEBIT",
+      "is_header": false,
+      "allow_posting": true,
+      "is_active": true
+    },
+    {
+      "code": 5890,
+      "name": "Other Taxes",
+      "account_type": "EXPENSE",
+      "normal_balance": "DEBIT",
+      "is_header": false,
+      "allow_posting": true,
+      "is_active": true
+    },
+    {
+      "code": 5900,
+      "name": "Other Expenses",
+      "account_type": "EXPENSE",
+      "normal_balance": "DEBIT",
+      "is_header": true,
+      "allow_posting": false,
+      "is_active": true
+    },
+    {
+      "code": 5910,
+      "name": "Travel",
+      "account_type": "EXPENSE",
+      "normal_balance": "DEBIT",
+      "is_header": false,
+      "allow_posting": true,
+      "is_active": true
+    },
+    {
+      "code": 5920,
+      "name": "Donations & Gifts",
+      "account_type": "EXPENSE",
+      "normal_balance": "DEBIT",
+      "is_header": false,
+      "allow_posting": true,
+      "is_active": true
+    },
+    {
+      "code": 5930,
+      "name": "General Insurance",
+      "account_type": "EXPENSE",
+      "normal_balance": "DEBIT",
+      "is_header": false,
+      "allow_posting": true,
+      "is_active": true
+    },
+    {
+      "code": 5990,
+      "name": "Miscellaneous Expenses",
+      "account_type": "EXPENSE",
+      "normal_balance": "DEBIT",
+      "is_header": false,
+      "allow_posting": true,
+      "is_active": true
+    }
+  ],
+  "currencies": [
+    {
+      "code": "USD",
+      "name": "US Dollar",
+      "symbol": "$",
+      "is_active": true
+    },
+    {
+      "code": "SAR",
+      "name": "Saudi Riyal",
+      "symbol": "﷼",
+      "is_active": true
+    },
+    {
+      "code": "EUR",
+      "name": "Euro",
+      "symbol": "€",
+      "is_active": true
+    },
+    {
+      "code": "GBP",
+      "name": "British Pound",
+      "symbol": "£",
+      "is_active": true
+    }
+  ],
+  "portfolio_strategies": [
+    {
+      "code": "LONG_TERM",
+      "name": "Long-Term Investing",
+      "description": "Long-term buy and hold strategy.",
+      "is_active": true
+    },
+    {
+      "code": "DIVIDEND",
+      "name": "Dividend Investing",
+      "description": "Income-focused dividend strategy.",
+      "is_active": true
+    },
+    {
+      "code": "GROWTH",
+      "name": "Growth Investing",
+      "description": "Growth stock strategy.",
+      "is_active": true
+    },
+    {
+      "code": "VALUE",
+      "name": "Value Investing",
+      "description": "Value investing strategy.",
+      "is_active": true
+    },
+    {
+      "code": "TRADING",
+      "name": "Active Trading",
+      "description": "Short-term trading strategy.",
+      "is_active": true
+    }
+  ],
+  "portfolio_objectives": [
+    {
+      "code": "RETIREMENT",
+      "name": "Retirement",
+      "description": "Build long-term retirement wealth.",
+      "is_active": true
+    },
+    {
+      "code": "PASSIVE_INCOME",
+      "name": "Passive Income",
+      "description": "Generate recurring income.",
+      "is_active": true
+    },
+    {
+      "code": "WEALTH_GROWTH",
+      "name": "Wealth Growth",
+      "description": "Maximize long-term capital appreciation.",
+      "is_active": true
+    },
+    {
+      "code": "CAPITAL_PRESERVATION",
+      "name": "Capital Preservation",
+      "description": "Protect capital with low risk.",
+      "is_active": true
+    },
+    {
+      "code": "SPECULATION",
+      "name": "Speculation",
+      "description": "High-risk, high-return investing.",
+      "is_active": true
+    }
+  ]
+}

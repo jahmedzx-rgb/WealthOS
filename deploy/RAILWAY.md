@@ -8,6 +8,9 @@ Never connect it to the desktop application's database or copy a local `.env` fi
 - `railway.json` selects `Dockerfile.web`, a single replica, a pre-deploy migration
   command, and `/ready`. Startup validates hosted settings without migrating again.
 - Current migration head: `c7e5b0d32a41`.
+- Pre-deploy also inserts missing public currencies, chart-of-account entries,
+  strategies and objectives atomically. Existing catalog rows are preserved;
+  no personal portfolios, balances or financial transactions are seeded.
 - Local checks: React production build, 23 focused tests, and a PostgreSQL 17
   registration/session/isolation smoke test against a freshly migrated database.
 - GitHub Actions builds and starts the actual Linux image against disposable

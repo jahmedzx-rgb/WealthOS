@@ -38,6 +38,13 @@ def test_migrated_postgres_registration_sessions_and_isolation():
     })
     assert reused.status_code == 403
     with SessionLocal() as database:
+        assert database.execute(text("SELECT COUNT(*) FROM currencies WHERE code IN ('SAR', 'USD')")).scalar_one() == 2
+        assert database.execute(text("SELECT COUNT(*) FROM accounts WHERE code IN (1110, 1120)")).scalar_one() == 2
+        assert database.execute(text("SELECT COUNT(*) FROM portfolio_strategies")).scalar_one() == 5
+        assert database.execute(text("SELECT COUNT(*) FROM portfolio_objectives")).scalar_one() == 5
+        assert database.execute(text("SELECT COUNT(*) FROM portfolios")).scalar_one() == 0
+        assert database.execute(text("SELECT COUNT(*) FROM journal_entries")).scalar_one() == 0
+        assert database.execute(text("SELECT COUNT(*) FROM web_invite_codes")).scalar_one() == 10
         assert database.execute(text("SELECT COUNT(*) FROM web_registration_slots")).scalar_one() == 2
         assert database.execute(text("SELECT COUNT(*) FROM users WHERE username = 'ReusedInvite'")).scalar_one() == 0
     a, b = clients
