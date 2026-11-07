@@ -31,7 +31,7 @@ jobs:
       WEB_MAX_USERS: "3"
       APP_VERSION: ci-test
       MIGRATION_HEAD: a1b2c3d4e5f6
-      TRUSTED_HOSTS: wealthos-web-beta.onrender.com
+      TRUSTED_HOSTS: wealthos-web-beta.onrender.com,127.0.0.1,localhost,testserver
       PORT: "10000"
     steps:
       - uses: actions/checkout@v4
