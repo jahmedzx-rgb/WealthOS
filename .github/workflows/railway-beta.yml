@@ -2,7 +2,7 @@ name: Railway beta image
 
 on:
   push:
-    branches: [muthra/railway-beta]
+    branches: [wealthos/railway-beta]
   workflow_dispatch:
 
 permissions:

@@ -21,7 +21,7 @@ Never connect it to the desktop application's database or copy a local `.env` fi
 
 1. Create a separate beta project and a new PostgreSQL service. Keep the database
    private. Do not import existing financial data.
-2. Add a GitHub-backed application service using branch `muthra/railway-beta`.
+2. Add a GitHub-backed application service using branch `wealthos/railway-beta`.
    Keep automatic deploys disabled while preparing the initial release.
 3. Set the variables in `deploy/railway.env.example`. Use Railway's reference to
    the new PostgreSQL service's private `DATABASE_URL`. Set `TRUSTED_HOSTS` to the
