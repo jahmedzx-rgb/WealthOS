@@ -57,5 +57,6 @@ jobs:
       - name: Show logs and stop test container
         if: always()
         run: |
-          docker logs beta-smoke 2>/dev/null || true
+          docker inspect beta-smoke --format 'container={{.State.Status}} exit={{.State.ExitCode}} error={{.State.Error}}' 2>/dev/null || true
+          docker logs beta-smoke 2>&1 || true
           docker rm -f beta-smoke 2>/dev/null || true
