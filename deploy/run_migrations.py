@@ -35,14 +35,22 @@ def _bootstrap_reference_data(connection) -> None:
                 cursor.execute(statement, [row[column] for column in columns])
 
 
-def _invite_hashes_from_env() -> list[str]:
+def _invite_hashes_from_env() -> list[tuple[str, bool]]:
+    admin_code = os.getenv("WEB_ADMIN_INVITE_CODE", "").strip()
     raw = os.getenv("WEB_INVITE_CODES", "")
-    if not raw:
+    member_codes = [value.strip() for value in raw.replace("\n", ",").split(",") if value.strip()]
+    if not admin_code and not member_codes:
         return []
-    codes = [value.strip() for value in raw.replace("\n", ",").split(",") if value.strip()]
-    if len(codes) != 10 or len(set(codes)) != 10 or any(len(code) < 16 for code in codes):
-        raise RuntimeError("WEB_INVITE_CODES must contain exactly 10 unique codes of at least 16 characters.")
-    return [hashlib.sha256(code.encode("utf-8")).hexdigest() for code in codes]
+    codes = [admin_code, *member_codes]
+    if (len(member_codes) != 2 or len(set(codes)) != 3
+            or any(len(code) < 16 for code in codes)):
+        raise RuntimeError(
+            "Configure one WEB_ADMIN_INVITE_CODE and exactly two unique WEB_INVITE_CODES; "
+            "all three codes must be at least 16 characters."
+        )
+    hashes = [(hashlib.sha256(admin_code.encode("utf-8")).hexdigest(), True)]
+    hashes.extend((hashlib.sha256(code.encode("utf-8")).hexdigest(), False) for code in member_codes)
+    return hashes
 
 
 def _provision_invites(connection) -> None:
@@ -53,7 +61,10 @@ def _provision_invites(connection) -> None:
         cursor.execute("SELECT COUNT(*) FROM web_invite_codes")
         if int(cursor.fetchone()[0]) != 0:
             return
-        cursor.executemany("INSERT INTO web_invite_codes (code_hash, created_at) VALUES (%s, NOW())", [(value,) for value in hashes])
+        cursor.executemany(
+            "INSERT INTO web_invite_codes (code_hash, created_at, is_admin) VALUES (%s, NOW(), %s)",
+            hashes,
+        )
 
 
 def main() -> None:

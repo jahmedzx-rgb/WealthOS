@@ -14,6 +14,8 @@ def validate_environment() -> None:
     for key, expected in required_flags.items():
         if os.getenv(key, "").lower() != expected:
             raise RuntimeError(f"Hosted deployment requires {key}={expected}.")
+    if os.getenv("WEB_MAX_USERS") != "3":
+        raise RuntimeError("Hosted beta registration must be limited to exactly three accounts.")
     for key in ("DATABASE_URL", "MIGRATION_HEAD", "APP_VERSION", "TRUSTED_HOSTS"):
         if not os.getenv(key, "").strip():
             raise RuntimeError(f"Hosted deployment requires {key}.")

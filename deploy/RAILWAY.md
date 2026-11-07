@@ -7,7 +7,7 @@ Never connect it to the desktop application's database or copy a local `.env` fi
 
 - `railway.json` selects `Dockerfile.web`, a single replica, a pre-deploy migration
   command, and `/ready`. Startup validates hosted settings without migrating again.
-- Current migration head: `c7e5b0d32a41`.
+- Current migration head: `a1b2c3d4e5f6`.
 - Pre-deploy also inserts missing public currencies, chart-of-account entries,
   strategies and objectives atomically. Existing catalog rows are preserved;
   no personal portfolios, balances or financial transactions are seeded.
@@ -26,14 +26,17 @@ Never connect it to the desktop application's database or copy a local `.env` fi
 3. Set the variables in `deploy/railway.env.example`. Use Railway's reference to
    the new PostgreSQL service's private `DATABASE_URL`. Set `TRUSTED_HOSTS` to the
    generated application hostname plus `healthcheck.railway.app`.
-4. Generate ten unique invitation codes with a cryptographic random generator
-   (at least 16 characters each). Save them privately, and place their comma-separated
-   values in `WEB_INVITE_CODES` for the initial release. Do not commit them.
-   Only hashes are stored in the database. Remove this variable after provisioning.
+4. Generate three unique invitation codes with a cryptographic random generator
+   (at least 16 characters each). Put one in `WEB_ADMIN_INVITE_CODE` and the other
+   two, comma-separated, in `WEB_INVITE_CODES`. Keep them private and never commit
+   them. Only hashes and role flags are stored in the database. The admin invite
+   creates the sole Administrator; the other two create tester accounts. Remove
+   both invitation variables after the migration provisions them; the stored
+   invitation rows remain available for their first use.
 5. Enable database backups and test restoring into another disposable database.
    Configure usage alerts. Confirm costs in the account before provisioning.
 6. Deploy the reviewed commit manually. Verify `/ready`, login, logout, page refresh,
-   secure cookies and isolation with two synthetic accounts on the Railway URL.
+   secure cookies and isolation with three synthetic accounts on the Railway URL.
 7. Invite testers only after those checks. Naming and custom domains are deferred.
 
 ## Operational notes

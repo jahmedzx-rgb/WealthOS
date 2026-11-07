@@ -36,13 +36,13 @@
       "description": "Owner-approved Web Beta version; never historical Windows Beta 0.1.0."
     },
     "MIGRATION_HEAD": {
-      "const": "c7e5b0d32a41"
+      "const": "a1b2c3d4e5f6"
     },
     "WEB_SESSION_HOURS": {
       "const": "12"
     },
     "WEB_MAX_USERS": {
-      "const": "10"
+      "const": "3"
     },
     "COOKIE_SECURE": {
       "const": "true"
@@ -78,9 +78,14 @@
       "type": "string",
       "pattern": "^[0-9]+(?:\\.[0-9]+)?$"
     },
+    "WEB_ADMIN_INVITE_CODE": {
+      "type": "string",
+      "minLength": 16,
+      "description": "One-time secret invite code for the single administrator account."
+    },
     "WEB_INVITE_CODES": {
       "type": "string",
-      "description": "Optional on repeat deploys. For initial registration: ten unique secret invite codes, each at least 16 characters, comma-separated."
+      "description": "Optional after setup. Initially, two unique one-time tester invite codes, each at least 16 characters, comma-separated."
     }
   }
 }

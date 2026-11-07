@@ -20,9 +20,9 @@ def test_migrated_postgres_registration_sessions_and_isolation():
     anonymous = TestClient(main.app, base_url="https://testserver")
     assert anonymous.get("/ready").status_code == 200
     assert anonymous.get("/api/v1/account/me").status_code == 401
-    invites = os.environ["WEB_INVITE_CODES"].split(",")
+    invites = [os.environ["WEB_ADMIN_INVITE_CODE"], *os.environ["WEB_INVITE_CODES"].split(",")]
     clients = []
-    for number in range(2):
+    for number in range(3):
         client = TestClient(main.app, base_url="https://testserver")
         response = client.post("/api/v1/auth/register", json={
             "username": f"SmokeUser{number}", "password": "Synthetic-smoke-password-123",
@@ -44,8 +44,9 @@ def test_migrated_postgres_registration_sessions_and_isolation():
         assert database.execute(text("SELECT COUNT(*) FROM portfolio_objectives")).scalar_one() == 5
         assert database.execute(text("SELECT COUNT(*) FROM portfolios")).scalar_one() == 0
         assert database.execute(text("SELECT COUNT(*) FROM journal_entries")).scalar_one() == 0
-        assert database.execute(text("SELECT COUNT(*) FROM web_invite_codes")).scalar_one() == 10
-        assert database.execute(text("SELECT COUNT(*) FROM web_registration_slots")).scalar_one() == 2
+        assert database.execute(text("SELECT COUNT(*) FROM web_invite_codes")).scalar_one() == 3
+        assert database.execute(text("SELECT COUNT(*) FROM web_registration_slots")).scalar_one() == 3
+        assert database.execute(text("SELECT COUNT(*) FROM users WHERE is_admin = true")).scalar_one() == 1
         assert database.execute(text("SELECT COUNT(*) FROM users WHERE username = 'ReusedInvite'")).scalar_one() == 0
     a, b = clients
     b_csrf = b.cookies.get(CSRF_COOKIE)

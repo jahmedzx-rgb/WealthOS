@@ -29,7 +29,7 @@ def current_revision(database: Path) -> str:
 def test_empty_sqlite_database_upgrades_from_root_to_head(tmp_path):
     database = tmp_path / "clean.sqlite3"
     run_upgrade(database, "head")
-    assert current_revision(database) == "c7e5b0d32a41"
+    assert current_revision(database) == "a1b2c3d4e5f6"
 
 
 def test_previous_beta_head_upgrades_to_current_head(tmp_path):
@@ -37,4 +37,4 @@ def test_previous_beta_head_upgrades_to_current_head(tmp_path):
     run_upgrade(database, "z2d69a0b1c43")
     assert current_revision(database) == "z2d69a0b1c43"
     run_upgrade(database, "head")
-    assert current_revision(database) == "c7e5b0d32a41"
+    assert current_revision(database) == "a1b2c3d4e5f6"

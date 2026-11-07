@@ -174,7 +174,7 @@ def rows(query):
 
 @router.get("/me")
 def me(user: User = Depends(current_user)):
-    return {"id": user.id, "username": user.username, "email": user.email, "full_name": user.full_name, "created_at": user.created_at, "preferred_language": user.preferred_language, "locale": user.locale, "nationality": user.nationality, "country_of_residence": user.country_of_residence, "tax_residence": user.tax_residence, "investor_type": user.investor_type, "default_dividend_withholding_tax_rate": user.default_dividend_withholding_tax_rate}
+    return {"id": user.id, "username": user.username, "email": user.email, "full_name": user.full_name, "is_admin": user.is_admin, "created_at": user.created_at, "preferred_language": user.preferred_language, "locale": user.locale, "nationality": user.nationality, "country_of_residence": user.country_of_residence, "tax_residence": user.tax_residence, "investor_type": user.investor_type, "default_dividend_withholding_tax_rate": user.default_dividend_withholding_tax_rate}
 
 
 @router.get("/setup-status")

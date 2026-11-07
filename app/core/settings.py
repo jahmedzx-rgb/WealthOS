@@ -8,7 +8,7 @@ class Settings(BaseSettings):
     LOCAL_USER_ID: int = 1
     WEB_MODE: bool = False
     WEB_SESSION_HOURS: int = 12
-    WEB_MAX_USERS: int = 10
+    WEB_MAX_USERS: int = 3
     COOKIE_SECURE: bool = True
     TRUSTED_HOSTS: str = "localhost,127.0.0.1,testserver"
 

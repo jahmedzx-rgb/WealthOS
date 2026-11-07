@@ -16,11 +16,11 @@ services:
       - key: APP_VERSION
         value: 0.2.0-beta.1
       - key: MIGRATION_HEAD
-        value: d7c13a5d4f93
+        value: a1b2c3d4e5f6
       - key: WEB_SESSION_HOURS
         value: "12"
       - key: WEB_MAX_USERS
-        value: "10"
+        value: "3"
       - key: COOKIE_SECURE
         value: "true"
       - key: TRUSTED_HOSTS

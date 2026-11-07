@@ -28,8 +28,9 @@ jobs:
       WEB_MODE: "true"
       DEBUG: "false"
       COOKIE_SECURE: "true"
+      WEB_MAX_USERS: "3"
       APP_VERSION: ci-test
-      MIGRATION_HEAD: c7e5b0d32a41
+      MIGRATION_HEAD: a1b2c3d4e5f6
       TRUSTED_HOSTS: 127.0.0.1,healthcheck.railway.app
       PORT: "10000"
     steps:

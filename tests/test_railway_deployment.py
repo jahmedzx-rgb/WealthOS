@@ -10,8 +10,9 @@ from deploy.validate_env import validate_environment
 def hosted_environment(monkeypatch):
     values = {
         "WEB_MODE": "true", "DEBUG": "false", "COOKIE_SECURE": "true",
+        "WEB_MAX_USERS": "3",
         "DATABASE_URL": "postgresql://localhost/disposable_test",
-        "APP_VERSION": "test-release", "MIGRATION_HEAD": "c7e5b0d32a41",
+        "APP_VERSION": "test-release", "MIGRATION_HEAD": "a1b2c3d4e5f6",
         "TRUSTED_HOSTS": "example.up.railway.app,healthcheck.railway.app",
     }
     for key, value in values.items():
@@ -34,11 +35,11 @@ def test_unsafe_hosted_environment_fails_before_connecting(hosted_environment, m
         validate_environment()
 
 
-@pytest.mark.parametrize("heads,expected_status", [(["c7e5b0d32a41"], 200), (["old-head"], 503), ([], 503)])
+@pytest.mark.parametrize("heads,expected_status", [(["a1b2c3d4e5f6"], 200), (["old-head"], 503), ([], 503)])
 def test_readiness_checks_database_revision(monkeypatch, heads, expected_status):
     import main
     monkeypatch.setattr(main.settings, "WEB_MODE", True)
-    monkeypatch.setenv("MIGRATION_HEAD", "c7e5b0d32a41")
+    monkeypatch.setenv("MIGRATION_HEAD", "a1b2c3d4e5f6")
     database = MagicMock()
     database.execute.return_value.scalars.return_value.all.return_value = heads
     factory = MagicMock()

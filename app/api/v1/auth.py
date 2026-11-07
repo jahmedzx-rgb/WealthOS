@@ -62,19 +62,23 @@ def register(payload: Credentials, request: Request, response: Response, db: Ses
     normalized = normalize_username(payload.username)
     if len(normalized) < 3:
         raise HTTPException(status_code=400, detail={"key": "auth.username_invalid"})
-    user = User(username=payload.username, username_normalized=normalized,
-                email=f"{secrets.token_hex(12)}@account.wealthos.invalid", full_name=payload.username,
-                password_hash=hash_secret(payload.password), preferred_language=payload.locale, locale=payload.locale,
-                setup_completed=True, local_data_acknowledged=True)
-    db.add(user)
     try:
-        db.flush()
         invite_hash = hashlib.sha256(payload.invite_code.strip().encode("utf-8")).hexdigest()
-        claimed = db.query(WebInviteCode).filter(WebInviteCode.code_hash == invite_hash, WebInviteCode.used_by_user_id.is_(None)).update(
-            {WebInviteCode.used_by_user_id: user.id, WebInviteCode.used_at: datetime.now(UTC)}, synchronize_session=False)
-        if claimed != 1:
+        invite = db.query(WebInviteCode).filter(WebInviteCode.code_hash == invite_hash, WebInviteCode.used_by_user_id.is_(None)).with_for_update().first()
+        if invite is None:
             db.rollback()
             raise HTTPException(status_code=403, detail={"key": "auth.invite_invalid"})
+        if invite.is_admin and db.query(User).filter(User.is_admin.is_(True)).first() is not None:
+            db.rollback()
+            raise HTTPException(status_code=403, detail={"key": "auth.invite_invalid"})
+        user = User(username=payload.username, username_normalized=normalized,
+                    email=f"{secrets.token_hex(12)}@account.wealthos.invalid", full_name=payload.username,
+                    password_hash=hash_secret(payload.password), preferred_language=payload.locale, locale=payload.locale,
+                    setup_completed=True, local_data_acknowledged=True, is_admin=invite.is_admin)
+        db.add(user)
+        db.flush()
+        invite.used_by_user_id = user.id
+        invite.used_at = datetime.now(UTC)
         reserved = False
         for slot in range(1, settings.WEB_MAX_USERS + 1):
             try:
@@ -95,7 +99,7 @@ def register(payload: Credentials, request: Request, response: Response, db: Ses
     db.refresh(user)
     token, csrf = issue_session(db, user.id, user.security_state_version)
     _set_auth_cookies(response, token, csrf)
-    return {"id": user.id, "username": user.username, "locale": user.locale}
+    return {"id": user.id, "username": user.username, "locale": user.locale, "is_admin": user.is_admin}
 
 
 @router.post("/login")
@@ -112,7 +116,7 @@ def login(payload: LoginCredentials, request: Request, response: Response, db: S
     db.commit()
     token, csrf = issue_session(db, user.id, user.security_state_version)
     _set_auth_cookies(response, token, csrf)
-    return {"id": user.id, "username": user.username, "locale": user.locale}
+    return {"id": user.id, "username": user.username, "locale": user.locale, "is_admin": user.is_admin}
 
 
 @router.post("/logout")

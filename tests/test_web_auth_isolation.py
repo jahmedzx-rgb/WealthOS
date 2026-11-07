@@ -17,7 +17,7 @@ def seed_invites(session_factory, *codes: str) -> None:
         db.commit()
 
 
-def test_two_web_accounts_are_authenticated_and_export_isolated(tmp_path, monkeypatch):
+def test_three_web_accounts_have_single_admin_and_isolated_data(tmp_path, monkeypatch):
     engine = create_engine(f"sqlite:///{tmp_path / 'web-auth.sqlite3'}", connect_args={"check_same_thread": False})
     Base.metadata.create_all(engine)
     testing_session = sessionmaker(bind=engine, autoflush=False, autocommit=False)
@@ -34,6 +34,9 @@ def test_two_web_accounts_are_authenticated_and_export_isolated(tmp_path, monkey
     monkeypatch.setattr(main_module, "SessionLocal", testing_session)
     main_module.app.dependency_overrides[get_db] = override_db
     seed_invites(testing_session, "invite-alice-0001", "invite-bob-0000002")
+    with testing_session() as db:
+        db.add(WebInviteCode(code_hash=token_digest("invite-admin-000001"), is_admin=True))
+        db.commit()
     try:
         anonymous = TestClient(main_module.app)
         assert anonymous.get("/api/v1/account/me").status_code == 401
@@ -42,8 +45,17 @@ def test_two_web_accounts_are_authenticated_and_export_isolated(tmp_path, monkey
         b = TestClient(main_module.app)
         first = a.post("/api/v1/auth/register", json={"username": "Alice", "password": "A-strong-passphrase-123", "locale": "en", "invite_code": "invite-alice-0001"})
         second = b.post("/api/v1/auth/register", json={"username": "Bob", "password": "B-strong-passphrase-456", "locale": "ar", "invite_code": "invite-bob-0000002"})
+        admin_client = TestClient(main_module.app)
+        admin = admin_client.post("/api/v1/auth/register", json={"username": "Owner", "password": "O-strong-passphrase-789", "locale": "en", "invite_code": "invite-admin-000001"})
         assert first.status_code == 201
         assert second.status_code == 201
+        assert admin.status_code == 201
+        assert admin.json()["is_admin"] is True
+        assert first.json()["is_admin"] is False
+        assert admin_client.get("/api/v1/account/me").json()["is_admin"] is True
+        assert b.get("/api/v1/account/me").json()["is_admin"] is False
+        with testing_session() as db:
+            assert db.query(User).filter(User.is_admin.is_(True)).count() == 1
         assert a.get("/api/v1/account/me").json()["username"] == "Alice"
         assert b.get("/api/v1/account/me").json()["locale"] == "ar"
 
