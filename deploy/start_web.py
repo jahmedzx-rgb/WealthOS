@@ -1,14 +1,14 @@
-"""Start the web process after the hosting provider's pre-deploy migration step."""
+"""Apply pending database migrations, then start the web process."""
 
 from __future__ import annotations
 
 import os
 
-from deploy.validate_env import validate_environment
+from deploy.run_migrations import main as run_migrations
 
 
 def main() -> None:
-    validate_environment()
+    run_migrations()
     port = os.environ.get("PORT", "10000")
     os.execvp(
         "uvicorn",
