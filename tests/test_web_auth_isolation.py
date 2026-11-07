@@ -35,6 +35,12 @@ def test_three_web_accounts_have_single_admin_and_isolated_data(tmp_path, monkey
     main_module.app.dependency_overrides[get_db] = override_db
     seed_invites(testing_session, "invite-alice-0001", "invite-bob-0000002")
     with testing_session() as db:
+        legacy_owner = User(id=1, email="legacy-owner@private.example", username=None, full_name="Legacy owner")
+        db.add(legacy_owner)
+        currency = Currency(code="SAR", name="Saudi Riyal", symbol="SAR")
+        db.add(currency)
+        db.flush()
+        db.add(Entity(user_id=1, code="LEGACY-OWNER", name="LEGACY-IMPORT-MARKER", entity_type="PERSON", base_currency_id=currency.id))
         db.add(WebInviteCode(code_hash=token_digest("invite-admin-000001"), is_admin=True))
         db.commit()
     try:
@@ -51,6 +57,7 @@ def test_three_web_accounts_have_single_admin_and_isolated_data(tmp_path, monkey
         assert second.status_code == 201
         assert admin.status_code == 201
         assert admin.json()["is_admin"] is True
+        assert admin.json()["id"] == 1
         assert first.json()["is_admin"] is False
         assert admin_client.get("/api/v1/account/me").json()["is_admin"] is True
         assert b.get("/api/v1/account/me").json()["is_admin"] is False
@@ -60,15 +67,16 @@ def test_three_web_accounts_have_single_admin_and_isolated_data(tmp_path, monkey
         assert b.get("/api/v1/account/me").json()["locale"] == "ar"
 
         with testing_session() as db:
-            currency = Currency(code="SAR", name="Saudi Riyal", symbol="SAR")
-            db.add(currency)
-            db.flush()
+            currency = db.query(Currency).filter(Currency.code == "SAR").one()
             db.add(Entity(user_id=second.json()["id"], code="BOB-PRIVATE", name="BOB-PRIVATE-MARKER", entity_type="PERSON", base_currency_id=currency.id))
             db.commit()
 
         exported = a.get("/api/v1/account/backup")
         assert exported.status_code == 200
         assert "BOB-PRIVATE-MARKER" not in exported.text
+        owner_export = admin_client.get("/api/v1/account/backup")
+        assert owner_export.status_code == 200
+        assert "LEGACY-IMPORT-MARKER" in owner_export.text
 
         b_csrf = b.cookies.get(CSRF_COOKIE)
         batch = b.post("/api/v1/imports/batches", headers={"x-csrf-token": b_csrf}, json={

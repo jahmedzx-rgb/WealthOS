@@ -24,10 +24,8 @@ def validate_environment() -> None:
     hosts = [host.strip() for host in os.environ["TRUSTED_HOSTS"].split(",")]
     if any(not host or "*" in host or ":" in host or "/" in host for host in hosts):
         raise RuntimeError("TRUSTED_HOSTS must contain exact hostnames without wildcards or URLs.")
-    if "healthcheck.railway.app" not in hosts:
-        raise RuntimeError("TRUSTED_HOSTS must include the Railway healthcheck hostname.")
-    if not any(host != "healthcheck.railway.app" for host in hosts):
-        raise RuntimeError("TRUSTED_HOSTS must also include the application's hostname.")
+    if not hosts:
+        raise RuntimeError("TRUSTED_HOSTS must include the application's exact hostname.")
     heads = ScriptDirectory.from_config(Config("alembic.ini")).get_heads()
     if heads != [os.environ["MIGRATION_HEAD"]]:
         raise RuntimeError("MIGRATION_HEAD does not match the source migration head.")

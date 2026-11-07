@@ -13,7 +13,7 @@ def hosted_environment(monkeypatch):
         "WEB_MAX_USERS": "3",
         "DATABASE_URL": "postgresql://localhost/disposable_test",
         "APP_VERSION": "test-release", "MIGRATION_HEAD": "a1b2c3d4e5f6",
-        "TRUSTED_HOSTS": "example.up.railway.app,healthcheck.railway.app",
+        "TRUSTED_HOSTS": "wealthos-web-beta.onrender.com",
     }
     for key, value in values.items():
         monkeypatch.setenv(key, value)
@@ -26,8 +26,8 @@ def test_valid_hosted_environment(hosted_environment):
 @pytest.mark.parametrize("key,value", [
     ("WEB_MODE", "false"), ("DEBUG", "true"), ("COOKIE_SECURE", "false"),
     ("DATABASE_URL", "sqlite:///:memory:"), ("MIGRATION_HEAD", "old-head"),
-    ("TRUSTED_HOSTS", "*,healthcheck.railway.app"),
-    ("TRUSTED_HOSTS", "example.up.railway.app"), ("APP_VERSION", ""),
+    ("TRUSTED_HOSTS", "*,wealthos-web-beta.onrender.com"),
+    ("TRUSTED_HOSTS", ""), ("APP_VERSION", ""),
 ])
 def test_unsafe_hosted_environment_fails_before_connecting(hosted_environment, monkeypatch, key, value):
     monkeypatch.setenv(key, value)

@@ -1,4 +1,4 @@
-"""Start the web process; migrations run once in Railway's pre-deploy step."""
+"""Start the web process after the hosting provider's pre-deploy migration step."""
 
 from __future__ import annotations
 

@@ -71,11 +71,33 @@ def register(payload: Credentials, request: Request, response: Response, db: Ses
         if invite.is_admin and db.query(User).filter(User.is_admin.is_(True)).first() is not None:
             db.rollback()
             raise HTTPException(status_code=403, detail={"key": "auth.invite_invalid"})
-        user = User(username=payload.username, username_normalized=normalized,
-                    email=f"{secrets.token_hex(12)}@account.wealthos.invalid", full_name=payload.username,
-                    password_hash=hash_secret(payload.password), preferred_language=payload.locale, locale=payload.locale,
-                    setup_completed=True, local_data_acknowledged=True, is_admin=invite.is_admin)
-        db.add(user)
+        user = None
+        if invite.is_admin:
+            # A restored local database owns its financial rows through the
+            # legacy placeholder user. Claim that row for the first admin so
+            # the imported data remains visible in the web account.
+            user = db.query(User).filter(
+                User.id == settings.LOCAL_USER_ID,
+                User.username.is_(None),
+            ).with_for_update().first()
+        if user is None:
+            user = User(
+                email=f"{secrets.token_hex(12)}@account.wealthos.invalid",
+                full_name=payload.username,
+                password_hash=hash_secret(payload.password),
+                preferred_language=payload.locale,
+                locale=payload.locale,
+            )
+            db.add(user)
+        user.username = payload.username
+        user.username_normalized = normalized
+        if user.id != settings.LOCAL_USER_ID or not user.full_name:
+            user.full_name = payload.username
+        user.password_hash = hash_secret(payload.password)
+        user.setup_completed = True
+        user.local_data_acknowledged = True
+        user.is_active = True
+        user.is_admin = invite.is_admin
         db.flush()
         invite.used_by_user_id = user.id
         invite.used_at = datetime.now(UTC)
