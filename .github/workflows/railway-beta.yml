@@ -44,14 +44,14 @@ jobs:
           for attempt in 1 2; do
             docker run --rm --network host \
               -e DATABASE_URL -e WEB_MODE -e DEBUG -e COOKIE_SECURE \
-              -e APP_VERSION -e MIGRATION_HEAD -e TRUSTED_HOSTS \
+              -e APP_VERSION -e MIGRATION_HEAD -e TRUSTED_HOSTS -e WEB_MAX_USERS \
               wealthos-web-beta:ci python -m deploy.run_migrations
           done
       - name: Verify runtime and schema readiness
         run: |
           docker run -d --name beta-smoke --network host \
             -e DATABASE_URL -e WEB_MODE -e DEBUG -e COOKIE_SECURE \
-            -e APP_VERSION -e MIGRATION_HEAD -e TRUSTED_HOSTS -e PORT \
+            -e APP_VERSION -e MIGRATION_HEAD -e TRUSTED_HOSTS -e PORT -e WEB_MAX_USERS \
             wealthos-web-beta:ci
           curl --fail --retry 15 --retry-delay 2 --retry-connrefused http://127.0.0.1:10000/ready
           curl --fail http://127.0.0.1:10000/ | grep -q '<!doctype html>'
