@@ -1,6 +1,6 @@
 from datetime import UTC, datetime
 
-from sqlalchemy import Boolean, DateTime, Numeric, String, JSON, UniqueConstraint, false
+from sqlalchemy import Boolean, DateTime, Index, Numeric, String, JSON, UniqueConstraint, false, text
 from decimal import Decimal
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
@@ -12,6 +12,8 @@ class User(Base):
     __table_args__ = (
         UniqueConstraint("email", name="uq_users_email"),
         UniqueConstraint("username_normalized", name="uq_users_username_normalized"),
+        Index("uq_users_single_admin", "is_admin", unique=True,
+              postgresql_where=text("is_admin = true"), sqlite_where=text("is_admin = 1")),
     )
 
     id: Mapped[int] = mapped_column(primary_key=True)
