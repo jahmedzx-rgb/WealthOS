@@ -1,4 +1,4 @@
-name: WealthOS hosted beta image
+name: WealthOS Render deployment check
 
 on:
   push:
@@ -37,7 +37,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           persist-credentials: false
-      - name: Build the actual Railway image
+      - name: Build the Render image
         run: docker build -f Dockerfile.web -t wealthos-web-beta:ci .
       - name: Migrate disposable PostgreSQL twice
         run: |
