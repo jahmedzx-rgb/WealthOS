@@ -73,7 +73,22 @@ export function useLiveFocusItems() {
           icon: <Landmark size={18}/>,
           route: '/investing/cash-flows',
         }))
-        const rentalItems:FocusItem[]=rentals.map(item=>({id:`rent-${item.id}`,title:'Rent Collection',subtitle:`${item.property_name} • ${item.days_until<0?`Overdue By ${Math.abs(item.days_until)} Days`:item.days_until===0?'Due Today':item.days_until===1?'Due Tomorrow':`Due In ${item.days_until} Days`}`,amount:item.expected_amount,priority:item.days_until<=2?'high':item.days_until<=7?'medium':'low',icon:<Landmark size={18}/>,route:`/operations/income?type=RENTAL&property=${encodeURIComponent(item.property_reference)}`}))
+        const rentalItems:FocusItem[]=rentals.map(item=>({
+          id:`rent-${item.id}`,
+          title:language==='ar'?'تحصيل الإيجار':'Rent Collection',
+          subtitle:`${item.property_name} • ${item.days_until<0
+            ? (language==='ar'?`متأخر ${Math.abs(item.days_until)} يوم`:`Overdue By ${Math.abs(item.days_until)} Days`)
+            : item.days_until===0
+              ? (language==='ar'?'مستحق اليوم':'Due Today')
+              : item.days_until===1
+                ? (language==='ar'?'مستحق غدًا':'Due Tomorrow')
+                : (language==='ar'?`مستحق خلال ${item.days_until} أيام`:`Due In ${item.days_until} Days`)}`,
+          amount:item.expected_amount,
+          amountCurrency:'SAR',
+          priority:item.days_until<=2?'high':item.days_until<=7?'medium':'low',
+          icon:<Landmark size={18}/>,
+          route:`/operations/income?type=RENTAL&property=${encodeURIComponent(item.property_reference)}`,
+        }))
         if (active) setItems([...rentalItems, ...reminders, ...cards])
       })
       .catch(() => { if (active) setError(true) })
