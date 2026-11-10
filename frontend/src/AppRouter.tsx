@@ -60,6 +60,62 @@ function ScrollToTop() {
   return null
 }
 
+const PAGE_TITLES: Array<[RegExp, string]> = [
+  [/^\/$/, 'Home'],
+  [/^\/analytics\/?$/, 'Analytics'],
+  [/^\/operations\/[^/]+\/?$/, 'Operation'],
+  [/^\/operations\/?$/, 'Operations'],
+  [/^\/portfolios\/[^/]+\/positions\/[^/]+\/?$/, 'Position Details'],
+  [/^\/investing\/positions\/?$/, 'Stocks'],
+  [/^\/investing\/cash-flows\/?$/, 'Investment Cash Flows'],
+  [/^\/investing\/alternative-investments\/?$/, 'Alternative Investments'],
+  [/^\/investing\/cash\/?$/, 'Cash'],
+  [/^\/investing\/brokers\/?$/, 'Brokers'],
+  [/^\/investing\/platforms\/?$/, 'Alt. Investment Platforms'],
+  [/^\/investing\/?$/, 'Investing'],
+  [/^\/(?:savings|investing\/saving-circles)\/?$/, 'Savings'],
+  [/^\/(?:savings\/deposits|investing\/deposits)\/?$/, 'Deposits'],
+  [/^\/focus\/?$/, 'Priorities'],
+  [/^\/activity\/[^/]+\/?$/, 'Activity Details'],
+  [/^\/activity\/?$/, 'Recent Activity'],
+  [/^\/search\/?$/, 'Search'],
+  [/^\/library\/?$/, 'Library'],
+  [/^\/index\/?$/, 'Index'],
+  [/^\/bank-accounts\/?$/, 'Bank Accounts'],
+  [/^\/e-wallets\/new\/?$/, 'New E-Wallet'],
+  [/^\/e-wallets\/?$/, 'E-Wallets'],
+  [/^\/credit-cards\/[^/]+\/payments\/?$/, 'Payment History'],
+  [/^\/credit-cards\/?$/, 'Credit Cards'],
+  [/^\/properties\/income\/?$/, 'Property Income'],
+  [/^\/properties\/expenses\/?$/, 'Property Expenses'],
+  [/^\/properties\/?$/, 'Properties'],
+  [/^\/accounting\/review-queue\/?$/, 'Review Queue'],
+  [/^\/accounting\/ledger\/?$/, 'General Ledger'],
+  [/^\/accounting\/journals\/?$/, 'Journal Entries'],
+  [/^\/accounting\/reconciliation\/?$/, 'Reconciliation'],
+  [/^\/accounting\/month-close\/?$/, 'Monthly Snapshots'],
+  [/^\/accounting\/loans\/[^/]+\/?$/, 'Loan Details'],
+  [/^\/accounting\/loans\/?$/, 'Loans'],
+  [/^\/accounting\/?$/, 'Accounting'],
+  [/^\/reporting\/?$/, 'Reporting'],
+  [/^\/settings\/profile\/?$/, 'Profile'],
+  [/^\/settings\/security\/?$/, 'Security'],
+  [/^\/settings\/currencies\/?$/, 'Currencies'],
+  [/^\/settings\/data-account\/?$/, 'Data & Account'],
+  [/^\/settings\/?$/, 'Settings'],
+]
+
+function DocumentTitle() {
+  const { pathname } = useLocation()
+
+  useEffect(() => {
+    const page = PAGE_TITLES.find(([pattern]) => pattern.test(pathname))?.[1] ?? 'Home'
+    document.title = `WealthOS | ${page}`
+  }, [pathname])
+
+  return null
+}
+
 function RouteLoading() {
   const { direction } = useLanguage()
   const [slow, setSlow] = useState(false)
@@ -107,6 +163,7 @@ export default function AppRouter() {
   return (
     <BrowserRouter>
       <ScrollToTop />
+      <DocumentTitle />
       <BootstrapGate><BetaProfileInitializer />
       <Suspense fallback={<RouteLoading />}>
       <Routes>
