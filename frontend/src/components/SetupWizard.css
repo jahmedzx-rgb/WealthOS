@@ -30,6 +30,8 @@
 .setup-wizard dt{color:var(--text-muted)}
 .setup-wizard dd{margin:0;font-weight:650;overflow-wrap:anywhere}
 .setup-wizard__error{color:var(--danger);font-size:.7rem}
+.setup-wizard__text-action{justify-self:start;padding:0;border:0;background:transparent;color:#315f9b;font:inherit;font-size:.68rem;font-weight:700;cursor:pointer}
+.setup-wizard__text-action:hover{text-decoration:underline}
 .setup-wizard__card>footer{display:flex;justify-content:flex-end;gap:.45rem;padding:.72rem 1.1rem;border-top:1px solid var(--border-primary);background:color-mix(in srgb,var(--surface-secondary) 44%,transparent)}
 .setup-wizard__card>footer button{min-height:34px;padding:.48rem .78rem;border:0;border-radius:8px;background:#122440;color:#fff;font-size:.68rem;font-weight:700;cursor:pointer}
 .setup-wizard__card>footer .secondary{border:1px solid var(--border-primary);background:var(--surface-primary);color:var(--text-primary)}

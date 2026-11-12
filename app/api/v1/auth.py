@@ -10,7 +10,14 @@ from sqlalchemy.orm import Session
 from app.core.models.user import User
 from app.core.settings import settings
 from app.database.engine import get_db
-from app.security.local_lock import hash_secret, needs_rehash, validate_new_password, verify_secret
+from app.security.local_lock import (
+    generate_recovery_code,
+    hash_secret,
+    needs_rehash,
+    normalize_recovery_code,
+    validate_new_password,
+    verify_secret,
+)
 from app.security.models import WebInviteCode, WebRegistrationSlot
 from app.security.web_auth import CSRF_COOKIE, SESSION_COOKIE, check_rate_limit, client_key, get_session, issue_session, normalize_username, revoke_session, revoke_user_sessions
 
@@ -35,6 +42,12 @@ class Credentials(BaseModel):
 class LoginCredentials(BaseModel):
     username: str = Field(min_length=3, max_length=64)
     password: str = Field(min_length=12, max_length=256)
+
+
+class RecoveryCredentials(BaseModel):
+    username: str = Field(min_length=3, max_length=64)
+    recovery_code: str = Field(min_length=32, max_length=80)
+    new_password: str = Field(min_length=12, max_length=256)
 
 
 DUMMY_PASSWORD_HASH = hash_secret("wealthos-constant-time-dummy-password")
@@ -93,7 +106,9 @@ def register(payload: Credentials, request: Request, response: Response, db: Ses
         user.username_normalized = normalized
         if user.id != settings.LOCAL_USER_ID or not user.full_name:
             user.full_name = payload.username
+        recovery_code = generate_recovery_code()
         user.password_hash = hash_secret(payload.password)
+        user.recovery_code_hash = hash_secret(normalize_recovery_code(recovery_code))
         user.setup_completed = True
         user.local_data_acknowledged = True
         user.is_active = True
@@ -121,7 +136,8 @@ def register(payload: Credentials, request: Request, response: Response, db: Ses
     db.refresh(user)
     token, csrf = issue_session(db, user.id, user.security_state_version)
     _set_auth_cookies(response, token, csrf)
-    return {"id": user.id, "username": user.username, "locale": user.locale, "is_admin": user.is_admin}
+    return {"id": user.id, "username": user.username, "locale": user.locale, "is_admin": user.is_admin,
+            "recovery_code": recovery_code}
 
 
 @router.post("/login")
@@ -139,6 +155,34 @@ def login(payload: LoginCredentials, request: Request, response: Response, db: S
     token, csrf = issue_session(db, user.id, user.security_state_version)
     _set_auth_cookies(response, token, csrf)
     return {"id": user.id, "username": user.username, "locale": user.locale, "is_admin": user.is_admin}
+
+
+@router.post("/recover")
+def recover(payload: RecoveryCredentials, request: Request, response: Response, db: Session = Depends(get_db)):
+    _require_web()
+    normalized = normalize_username(payload.username)
+    check_rate_limit(db, client_key(request, f"recover:{normalized}"), 8, 900)
+    user = db.query(User).filter(User.username_normalized == normalized, User.is_active.is_(True)).first()
+    supplied_code = normalize_recovery_code(payload.recovery_code)
+    valid = verify_secret(
+        supplied_code,
+        user.recovery_code_hash if user is not None and user.recovery_code_hash else DUMMY_PASSWORD_HASH,
+    )
+    if user is None or not valid:
+        raise HTTPException(status_code=401, detail={"key": "auth.recovery_invalid"})
+    try:
+        validate_new_password(payload.new_password)
+    except ValueError as error:
+        raise HTTPException(status_code=400, detail={"key": "auth.password_weak"}) from error
+    replacement_code = generate_recovery_code()
+    user.password_hash = hash_secret(payload.new_password)
+    user.recovery_code_hash = hash_secret(normalize_recovery_code(replacement_code))
+    user.security_state_version += 1
+    db.commit()
+    revoke_user_sessions(db, user.id)
+    token, csrf = issue_session(db, user.id, user.security_state_version)
+    _set_auth_cookies(response, token, csrf)
+    return {"recovered": True, "recovery_code": replacement_code}
 
 
 @router.post("/logout")

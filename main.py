@@ -98,7 +98,7 @@ async def security_controls(request: Request, call_next):
         "/api/v1/account/unlock",
         "/api/v1/account/recover",
     }
-    public_web_paths = {"/api/v1/auth/register", "/api/v1/auth/login"}
+    public_web_paths = {"/api/v1/auth/register", "/api/v1/auth/login", "/api/v1/auth/recover"}
     if request.url.path.startswith("/api/v1/"):
         if settings.WEB_MODE:
             with SessionLocal() as db:

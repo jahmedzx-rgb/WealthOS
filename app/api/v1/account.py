@@ -97,6 +97,10 @@ class PasswordDisableRequest(BaseModel):
     current_local_password: str = Field(min_length=1, max_length=256)
 
 
+class RecoveryCodeRotateRequest(BaseModel):
+    current_password: str = Field(min_length=1, max_length=256)
+
+
 def _sessions(request: Request):
     if not hasattr(request.app.state, "unlock_sessions"):
         request.app.state.unlock_sessions = {}
@@ -343,8 +347,29 @@ def change_password(payload: PasswordChangeRequest, request: Request, user: User
     user.recovery_code_hash = hash_secret(normalize_recovery_code(recovery_code))
     user.security_state_version += 1
     db.commit()
+    if settings.WEB_MODE:
+        from fastapi.responses import JSONResponse
+        from app.security.web_auth import CSRF_COOKIE, SESSION_COOKIE, issue_session as issue_web_session
+        from app.security.web_auth import revoke_user_sessions as revoke_web_sessions
+
+        revoke_web_sessions(db, user.id)
+        token, csrf = issue_web_session(db, user.id, user.security_state_version)
+        result = JSONResponse({"changed": True, "recovery_code": recovery_code})
+        common = {"secure": settings.COOKIE_SECURE, "samesite": "strict", "path": "/", "max_age": settings.WEB_SESSION_HOURS * 3600}
+        result.set_cookie(SESSION_COOKIE, token, httponly=True, **common)
+        result.set_cookie(CSRF_COOKIE, csrf, httponly=False, **common)
+        return result
     revoke_user_sessions(_sessions(request), user.id)
     return _set_unlock_cookie({"changed": True, "recovery_code": recovery_code}, _issue_unlock_cookie(request, user))
+
+
+@router.post("/recovery-code")
+def rotate_recovery_code(payload: RecoveryCodeRotateRequest, user: User = Depends(current_user), db: Session = Depends(get_db)):
+    _require_recent_password(user, payload.current_password, db)
+    recovery_code = generate_recovery_code()
+    user.recovery_code_hash = hash_secret(normalize_recovery_code(recovery_code))
+    db.commit()
+    return {"recovery_code": recovery_code}
 
 
 @router.post("/password/disable")

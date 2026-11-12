@@ -1,8 +1,8 @@
 import { apiDelete, apiGet, apiPatch, apiPost } from './api'
 
-export type AccountProfile={id:number;email:string;full_name:string;created_at:string;preferred_language:'ar'|'en';nationality:string|null;country_of_residence:string|null;tax_residence:string|null;investor_type:'INDIVIDUAL'|'ENTITY';default_dividend_withholding_tax_rate:number}
+export type AccountProfile={id:number;username:string|null;email:string;full_name:string;is_admin:boolean;created_at:string;preferred_language:'ar'|'en';locale:'ar'|'en';nationality:string|null;country_of_residence:string|null;tax_residence:string|null;investor_type:'INDIVIDUAL'|'ENTITY';default_dividend_withholding_tax_rate:number}
 export const getAccountProfile=()=>apiGet<AccountProfile>('/account/me')
-export const updateAccountProfile=(profile:Omit<AccountProfile,'id'|'created_at'|'preferred_language'>)=>apiPatch<AccountProfile>('/account/me',profile)
+export const updateAccountProfile=(profile:Pick<AccountProfile,'full_name'|'email'|'nationality'|'country_of_residence'|'tax_residence'|'investor_type'|'default_dividend_withholding_tax_rate'>)=>apiPatch<AccountProfile>('/account/me',profile)
 export const getAccountBackup=()=>apiGet<Record<string,unknown>>('/account/backup')
 export const deleteAccount=(email:string)=>apiDelete(`/account?confirm_email=${encodeURIComponent(email)}`)
 export type AccountPreferences={quick_action_ids:string[]|null}
@@ -19,5 +19,7 @@ export const lockLocalAccount=()=>apiPost<{locked:boolean}>('/account/lock',{})
 export const recoverLocalAccount=(recovery_code:string,new_local_password:string)=>apiPost<{recovered:boolean;recovery_code:string}>('/account/recover',{recovery_code,new_local_password})
 export const changeLocalPassword=(current_local_password:string,new_local_password:string)=>apiPost<{changed:boolean;recovery_code:string}>('/account/password/change',{current_local_password,new_local_password})
 export const disableLocalPassword=(current_local_password:string)=>apiPost<{disabled:boolean}>('/account/password/disable',{current_local_password})
-export const registerWebAccount=(username:string,password:string,locale:'ar'|'en',inviteCode:string)=>apiPost<{id:number;username:string;locale:'ar'|'en'}>('/auth/register',{username,password,locale,invite_code:inviteCode})
+export const rotateRecoveryCode=(current_password:string)=>apiPost<{recovery_code:string}>('/account/recovery-code',{current_password})
+export const registerWebAccount=(username:string,password:string,locale:'ar'|'en',inviteCode:string)=>apiPost<{id:number;username:string;locale:'ar'|'en';recovery_code:string}>('/auth/register',{username,password,locale,invite_code:inviteCode})
 export const loginWebAccount=(username:string,password:string)=>apiPost<{id:number;username:string;locale:'ar'|'en'}>('/auth/login',{username,password})
+export const recoverWebAccount=(username:string,recovery_code:string,new_password:string)=>apiPost<{recovered:boolean;recovery_code:string}>('/auth/recover',{username,recovery_code,new_password})

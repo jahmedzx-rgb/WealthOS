@@ -56,6 +56,8 @@ def test_three_web_accounts_have_single_admin_and_isolated_data(tmp_path, monkey
         assert first.status_code == 201
         assert second.status_code == 201
         assert admin.status_code == 201
+        assert first.json()["recovery_code"]
+        assert second.json()["recovery_code"]
         assert admin.json()["is_admin"] is True
         assert admin.json()["id"] == 1
         assert first.json()["is_admin"] is False
@@ -151,5 +153,54 @@ def test_username_normalization_is_unique(tmp_path, monkeypatch):
         assert first.status_code == 201
         assert duplicate.status_code == 409
         assert duplicate.json()["detail"]["key"] == "auth.username_taken"
+    finally:
+        main_module.app.dependency_overrides.clear()
+
+
+def test_web_recovery_code_resets_password_and_rotates_code(tmp_path, monkeypatch):
+    engine = create_engine(f"sqlite:///{tmp_path / 'recovery.sqlite3'}", connect_args={"check_same_thread": False})
+    Base.metadata.create_all(engine)
+    testing_session = sessionmaker(bind=engine, autoflush=False, autocommit=False)
+
+    def override_db():
+        with testing_session() as db:
+            yield db
+
+    monkeypatch.setattr(settings, "WEB_MODE", True)
+    monkeypatch.setattr(settings, "COOKIE_SECURE", False)
+    monkeypatch.setattr(main_module, "SessionLocal", testing_session)
+    main_module.app.dependency_overrides[get_db] = override_db
+    seed_invites(testing_session, "invite-recovery-0001")
+    try:
+        client = TestClient(main_module.app)
+        registered = client.post("/api/v1/auth/register", json={
+            "username": "Recoverable", "password": "Original-passphrase-123",
+            "locale": "en", "invite_code": "invite-recovery-0001",
+        })
+        assert registered.status_code == 201
+        original_code = registered.json()["recovery_code"]
+        csrf = client.cookies.get(CSRF_COOKIE)
+        assert client.post("/api/v1/auth/logout", headers={"x-csrf-token": csrf}).status_code == 200
+
+        recovered = client.post("/api/v1/auth/recover", json={
+            "username": "recoverable", "recovery_code": original_code,
+            "new_password": "Replacement-passphrase-456",
+        })
+        assert recovered.status_code == 200
+        assert recovered.json()["recovery_code"] != original_code
+        assert client.get("/api/v1/account/me").status_code == 200
+
+        another = TestClient(main_module.app)
+        assert another.post("/api/v1/auth/login", json={
+            "username": "Recoverable", "password": "Original-passphrase-123",
+        }).status_code == 401
+        assert another.post("/api/v1/auth/login", json={
+            "username": "Recoverable", "password": "Replacement-passphrase-456",
+        }).status_code == 200
+        reused = TestClient(main_module.app).post("/api/v1/auth/recover", json={
+            "username": "Recoverable", "recovery_code": original_code,
+            "new_password": "Another-passphrase-789",
+        })
+        assert reused.status_code == 401
     finally:
         main_module.app.dependency_overrides.clear()
