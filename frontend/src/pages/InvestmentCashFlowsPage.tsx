@@ -33,7 +33,7 @@ const receivedFlow=(entry:JournalEntry,propertyNames:Map<string,string>,rentalFr
   const propertyName=kind==='RENT'&&entry.related_reference?propertyNames.get(entry.related_reference):undefined
   const frequency=kind==='RENT'&&entry.related_reference?rentalFrequencies.get(entry.related_reference)??null:null
   const symbol=entry.description.trim().split(/\s+/)[0]
-  const currency=kind==='DISTRIBUTION'?distributionCurrencies.get(symbol)??'SAR':'SAR'
+  const currency=kind==='DISTRIBUTION'?(entry.description.includes('US Portfolio')?'USD':distributionCurrencies.get(symbol)??'SAR'):'SAR'
   return{id:`received-${entry.id}`,asset:propertyName??entry.description,provider:propertyName?'Investment Property':line.account_name,kind,status:'RECEIVED',date:entry.transaction_date.slice(0,10),gross:Number(line.credit),tax:null,net:Number(line.credit),currency,frequency,action:null}
 }
 
