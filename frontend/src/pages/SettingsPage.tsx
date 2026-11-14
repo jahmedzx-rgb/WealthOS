@@ -1,4 +1,4 @@
-import { ChevronRight, Coins, DatabaseBackup, LockKeyhole, Settings, ShieldCheck, UserRound } from 'lucide-react'
+import { ChevronRight, Coins, DatabaseBackup, LockKeyhole, Settings, ShieldCheck, Smartphone, UserRound } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import PageHeader from '../components/ui/PageHeader'
@@ -12,6 +12,7 @@ const sections = [
   { to: '/settings/security', title: 'Sign-in & Password', copy: 'Manage your password and recovery code.', icon: LockKeyhole },
   { to: '/settings/currencies', title: 'Currencies', copy: 'Choose reporting and transaction currencies.', icon: Coins },
   { to: '/settings/data-account', title: 'Data & Account', copy: 'Download a backup or permanently delete your account.', icon: DatabaseBackup },
+  { to: '/settings/mobile-connections', title: 'Mobile Connections', copy: 'Pair WealthOS Connect and manage financial SMS access.', icon: Smartphone },
 ]
 
 export default function SettingsPage() {

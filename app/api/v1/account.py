@@ -10,6 +10,7 @@ from app.core.models import Entity, User
 from app.database.engine import get_db
 from app.document_imports.models import ImportBatch, ImportedOperation
 from app.investing.models import Broker, Portfolio, PortfolioValuationSnapshot, Position, Trade
+from app.mobile_bridge.models import MobileDevice, MobileMessage, MobilePairing
 from app.core.settings import settings
 from app.security.local_lock import (
     generate_recovery_code, hash_secret, issue_session, normalize_recovery_code,
@@ -430,6 +431,7 @@ def backup(user: User = Depends(current_user), db: Session = Depends(get_db)):
     portfolio_ids = [item.id for item in db.query(Portfolio.id).filter(Portfolio.entity_id.in_(entity_ids))] if entity_ids else []
     entry_ids = [item.id for item in db.query(JournalEntry.id).filter(JournalEntry.user_id == user.id)]
     batch_ids = [item.id for item in db.query(ImportBatch.id).filter(ImportBatch.user_id == user.id)]
+    device_ids = [item.id for item in db.query(MobileDevice.id).filter(MobileDevice.user_id == user.id)]
     return {
         "format": "WealthOS Account Backup", "version": 1, "exported_at": datetime.now(UTC),
         "user": {"id": user.id, "email": user.email, "full_name": user.full_name, "created_at": user.created_at},
@@ -448,6 +450,8 @@ def backup(user: User = Depends(current_user), db: Session = Depends(get_db)):
             "portfolio_valuation_snapshots": rows(db.query(PortfolioValuationSnapshot).filter(PortfolioValuationSnapshot.user_id == user.id)),
             "import_batches": rows(db.query(ImportBatch).filter(ImportBatch.user_id == user.id)),
             "imported_operations": rows(db.query(ImportedOperation).filter(ImportedOperation.batch_id.in_(batch_ids))) if batch_ids else [],
+            "mobile_devices": [{column.name: getattr(item, column.name) for column in item.__table__.columns if column.name != "token_hash"} for item in db.query(MobileDevice).filter(MobileDevice.user_id == user.id)],
+            "mobile_messages": rows(db.query(MobileMessage).filter(MobileMessage.device_id.in_(device_ids))) if device_ids else [],
         },
     }
 
@@ -460,12 +464,17 @@ def delete_account(confirm_email: str, user: User = Depends(current_user), db: S
     portfolio_ids = [item.id for item in db.query(Portfolio.id).filter(Portfolio.entity_id.in_(entity_ids))] if entity_ids else []
     entry_ids = [item.id for item in db.query(JournalEntry.id).filter(JournalEntry.user_id == user.id)]
     batch_ids = [item.id for item in db.query(ImportBatch.id).filter(ImportBatch.user_id == user.id)]
+    device_ids = [item.id for item in db.query(MobileDevice.id).filter(MobileDevice.user_id == user.id)]
     if portfolio_ids:
         db.query(Trade).filter(Trade.portfolio_id.in_(portfolio_ids)).delete(synchronize_session=False)
         db.query(Position).filter(Position.portfolio_id.in_(portfolio_ids)).delete(synchronize_session=False)
         db.query(Portfolio).filter(Portfolio.id.in_(portfolio_ids)).delete(synchronize_session=False)
     if batch_ids:
         db.query(ImportedOperation).filter(ImportedOperation.batch_id.in_(batch_ids)).delete(synchronize_session=False)
+    if device_ids:
+        db.query(MobileMessage).filter(MobileMessage.device_id.in_(device_ids)).delete(synchronize_session=False)
+    db.query(MobileDevice).filter(MobileDevice.user_id == user.id).delete(synchronize_session=False)
+    db.query(MobilePairing).filter(MobilePairing.user_id == user.id).delete(synchronize_session=False)
     db.query(ImportBatch).filter(ImportBatch.user_id == user.id).delete(synchronize_session=False)
     db.query(Loan).filter(Loan.user_id == user.id).delete(synchronize_session=False)
     db.query(Deposit).filter(Deposit.user_id == user.id).delete(synchronize_session=False)

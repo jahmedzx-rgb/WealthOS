@@ -98,14 +98,16 @@ async def security_controls(request: Request, call_next):
         "/api/v1/account/unlock",
         "/api/v1/account/recover",
     }
-    public_web_paths = {"/api/v1/auth/register", "/api/v1/auth/login", "/api/v1/auth/recover"}
+    public_web_paths = {"/api/v1/auth/register", "/api/v1/auth/login", "/api/v1/auth/recover", "/api/v1/mobile/pairings/claim"}
+    mobile_device_paths = ("/api/v1/mobile/messages/", "/api/v1/mobile/device/")
     if request.url.path.startswith("/api/v1/"):
         if settings.WEB_MODE:
             with SessionLocal() as db:
                 session = get_session(db, request.cookies.get(SESSION_COOKIE, ""))
-                if request.url.path not in public_web_paths and session is None:
+                is_mobile_device_request = request.url.path.startswith(mobile_device_paths)
+                if request.url.path not in public_web_paths and not is_mobile_device_request and session is None:
                     return JSONResponse(status_code=401, content={"detail": {"key": "auth.required"}})
-                if request.method in {"POST", "PUT", "PATCH", "DELETE"} and request.url.path not in public_web_paths:
+                if request.method in {"POST", "PUT", "PATCH", "DELETE"} and request.url.path not in public_web_paths and not is_mobile_device_request:
                     if session is None or not csrf_is_valid(request, session):
                         return JSONResponse(status_code=403, content={"detail": {"key": "auth.csrf_invalid"}})
         else:

@@ -32,6 +32,7 @@ const ProfileSettingsPage=lazy(()=>import('./pages/ProfileSettingsPage'))
 const SecuritySettingsPage=lazy(()=>import('./pages/SecuritySettingsPage'))
 const BrokersPage=lazy(()=>import('./pages/BrokersPage'))
 const DataAccountSettingsPage=lazy(()=>import('./pages/DataAccountSettingsPage'))
+const MobileConnectionsPage=lazy(()=>import('./pages/MobileConnectionsPage'))
 const SearchResultsPage=lazy(()=>import('./pages/SearchResultsPage'))
 const LibraryPage=lazy(()=>import('./pages/LibraryPage'))
 const SystemIndexPage=lazy(()=>import('./pages/SystemIndexPage'))
@@ -102,6 +103,7 @@ const PAGE_TITLES: Array<[RegExp, string]> = [
   [/^\/settings\/security\/?$/, 'Security'],
   [/^\/settings\/currencies\/?$/, 'Currencies'],
   [/^\/settings\/data-account\/?$/, 'Data & Account'],
+  [/^\/settings\/mobile-connections\/?$/, 'Mobile Connections'],
   [/^\/settings\/?$/, 'Settings'],
 ]
 
@@ -227,6 +229,7 @@ export default function AppRouter() {
           <Route path="/settings/security" element={<SecuritySettingsPage />} />
           <Route path="/settings/currencies" element={<CurrencySettingsPage />} />
           <Route path="/settings/data-account" element={<DataAccountSettingsPage />} />
+          <Route path="/settings/mobile-connections" element={<MobileConnectionsPage />} />
         </Route>
       </Routes>
       </Suspense>

@@ -8,6 +8,7 @@ from app.api.v1.portfolio import router as portfolio_router
 from app.api.v1.document_imports import router as document_imports_router
 from app.api.v1.account import router as account_router
 from app.api.v1.auth import router as auth_router
+from app.api.v1.mobile_bridge import router as mobile_bridge_router
 
 
 api_router = APIRouter(
@@ -21,3 +22,4 @@ api_router.include_router(portfolio_router)
 api_router.include_router(document_imports_router)
 api_router.include_router(account_router)
 api_router.include_router(auth_router)
+api_router.include_router(mobile_bridge_router)
