@@ -32,7 +32,8 @@ const receivedFlow=(entry:JournalEntry,propertyNames:Map<string,string>,rentalFr
   const kind:FlowKind=accountName.includes('rental')?'RENT':accountName.includes('dividend')||accountName.includes('distribution')?'DISTRIBUTION':'YIELD'
   const propertyName=kind==='RENT'&&entry.related_reference?propertyNames.get(entry.related_reference):undefined
   const frequency=kind==='RENT'&&entry.related_reference?rentalFrequencies.get(entry.related_reference)??null:null
-  const currency=entry.related_reference?distributionCurrencies.get(entry.related_reference)??'SAR':'SAR'
+  const symbol=entry.description.trim().split(/\s+/)[0]
+  const currency=kind==='DISTRIBUTION'?distributionCurrencies.get(symbol)??'SAR':'SAR'
   return{id:`received-${entry.id}`,asset:propertyName??entry.description,provider:propertyName?'Investment Property':line.account_name,kind,status:'RECEIVED',date:entry.transaction_date.slice(0,10),gross:Number(line.credit),tax:null,net:Number(line.credit),currency,frequency,action:null}
 }
 
@@ -42,7 +43,7 @@ export default function InvestmentCashFlowsPage(){
     const items:CashFlow[]=[]
     const propertyNames=new Map(financial.properties.map(item=>[item.reference,item.name]))
     const rentalFrequencies=new Map(rentals.map(item=>[item.property_reference,item.frequency]))
-    const distributionCurrencies=new Map(listed.filter(item=>item.announcement_id).map(item=>[`${item.symbol}·distribution:${item.announcement_id}`,item.currency_code as Currency] as const))
+    const distributionCurrencies=new Map(listed.map(item=>[item.symbol,item.currency_code as Currency] as const))
     const lastReceivedRent=new Map<string,number>()
     for(const entry of journals){
       if(!entry.related_reference?.startsWith('property:')||lastReceivedRent.has(entry.related_reference))continue
