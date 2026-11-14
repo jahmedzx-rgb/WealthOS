@@ -120,28 +120,32 @@ class VerifiedFundDistributionProvider:
     """Time-bounded official fund announcements used before market feeds normalize the event."""
 
     EVENTS = {
-        "GPTY": DistributionEvent(
-            distribution_date=date(2026, 10, 29),
-            amount_per_unit=Decimal("0.2620"),
-            source="YieldMax official distribution schedule",
-            eligibility_date=date(2026, 10, 28),
-            date_kind="payment",
-            frequency="WEEKLY",
+        "GPTY": (
+            DistributionEvent(date(2026, 10, 29), Decimal("0.2620"), "YieldMax official distribution schedule", date(2026, 10, 28), frequency="WEEKLY"),
+            DistributionEvent(date(2026, 11, 5), Decimal("0.2433"), "YieldMax official distribution schedule", date(2026, 11, 5), frequency="WEEKLY"),
+            DistributionEvent(date(2026, 11, 13), Decimal("0.2407"), "YieldMax official distribution schedule", date(2026, 11, 12), frequency="WEEKLY"),
         ),
-        "FEPI": DistributionEvent(
-            distribution_date=date(2026, 10, 29),
-            amount_per_unit=Decimal("0.1964"),
-            source="REX Shares official distribution schedule",
-            eligibility_date=date(2026, 10, 28),
-            date_kind="payment",
-            frequency="WEEKLY",
+        "FEPI": (
+            DistributionEvent(date(2026, 10, 29), Decimal("0.1964"), "REX Shares official distribution schedule", date(2026, 10, 28), frequency="WEEKLY"),
+            DistributionEvent(date(2026, 11, 5), Decimal("0.1833"), "REX Shares official distribution schedule", date(2026, 11, 4), frequency="WEEKLY"),
+            DistributionEvent(date(2026, 11, 13), Decimal("0.1798"), "REX Shares official distribution schedule", date(2026, 11, 12), frequency="WEEKLY"),
+        ),
+        "QUSA": (
+            DistributionEvent(date(2026, 10, 27), Decimal("0.20825"), "VistaShares official distribution schedule", date(2026, 10, 26), frequency="MONTHLY"),
+        ),
+        "IYRI": (
+            DistributionEvent(date(2026, 10, 23), Decimal("0.4113"), "NEOS official distribution schedule", date(2026, 10, 21), frequency="MONTHLY"),
         ),
     }
 
-    def get_upcoming(self, symbol: str) -> DistributionEvent | None:
+    def get_recent(self, symbol: str, since: date | None = None) -> list[DistributionEvent]:
         code = symbol.split(".", 1)[0].strip().upper()
-        event = self.EVENTS.get(code)
-        return event if event and event.distribution_date >= date.today() - timedelta(days=7) else None
+        cutoff = since or date.today() - timedelta(days=365)
+        return [event for event in self.EVENTS.get(code, ()) if event.distribution_date >= cutoff]
+
+    def get_upcoming(self, symbol: str) -> DistributionEvent | None:
+        events = self.get_recent(symbol)
+        return max(events, key=lambda event: event.distribution_date) if events else None
 
 
 class YahooDistributionProvider:
@@ -215,6 +219,21 @@ class MultiSourceDistributionProvider:
             if event is not None:
                 return event, checked
         return None, checked
+
+    def get_events(self, symbol: str) -> tuple[list[DistributionEvent], list[str]]:
+        checked: list[str] = []
+        for provider in self.providers:
+            checked.append(type(provider).__name__.replace("DistributionProvider", ""))
+            try:
+                events = provider.get_recent(symbol) if hasattr(provider, "get_recent") else []
+                if not events:
+                    event = provider.get_upcoming(symbol)
+                    events = [event] if event is not None else []
+            except DistributionProviderError:
+                continue
+            if events:
+                return events, checked
+        return [], checked
 
 
 def _load_json(url: str, timeout_seconds: float, headers: dict[str, str] | None = None) -> dict:

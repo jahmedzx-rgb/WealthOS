@@ -44,7 +44,7 @@ class DistributionTrackingService:
 
     def _settle_due_official_distributions(self) -> tuple[int, Decimal]:
         today = date.today()
-        cutoff = today - timedelta(days=7)
+        cutoff = today - timedelta(days=365)
         rows = (self.db.query(DistributionAnnouncement, Security, Portfolio)
             .join(Security, Security.id == DistributionAnnouncement.security_id)
             .join(Portfolio, Portfolio.id == DistributionAnnouncement.portfolio_id)
@@ -112,40 +112,41 @@ class DistributionTrackingService:
             if security.currency_code == "SAR":
                 providers.append(VerifiedSaudiExchangeDistributionProvider())
             providers.append(YahooDistributionProvider(settings.MARKET_PRICE_REQUEST_TIMEOUT_SECONDS))
-            event, sources = MultiSourceDistributionProvider(providers).get_upcoming(security.market_symbol or security.symbol)
+            events, sources = MultiSourceDistributionProvider(providers).get_events(security.market_symbol or security.symbol)
             checked.extend(f"{security.symbol}:{source}" for source in sources)
-            if event is None:
+            if not events:
                 continue
-            eligibility = event.eligibility_date or event.distribution_date
-            quantity = max(Decimal("0"), self._eligible_quantity(position, eligibility))
-            if quantity <= 0:
-                continue
-            gross = (quantity * event.amount_per_unit).quantize(CENT, rounding=ROUND_HALF_UP)
-            tax_rate = Decimal(str(broker.dividend_withholding_tax_rate if broker and broker.dividend_withholding_tax_rate is not None else user.default_dividend_withholding_tax_rate or 0))
-            tax = (gross * tax_rate / 100).quantize(CENT, rounding=ROUND_HALF_UP)
-            net = gross - tax
-            fingerprint = f"{portfolio.id}:{security.id}:{eligibility.isoformat()}:{event.distribution_date.isoformat()}:{event.amount_per_unit.normalize()}"
-            item = self.db.query(DistributionAnnouncement).filter_by(user_id=self.user_id, fingerprint=fingerprint).one_or_none()
-            if item is None:
-                item = DistributionAnnouncement(user_id=self.user_id, portfolio_id=portfolio.id, security_id=security.id, fingerprint=fingerprint)
-                self.db.add(item); created += 1
-            else:
-                updated += 1
-            item.announcement_date = min(date.today(), eligibility)
-            item.eligibility_date = eligibility
-            item.payment_date = event.distribution_date
-            item.amount_per_unit = event.amount_per_unit
-            item.eligible_quantity = quantity
-            item.expected_gross_amount = gross
-            item.withholding_tax_rate = tax_rate
-            item.expected_tax_amount = tax
-            item.expected_net_amount = net
-            item.currency_code = security.currency_code
-            item.frequency = event.frequency
-            item.source = event.source
-            if item.status != "RECEIVED":
-                item.status = "AWAITING_RECEIPT" if event.distribution_date <= date.today() else "ANNOUNCED"
-            item.last_checked_at = datetime.now(UTC)
+            for event in events:
+                eligibility = event.eligibility_date or event.distribution_date
+                quantity = max(Decimal("0"), self._eligible_quantity(position, eligibility))
+                if quantity <= 0:
+                    continue
+                gross = (quantity * event.amount_per_unit).quantize(CENT, rounding=ROUND_HALF_UP)
+                tax_rate = Decimal(str(broker.dividend_withholding_tax_rate if broker and broker.dividend_withholding_tax_rate is not None else user.default_dividend_withholding_tax_rate or 0))
+                tax = (gross * tax_rate / 100).quantize(CENT, rounding=ROUND_HALF_UP)
+                net = gross - tax
+                fingerprint = f"{portfolio.id}:{security.id}:{eligibility.isoformat()}:{event.distribution_date.isoformat()}:{event.amount_per_unit.normalize()}"
+                item = self.db.query(DistributionAnnouncement).filter_by(user_id=self.user_id, fingerprint=fingerprint).one_or_none()
+                if item is None:
+                    item = DistributionAnnouncement(user_id=self.user_id, portfolio_id=portfolio.id, security_id=security.id, fingerprint=fingerprint)
+                    self.db.add(item); created += 1
+                else:
+                    updated += 1
+                item.announcement_date = min(date.today(), eligibility)
+                item.eligibility_date = eligibility
+                item.payment_date = event.distribution_date
+                item.amount_per_unit = event.amount_per_unit
+                item.eligible_quantity = quantity
+                item.expected_gross_amount = gross
+                item.withholding_tax_rate = tax_rate
+                item.expected_tax_amount = tax
+                item.expected_net_amount = net
+                item.currency_code = security.currency_code
+                item.frequency = event.frequency
+                item.source = event.source
+                if item.status != "RECEIVED":
+                    item.status = "AWAITING_RECEIPT" if event.distribution_date <= date.today() else "ANNOUNCED"
+                item.last_checked_at = datetime.now(UTC)
         # SessionLocal disables autoflush. Persist newly discovered paid events
         # to the transaction before querying the due-payment settlement batch.
         self.db.flush()

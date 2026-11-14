@@ -67,9 +67,9 @@ def test_verified_stc_distribution_matches_official_announcement():
 def test_verified_gpty_weekly_distribution_matches_official_schedule():
     event = VerifiedFundDistributionProvider().get_upcoming("GPTY")
     assert event is not None
-    assert event.eligibility_date == date(2026, 10, 28)
-    assert event.distribution_date == date(2026, 10, 29)
-    assert event.amount_per_unit == Decimal("0.2620")
+    assert event.eligibility_date == date(2026, 11, 12)
+    assert event.distribution_date == date(2026, 11, 13)
+    assert event.amount_per_unit == Decimal("0.2407")
     assert event.source == "YieldMax official distribution schedule"
     assert event.frequency == "WEEKLY"
 
@@ -77,11 +77,29 @@ def test_verified_gpty_weekly_distribution_matches_official_schedule():
 def test_verified_fepi_weekly_distribution_matches_official_schedule():
     event = VerifiedFundDistributionProvider().get_upcoming("FEPI")
     assert event is not None
-    assert event.eligibility_date == date(2026, 10, 28)
-    assert event.distribution_date == date(2026, 10, 29)
-    assert event.amount_per_unit == Decimal("0.1964")
+    assert event.eligibility_date == date(2026, 11, 12)
+    assert event.distribution_date == date(2026, 11, 13)
+    assert event.amount_per_unit == Decimal("0.1798")
     assert event.source == "REX Shares official distribution schedule"
     assert event.frequency == "WEEKLY"
+
+
+def test_verified_fund_provider_returns_all_recent_official_events():
+    provider = VerifiedFundDistributionProvider()
+    assert [event.distribution_date for event in provider.get_recent("GPTY")] == [
+        date(2026, 10, 29), date(2026, 11, 5), date(2026, 11, 13)
+    ]
+    events, checked = MultiSourceDistributionProvider([provider]).get_events("FEPI")
+    assert [event.amount_per_unit for event in events] == [Decimal("0.1964"), Decimal("0.1833"), Decimal("0.1798")]
+    assert checked == ["VerifiedFund"]
+
+
+def test_verified_qusa_and_iyri_distributions_match_official_schedules():
+    provider = VerifiedFundDistributionProvider()
+    qusa = provider.get_upcoming("QUSA")
+    iyri = provider.get_upcoming("IYRI")
+    assert (qusa.distribution_date, qusa.amount_per_unit) == (date(2026, 10, 27), Decimal("0.20825"))
+    assert (iyri.distribution_date, iyri.amount_per_unit) == (date(2026, 10, 23), Decimal("0.4113"))
 
 
 def test_distribution_frequency_is_inferred_from_actual_intervals():
