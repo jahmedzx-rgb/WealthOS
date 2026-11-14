@@ -137,7 +137,7 @@ export default function AppRouter() {
     return () => window.clearTimeout(timer)
   }, [])
   useEffect(() => {
-    const key = 'wealthos:distribution-sync-next-at'
+    const key = 'wealthos:distribution-sync-next-at:v2'
     const now = Date.now()
     try {
       if (Number(localStorage.getItem(key) ?? 0) > now) return
