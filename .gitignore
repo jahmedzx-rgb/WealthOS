@@ -26,6 +26,8 @@ tmp/
 work/
 .launch-index
 *.xml
+!mobile/android/app/src/main/AndroidManifest.xml
+!mobile/android/app/src/main/res/**/*.xml
 
 # VS Code
 .vscode/

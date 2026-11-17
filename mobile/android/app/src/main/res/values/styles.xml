@@ -1,0 +1,9 @@
+<resources>
+    <style name="Theme.WealthOSConnect" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimary">#102744</item>
+        <item name="colorSecondary">#B88A22</item>
+        <item name="android:fontFamily">sans</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:statusBarColor">#102744</item>
+    </style>
+</resources>
