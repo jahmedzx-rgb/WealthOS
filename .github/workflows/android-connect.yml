@@ -34,7 +34,11 @@ jobs:
           gradle :app:assembleDebug --stacktrace 2>&1 | tee gradle-build.log
           status=${PIPESTATUS[0]}
           if [ "$status" -ne 0 ]; then
-            message=$(tail -n 120 gradle-build.log | sed 's/%/%25/g; s/\r/%0D/g' | awk '{printf "%s%%0A", $0}')
+            grep -E '(^e: | error: |FAILURE:|What went wrong|Execution failed for task|Caused by:|Unresolved reference|Type mismatch|Cannot access|does not exist)' gradle-build.log > gradle-errors.log || true
+            if [ ! -s gradle-errors.log ]; then
+              tail -n 80 gradle-build.log > gradle-errors.log
+            fi
+            message=$(tail -n 100 gradle-errors.log | sed 's/%/%25/g; s/\r/%0D/g' | awk '{printf "%s%%0A", $0}')
             echo "::error title=Android build failed::$message"
           fi
           exit "$status"
