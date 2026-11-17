@@ -72,7 +72,7 @@ class MainActivity: AppCompatActivity() {
         root.addView(Button(this).apply { text = "Sync messages now"; setOnClickListener { requestSmsPermissions(); SmsSyncWorker.enqueueNow(this@MainActivity); showStatus("Sync requested.", true) } }, params())
         status = TextView(this).apply { textSize = 14f; setPadding(0,padding,0,padding) }
         root.addView(status)
-        root.addView(TextView(this).apply { text = "Privacy: the app filters OTP messages on the phone, accepts only configured financial senders, and sends operations to the WealthOS review queue. Nothing is posted automatically."; textSize = 13f; setTextColor(Color.DKGRAY })
+        root.addView(TextView(this).apply { text = "Privacy: the app filters OTP messages on the phone, accepts only configured financial senders, and sends operations to the WealthOS review queue. Nothing is posted automatically."; textSize = 13f; setTextColor(Color.DKGRAY) })
         return ScrollView(this).apply { addView(root) }
     }
 
