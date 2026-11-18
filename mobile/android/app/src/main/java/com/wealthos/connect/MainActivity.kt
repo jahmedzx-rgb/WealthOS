@@ -1,7 +1,6 @@
 package com.wealthos.connect
 
-import android.Manifest
-import android.content.pm.PackageManager
+import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.provider.Settings
@@ -11,9 +10,8 @@ import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.ScrollView
 import android.widget.TextView
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
+import androidx.core.app.NotificationManagerCompat
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.journeyapps.barcodescanner.ScanContract
@@ -31,11 +29,6 @@ class MainActivity: AppCompatActivity() {
     private lateinit var status: TextView
     private lateinit var pairButton: Button
 
-    private val permissionLauncher = registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { grants ->
-        if (grants[Manifest.permission.READ_SMS] == true && grants[Manifest.permission.RECEIVE_SMS] == true) {
-            SmsSyncWorker.schedule(this); SmsSyncWorker.enqueueNow(this); showStatus("SMS access granted. Historical sync started.", true)
-        } else showStatus("SMS permission is required to import financial messages.", false)
-    }
     private val scanLauncher = registerForActivityResult(ScanContract()) { result ->
         if (result.contents.isNullOrBlank()) return@registerForActivityResult
         runCatching {
@@ -54,8 +47,7 @@ class MainActivity: AppCompatActivity() {
         if (config.paired) {
             apiBase.setText(config.apiBase)
             pairButton.text = "Re-pair phone"
-            showStatus("Connected to WealthOS. New financial messages sync automatically.", true)
-            requestSmsPermissions()
+            refreshAccessStatus()
         }
     }
 
@@ -63,16 +55,16 @@ class MainActivity: AppCompatActivity() {
         val padding = (20 * resources.displayMetrics.density).toInt()
         val root = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL; setPadding(padding, padding, padding, padding); setBackgroundColor(Color.rgb(246,248,251)) }
         root.addView(TextView(this).apply { text = "WealthOS Connect"; textSize = 25f; setTextColor(Color.rgb(16,39,68)); setTypeface(typeface, android.graphics.Typeface.BOLD) })
-        root.addView(TextView(this).apply { text = "Secure financial SMS bridge"; textSize = 14f; setTextColor(Color.DKGRAY); setPadding(0,0,0,padding) })
+        root.addView(TextView(this).apply { text = "Secure Google Messages bridge"; textSize = 14f; setTextColor(Color.DKGRAY); setPadding(0,0,0,padding) })
         apiBase = field(root, "WealthOS API address", "https://wealthos-web-beta.onrender.com/api/v1")
         pairingSecret = field(root, "Manual pairing code", "Paste the code from WealthOS")
         root.addView(Button(this).apply { text = "Scan pairing QR"; setOnClickListener { scanLauncher.launch(ScanOptions().setDesiredBarcodeFormats(ScanOptions.QR_CODE).setPrompt("Scan the WealthOS QR code").setBeepEnabled(false)) } }, params())
         pairButton = Button(this).apply { text = "Pair phone"; setOnClickListener { pair() } }
         root.addView(pairButton, params())
-        root.addView(Button(this).apply { text = "Sync messages now"; setOnClickListener { requestSmsPermissions(); SmsSyncWorker.enqueueNow(this@MainActivity); showStatus("Sync requested.", true) } }, params())
+        root.addView(Button(this).apply { text = "Enable Google Messages access"; setOnClickListener { startActivity(Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS)) } }, params())
         status = TextView(this).apply { textSize = 14f; setPadding(0,padding,0,padding) }
         root.addView(status)
-        root.addView(TextView(this).apply { text = "Privacy: the app filters OTP messages on the phone, accepts only configured financial senders, and sends operations to the WealthOS review queue. Nothing is posted automatically."; textSize = 13f; setTextColor(Color.DKGRAY) })
+        root.addView(TextView(this).apply { text = "Privacy: WealthOS reads only new Google Messages notifications after you grant access. OTP messages are filtered on the phone, and financial operations go to the review queue. Nothing is posted automatically."; textSize = 13f; setTextColor(Color.DKGRAY) })
         return ScrollView(this).apply { addView(root) }
     }
 
@@ -93,14 +85,18 @@ class MainActivity: AppCompatActivity() {
                 .onSuccess { result ->
                     config.apiBase = base; config.deviceId = result.deviceId; config.deviceToken = result.deviceToken; config.senderAllowlist = result.senders
                     config.historySince = LocalDate.of(2026,10,15).atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli()
-                    runOnUiThread { pairButton.isEnabled = true; pairButton.text = "Re-pair phone"; pairingSecret.setText(""); showStatus("Phone paired. Grant SMS access to start the historical sync from 15 October 2026.", true); requestSmsPermissions() }
+                    runOnUiThread { pairButton.isEnabled = true; pairButton.text = "Re-pair phone"; pairingSecret.setText(""); showStatus("Phone paired. Enable Google Messages access to receive new financial operations.", true) }
                 }.onFailure { error -> runOnUiThread { pairButton.isEnabled = true; showStatus(error.message ?: "Pairing failed.", false) } }
         }
     }
 
-    private fun requestSmsPermissions() {
-        val missing = listOf(Manifest.permission.READ_SMS, Manifest.permission.RECEIVE_SMS).filter { ContextCompat.checkSelfPermission(this,it) != PackageManager.PERMISSION_GRANTED }
-        if (missing.isNotEmpty()) permissionLauncher.launch(missing.toTypedArray()) else { SmsSyncWorker.schedule(this); SmsSyncWorker.enqueueNow(this) }
+    override fun onResume() {
+        super.onResume()
+        if (::config.isInitialized && ::status.isInitialized && config.paired) refreshAccessStatus()
+    }
+    private fun refreshAccessStatus() {
+        val enabled = packageName in NotificationManagerCompat.getEnabledListenerPackages(this)
+        showStatus(if (enabled) "Connected. New financial messages will sync automatically." else "Connected, but Google Messages access is not enabled yet.", enabled)
     }
     private fun showStatus(text: String, success: Boolean) { status.text = text; status.setTextColor(if(success) Color.rgb(25,130,75) else Color.rgb(185,45,45)) }
 }

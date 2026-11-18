@@ -1,31 +1,28 @@
 package com.wealthos.connect
 
-import android.Manifest
 import android.content.Context
-import android.content.pm.PackageManager
-import androidx.core.content.ContextCompat
 import androidx.work.CoroutineWorker
-import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.ExistingWorkPolicy
+import androidx.work.Data
 import androidx.work.OneTimeWorkRequestBuilder
-import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import java.util.concurrent.TimeUnit
 
 class SmsSyncWorker(context: Context, params: WorkerParameters): CoroutineWorker(context, params) {
     override suspend fun doWork(): Result = withContext(Dispatchers.IO) {
         val config = BridgeConfig(applicationContext)
-        if (!config.paired || ContextCompat.checkSelfPermission(applicationContext, Manifest.permission.READ_SMS) != PackageManager.PERMISSION_GRANTED) return@withContext Result.success()
-        val since = if (config.lastSyncedSmsAt > 0) maxOf(config.historySince, config.lastSyncedSmsAt - TimeUnit.MINUTES.toMillis(5)) else config.historySince
-        val messages = SmsRepository.read(applicationContext, since, config.senderAllowlist)
-        if (messages.isEmpty()) return@withContext Result.success()
+        if (!config.paired) return@withContext Result.success()
+        val record = SmsRepository.fromNotification(
+            inputData.getString("source_id").orEmpty(),
+            inputData.getString("sender").orEmpty(),
+            inputData.getString("body").orEmpty(),
+            inputData.getLong("received_at", System.currentTimeMillis()),
+            config.senderAllowlist,
+        ) ?: return@withContext Result.success()
         try {
-            BridgeApi.upload(config, messages, config.lastSyncedSmsAt == 0L)
-            config.lastSyncedSmsAt = messages.maxOf { it.receivedAt }
-            if (messages.size >= 500) enqueueNow(applicationContext)
+            BridgeApi.upload(config, listOf(record), false)
             Result.success()
         } catch (error: Exception) {
             if (runAttemptCount >= 8) Result.failure() else Result.retry()
@@ -33,14 +30,15 @@ class SmsSyncWorker(context: Context, params: WorkerParameters): CoroutineWorker
     }
 
     companion object {
-        private const val PERIODIC_NAME = "wealthos-sms-periodic"
-        private const val IMMEDIATE_NAME = "wealthos-sms-immediate"
-        fun schedule(context: Context) {
-            val request = PeriodicWorkRequestBuilder<SmsSyncWorker>(15, TimeUnit.MINUTES).build()
-            WorkManager.getInstance(context).enqueueUniquePeriodicWork(PERIODIC_NAME, ExistingPeriodicWorkPolicy.UPDATE, request)
-        }
-        fun enqueueNow(context: Context) {
-            WorkManager.getInstance(context).enqueueUniqueWork(IMMEDIATE_NAME, ExistingWorkPolicy.APPEND_OR_REPLACE, OneTimeWorkRequestBuilder<SmsSyncWorker>().build())
+        fun enqueue(context: Context, record: SmsRecord) {
+            val input = Data.Builder()
+                .putString("source_id", record.sourceId)
+                .putString("sender", record.sender)
+                .putString("body", record.body)
+                .putLong("received_at", record.receivedAt)
+                .build()
+            val request = OneTimeWorkRequestBuilder<SmsSyncWorker>().setInputData(input).build()
+            WorkManager.getInstance(context).enqueueUniqueWork("wealthos-message-${record.sourceId.hashCode()}", ExistingWorkPolicy.KEEP, request)
         }
     }
 }
