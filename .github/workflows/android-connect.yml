@@ -53,6 +53,21 @@ jobs:
             echo "::error title=Android build failed::$message"
           fi
           exit "$status"
+      - name: Verify signature and restricted permissions
+        shell: bash
+        run: |
+          apk="app/build/outputs/apk/release/app-release.apk"
+          apksigner=$(find "$ANDROID_HOME/build-tools" -type f -name apksigner | sort -V | tail -n 1)
+          aapt=$(find "$ANDROID_HOME/build-tools" -type f -name aapt | sort -V | tail -n 1)
+          test -x "$apksigner"
+          test -x "$aapt"
+          "$apksigner" verify --verbose --print-certs "$apk"
+          permissions=$("$aapt" dump permissions "$apk")
+          printf '%s\n' "$permissions"
+          if printf '%s\n' "$permissions" | grep -Eq 'android.permission.(READ_SMS|RECEIVE_SMS)'; then
+            echo "::error title=Restricted SMS permission::Release APK still requests a restricted SMS permission."
+            exit 1
+          fi
       - name: Upload build log
         if: always()
         uses: actions/upload-artifact@v4
