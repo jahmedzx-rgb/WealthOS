@@ -65,3 +65,29 @@ def test_pairing_and_ingestion_create_one_review_operation_and_dedupe():
     assert operation.status == "PENDING"
     assert operation.amount == 48.75
     assert operation.card_last4 == "7304"
+
+
+def test_built_in_abyan_trade_sender_is_accepted_for_existing_device_allowlist():
+    db = make_db()
+    user = User(email="abyan@example.com", full_name="Abyan Test", is_active=True)
+    db.add(user)
+    db.commit()
+    pairing = create_pairing(PairingCreate(sender_allowlist=["SNB"]), db, user)
+    claimed = claim_pairing(PairingClaim(
+        pairing_secret=pairing["pairing_secret"],
+        device_name="Ahmed Phone",
+        installation_id="installation-abyan",
+        app_version="0.2.2",
+        os_version="Android 15",
+    ), request(), db)
+    device = db.query(MobileDevice).filter_by(public_id=claimed["device_id"]).one()
+    result = ingest_messages(MobileMessageBatch(messages=[MobileMessageInput(
+        source_id="abyan-trade-1",
+        sender="Abyan Trade",
+        body="تم تنفيذ شراء سهم بمبلغ 25.00 SAR",
+        received_at=datetime(2026, 11, 18, 20, tzinfo=UTC),
+    )]), db, device)
+    assert result["accepted"] == 1
+    operation = db.query(ImportedOperation).one()
+    assert operation.operation_type == "Trade"
+    assert operation.amount == 25

@@ -10,7 +10,7 @@ import { formatDateTime } from '../utils/dateFormat'
 import './SettingsSubpage.css'
 import './MobileConnectionsPage.css'
 
-const DEFAULT_SENDERS=['SNB','ANB','NBD','D360','ALINMA','ALRAJHI','SAB','SAIB','BSF']
+const DEFAULT_SENDERS=['SNB','ANB','NBD','D360','ALINMA','ALRAJHI','SAB','SAIB','BSF','Abyan Trade']
 
 export default function MobileConnectionsPage(){
   const{direction}=useLanguage()

@@ -25,7 +25,9 @@ class MessagesNotificationListener : NotificationListenerService() {
             sender,
             body,
             sbn.postTime,
-            config.senderAllowlist,
+            // Sender authorization is enforced by the server so changes from
+            // WealthOS apply immediately without re-pairing the phone.
+            emptySet(),
         ) ?: return
         SmsSyncWorker.enqueue(this, record)
     }

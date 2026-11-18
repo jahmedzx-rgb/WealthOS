@@ -19,7 +19,9 @@ class SmsSyncWorker(context: Context, params: WorkerParameters): CoroutineWorker
             inputData.getString("sender").orEmpty(),
             inputData.getString("body").orEmpty(),
             inputData.getLong("received_at", System.currentTimeMillis()),
-            config.senderAllowlist,
+            // The API owns the live sender allowlist. Keep only the financial
+            // and OTP filters on-device before the encrypted upload.
+            emptySet(),
         ) ?: return@withContext Result.success()
         try {
             BridgeApi.upload(config, listOf(record), false)

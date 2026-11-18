@@ -21,6 +21,17 @@ from app.security.web_auth import check_rate_limit, client_key, token_digest
 
 router = APIRouter(prefix="/mobile", tags=["Mobile bridge"])
 
+# Trusted financial senders that must remain available for the private bridge
+# even when an older paired device still has a cached allowlist.
+BUILT_IN_FINANCIAL_SENDERS = {"Abyan Trade"}
+
+
+def _effective_sender_allowlist(device: MobileDevice) -> list[str]:
+    configured = {sender.strip() for sender in (device.sender_allowlist or []) if sender.strip()}
+    if not configured:
+        return []
+    return sorted(configured | BUILT_IN_FINANCIAL_SENDERS, key=str.casefold)
+
 
 def _aware(value: datetime) -> datetime:
     return value if value.tzinfo else value.replace(tzinfo=UTC)
@@ -176,7 +187,7 @@ def revoke_device(device_id: int, db: Session = Depends(get_db), user: User = De
 def device_config(device: MobileDevice = Depends(current_mobile_device)):
     return {
         "device_id": device.public_id,
-        "sender_allowlist": device.sender_allowlist or [],
+        "sender_allowlist": _effective_sender_allowlist(device),
         "max_batch_size": 500,
         "review_before_posting": True,
     }
@@ -193,7 +204,7 @@ def ingest_messages(
     accepted_inputs: list[ImportedOperationInput] = []
     accepted_messages = []
     duplicates = ignored = 0
-    allowlist = {sender.casefold() for sender in (device.sender_allowlist or [])}
+    allowlist = {sender.casefold() for sender in _effective_sender_allowlist(device)}
     for message in payload.messages:
         received_at = _aware(message.received_at).astimezone(UTC)
         if received_at > now + timedelta(minutes=10) or received_at < datetime(2010, 1, 1, tzinfo=UTC):
