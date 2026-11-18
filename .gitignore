@@ -56,3 +56,5 @@ release/
 # Local archives
 *.zip
 .web-beta-index*
+.tools/
+.signing/

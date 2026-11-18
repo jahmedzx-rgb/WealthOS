@@ -15,9 +15,23 @@ android {
         versionName = "0.2.0"
     }
     buildFeatures { buildConfig = true }
+    signingConfigs {
+        create("wealthosRelease") {
+            val signingFile = System.getenv("WEALTHOS_STORE_FILE")
+            if (!signingFile.isNullOrBlank()) {
+                storeFile = file(signingFile)
+                storePassword = System.getenv("WEALTHOS_STORE_PASSWORD")
+                keyAlias = "wealthos"
+                keyPassword = System.getenv("WEALTHOS_STORE_PASSWORD")
+                storeType = "PKCS12"
+            }
+        }
+    }
     buildTypes {
         release {
             isMinifyEnabled = true
+            isDebuggable = false
+            signingConfig = signingConfigs.getByName("wealthosRelease")
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
     }

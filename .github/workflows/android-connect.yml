@@ -27,11 +27,22 @@ jobs:
       - uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: '8.10.2'
-      - name: Build debug APK
+      - name: Prepare protected release signing
         shell: bash
+        env:
+          WEALTHOS_KEYSTORE_BASE64: ${{ secrets.WEALTHOS_KEYSTORE_BASE64 }}
+        run: |
+          test -n "$WEALTHOS_KEYSTORE_BASE64"
+          printf '%s' "$WEALTHOS_KEYSTORE_BASE64" | base64 --decode > wealthos-release.p12
+          chmod 600 wealthos-release.p12
+      - name: Build signed release APK
+        shell: bash
+        env:
+          WEALTHOS_STORE_FILE: ../wealthos-release.p12
+          WEALTHOS_STORE_PASSWORD: ${{ secrets.WEALTHOS_KEYSTORE_PASSWORD }}
         run: |
           set +e
-          gradle :app:assembleDebug --stacktrace 2>&1 | tee gradle-build.log
+          gradle :app:assembleRelease --stacktrace 2>&1 | tee gradle-build.log
           status=${PIPESTATUS[0]}
           if [ "$status" -ne 0 ]; then
             grep -E '(^e: | error: |FAILURE:|What went wrong|Execution failed for task|Caused by:|Unresolved reference|Type mismatch|Cannot access|does not exist)' gradle-build.log > gradle-errors.log || true
@@ -52,7 +63,7 @@ jobs:
           retention-days: 14
       - uses: actions/upload-artifact@v4
         with:
-          name: WealthOS-Connect-debug
-          path: mobile/android/app/build/outputs/apk/debug/app-debug.apk
+          name: WealthOS-Connect-release
+          path: mobile/android/app/build/outputs/apk/release/app-release.apk
           if-no-files-found: error
           retention-days: 14
