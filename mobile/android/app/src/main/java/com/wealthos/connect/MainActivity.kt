@@ -70,7 +70,13 @@ class MainActivity: AppCompatActivity() {
 
     private fun field(root: LinearLayout, label: String, hint: String): EditText {
         val input = TextInputEditText(this).apply { this.hint = hint; setSingleLine(true) }
-        root.addView(TextInputLayout(this).apply { this.hint = label; addView(input, ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)) }, params())
+        root.addView(TextInputLayout(this).apply {
+            this.hint = label
+            addView(input, LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+            ))
+        }, params())
         return input
     }
     private fun params() = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply { bottomMargin = (10 * resources.displayMetrics.density).toInt() }
